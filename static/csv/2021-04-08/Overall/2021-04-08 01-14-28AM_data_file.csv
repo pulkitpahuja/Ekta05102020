@@ -1,0 +1,5 @@
+Device,kV,mA,Insulation,Voltmeter,VAW-V,VAW-A,VAW-W,MicroAmpere-1,PF,20V,30A,Freq.,MicroAmpere-2,Timestamp
+123,0-Passed,Passed,Passed,Passed,Passed,Passed,Failed,Failed,Passed,Passed,Passed,Passed,Failed,04-08-2021 00-42-36
+123,0-Passed,Passed,Passed,Passed,Passed,Passed,Failed,Failed,Passed,Passed,Passed,Passed,Failed,04-DD-YYYY 00-41-11
+123,0-Passed,Passed,Passed,Passed,Passed,Passed,Failed,Failed,Passed,Passed,Passed,Passed,Failed,08-04-2021 00-43-52
+123,0-Passed,Passed,Passed,Passed,Passed,Passed,Failed,Failed,Passed,Passed,Passed,Passed,Failed,4-D-YYYY 00-39-34
