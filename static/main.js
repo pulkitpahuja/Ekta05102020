@@ -521,7 +521,11 @@ function run_task(truth, device) {
                 if (device > 5) {
                     val = device + 2;
                 }
-                document.getElementById("result_" + val).value = response;
+                if(val===9){
+                    document.getElementById("result_" + val).value = Math.abs(response);
+                }else{
+                    document.getElementById("result_" + val).value = response;
+                }
                 if (parseFloat(response) <= parseFloat(to_send["maximum"]) && parseFloat(response) >= parseFloat(to_send["minimum"])) {
                     $("#result_" + val).css({ "color": "green" });
                 } else {
