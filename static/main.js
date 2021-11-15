@@ -399,6 +399,15 @@ function save_result_data() {
             alert("Result Status : " + data);
         }
     });
+
+    $.ajax({
+        type: "POST",
+        url: "/download_csv",
+        data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }),  // serializes the form's elements.
+        success: data => {
+            alert(data);
+        }
+    });
 }
 
 
@@ -520,7 +529,7 @@ function run_task(truth, device) {
 
                         var temp = parseInt(document.getElementById("delay").value);
                         if (delay_count <= temp) {
-                            
+
                         } else {
                             setTimeout(function () {
                                 stop();

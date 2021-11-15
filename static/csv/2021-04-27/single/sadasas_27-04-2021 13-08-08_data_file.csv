@@ -10,4 +10,4 @@ MicroAmpere,0.0,μA-1,Failed
 PF,0.0,,Passed
 20V,0.0,V,Passed
 30A,0.0,A,Passed
-Frequency,0.0,Hz,Passed
+Frequency,50.0,Hz,Failed

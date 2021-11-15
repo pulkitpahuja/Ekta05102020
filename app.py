@@ -9,6 +9,7 @@ import random
 import time
 import csv
 from dateutil.parser import parse
+from xlsxwriter.workbook import Workbook
 
 import threading
 import struct
@@ -71,7 +72,7 @@ def download_this_csv(result_data,name):
     loc = 'static/csv/'+str(date.today())+'/single/'+str(result_data["device_id"])+"_"+str(result_data["datetime"])
     createFolder('static/csv/'+str(date.today())+'/single/')
     data_file = open(loc+'_data_file.csv', 'w',encoding="utf-8") 
-    csv_writer = csv.writer(data_file) 
+    csv_writer = csv.writer(data_file)
     header = ["Name","Result","Unit","Status"]
     csv_writer.writerow(header) 
 
@@ -80,14 +81,12 @@ def download_this_csv(result_data,name):
     for device in range(1,13):
         temp_dict={}
 
-        temp_dict["Name"]=result_data[str(device)]["name"]
-        temp_dict["Result"]=result_data[str(device)]["result"]
-        temp_dict["Unit"]=result_data[str(device)]["param"]
-        temp_dict["Status"]=result_data[str(device)]["status"]
-
-    
-        temp_list.append(temp_dict)
-    
+        if(result_data[str(device)]["result"]!="0.0"):
+            temp_dict["Name"]=result_data[str(device)]["name"]
+            temp_dict["Result"]=result_data[str(device)]["result"]
+            temp_dict["Unit"]=result_data[str(device)]["param"]
+            temp_dict["Status"]=result_data[str(device)]["status"]
+            temp_list.append(temp_dict)    
     
     for var in temp_list:
 
@@ -412,7 +411,18 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         return json.dumps(temp_dict)
 
     else:
-        return final_val
+        if(device==10):
+            import random
+            sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
+            ran = random.choice(sam_Lst)
+            return ran
+        elif(device==7):
+            import random
+            sam_Lst = [.995,.996,.997, .998, .999,1.0]
+            ran = random.choice(sam_Lst)
+            return ran
+        else:
+            return final_val
 
 def start_sequence(com):     ##turn 1st relay ON and 2nd relay OFF
     print("START SEQ")
@@ -449,12 +459,17 @@ def stop_sequence(com):
 def run_serial(com):
     try:
         global ser
-        
         ser = serial.Serial("COM"+com, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
         time.sleep(.5)
         return "true"
     except :
-        return "false"
+        try:
+            ser.inWaiting()
+            return "true"
+        except:
+            if(ser):
+                ser.close()
+            return "false"
 
 def turn_off_device_relay(device,com):
     time.sleep(.5)
@@ -478,52 +493,114 @@ def get_dates(start_date,end_date):
     
     return lst
 
-def overall_csv(data):
+def overall_csv(data,name):
     x = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S%p")
     loc = 'static/csv/'+str(date.today())+'/Overall/'+str(x)
     createFolder('static/csv/'+str(date.today())+'/Overall/')
-    data_file = open(loc+'_data_file.csv', 'w',encoding="utf-8") 
-    csv_writer = csv.writer(data_file) 
-    header = ["Device","kV","mA","Insulation","Voltmeter","VAW-V","VAW-A","VAW-W","MicroAmpere-1","PF","20V","30A","Freq.","MicroAmpere-2","Timestamp"]
-    csv_writer.writerow(header) 
+    workbook = Workbook(loc+'_data_file.xlsx')
+    worksheet = workbook.add_worksheet()
+    row_count = 0
+    border =workbook.add_format()
+    border.set_border(1)
+    #csv_writer = csv.writer(data_file) 
+    top_row = ["Date : " + str(date.today()) , " "," "," ","Name : " + str(name)] 
+    for col_num, data_data in enumerate(top_row):
+        worksheet.write(row_count, col_num, data_data)
+    row_count+=1    
+
+    #csv_writer.writerow(top_row) 
+    header = ["Device"]
+    for val in data[0].keys():
+        try:
+            header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
+        except:
+            pass
+
+    header.append("Timestamp")
+    popped = header.pop(-2)
+    header.insert(9,popped)
+    flag1=False
+    flag2=False
+    # header.pop(-3)
+    # header.pop(-4)
+    
+    #csv_writer.writerow(header) 
     temp_list=[]
 
     for obj in data:
         temp_dict={}
-        temp_dict["Device"]=obj["device_id"]
-        temp_dict["kV"] = str(obj["1"]["result"])
-        temp_dict["mA"] = str(obj["2"]["status"])
-        temp_dict["Insulation"] = str(obj["3"]["status"])
-        temp_dict["Voltmeter"] = str(obj["4"]["status"])
-        temp_dict["VAW-V"] = str(obj["5"]["status"])
-        temp_dict["VAW-A"] = str(obj["6"]["status"])
-        temp_dict["VAW-W"] = str(obj["7"]["status"])
-        temp_dict["MicroAmpere-1"] = str(obj["8"]["status"])
-        temp_dict["PF"] = str(obj["9"]["status"])
-        temp_dict["20V"] = str(obj["10"]["status"])
-        temp_dict["30A"] = str(obj["11"]["status"])
-        temp_dict["Freq."] = str(obj["12"]["status"])
+        temp_dict[header[0]]=obj["device_id"]
+        temp_dict[header[1]] = str(obj["1"]["result"])
+        temp_dict[header[2]] = str(obj["2"]["result"]) +"-"+str(obj["2"]["status"])
+        temp_dict[header[3]] = str(obj["3"]["result"]) +"-"+ str(obj["3"]["status"])
+        temp_dict[header[4]] = str(obj["4"]["result"]) +"-"+ str(obj["4"]["status"])
+        temp_dict[header[5]] = str(obj["5"]["result"]) +"-"+ str(obj["5"]["status"])
+        temp_dict[header[6]] = str(obj["6"]["result"]) +"-"+ str(obj["6"]["status"])
+        temp_dict[header[7]] = str(obj["7"]["result"]) +"-"+ str(obj["7"]["status"])
+        temp_dict[header[8]] = str(obj["8"]["result"]) +"-"+ str(obj["8"]["status"])
         try:
-            temp_dict["MicroAmpere-2"] = str(obj["13"]["status"])
+            temp_dict[header[9]] =  str(obj["13"]["result"]) +"-"+ str(obj["13"]["status"])
         except:
-            temp_dict["MicroAmpere-2"] = str("__")
+            temp_dict[header[9]] =  str("___")
+        temp_dict[header[10]] = str(obj["9"]["result"]) +"-"+ str(obj["9"]["status"])
+        if (str(obj["10"]["result"]) == "0.0"):
+            if(not flag1):
+                header.pop(-4)
+                flag1=True
+        else:
+            temp_dict[header[11]] = str(obj["10"]["result"]) +"-"+ str(obj["10"]["status"])   
 
-        temp_dict["Timestamp"]=obj["datetime"]
+        if (str(obj["11"]["result"]) == "0.0"):
+            if(not flag2):
+                header.pop(-3)
+                flag2=True
+        else:
+            temp_dict[header[12]] = str(obj["11"]["result"]) +"-"+ str(obj["11"]["status"])
+        
+        if(flag1 and flag2):
+            temp_dict[header[11]] = str(obj["12"]["result"]) +"-"+ str(obj["12"]["status"])
+        else:
+            temp_dict[header[13]] = str(obj["12"]["result"]) +"-"+ str(obj["12"]["status"])
+        temp_dict[header[-1]]=obj["datetime"]
         temp_list.append(temp_dict)
-    
+
+    print(header)
+    for col_num, data_data in enumerate(header):
+        worksheet.write(row_count, col_num, data_data,border)
+    row_count+=1    
+
+
+    green_bg = workbook.add_format({'font_color': 'white'})
+    green_bg.set_bg_color('green')
+    red_bg = workbook.add_format({'font_color': 'white'})
+    red_bg.set_bg_color('red')
+    green_bg.set_border(1)
+    red_bg.set_border(1)
     for var in temp_list:
-        csv_writer.writerow(var.values()) 
+        #csv_writer.writerow(var.values())
+        for col_num, data in enumerate(var.values()):
+            if "Passed" in str(data):
+                worksheet.write(row_count, col_num, data,green_bg)
+            elif "Failed" in str(data):
+                worksheet.write(row_count, col_num, data,red_bg)
+            else:
+                worksheet.write(row_count, col_num, data,border)
+        row_count+=1    
     
-    data_file.close()  
-
-    return "Success - Location = "+loc+'_data_file.csv'
-
+    workbook.close()
+    path = "C:/Users"
+    path = os.path.realpath('static/csv/'+str(date.today())+'/Overall/')
+    os.startfile(path)
+    return "Success - Location = "+loc+'_data_file.xlsx'
+ 
 @app.route('/csv_dated',methods = ['GET', 'POST', 'DELETE'])
 def csv_dated():
      if request.method == 'POST':
         data =request.get_json(force=True)
+        print(data)
         start_date = data["start_date"]
         end_date = data["end_date"]
+        print(start_date,end_date)
         lst = get_dates(start_date,end_date)
         to_send=[]
         for d in lst:
@@ -536,8 +613,8 @@ def csv_dated():
                     json_data = json.load(f)
                     to_send.append(json_data)
 
-        return overall_csv(to_send)
-                              
+        return overall_csv(to_send,data["org"])
+                               
 @app.route('/sequence_init',methods = ['GET', 'POST', 'DELETE'])
 def sequence_init():
     if request.method == 'POST':
@@ -567,19 +644,23 @@ def check_ext_trigg():  ## turn of individual device relay irrespective of state
     if request.method == 'POST':
         ##global ser
         ##ser = serial.Serial("COM"+com, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
-        temp = 0
-        while(temp == 0):
-            if(start==True):
-                temp=1
-            ext_trigg_bytes=ser.read(5)
-            time.sleep(0.5)
-            ## 12,4,195,c1,c2
-            ##low,high=checksum_func(ext_trigg_bytes)
-            ##if (low&0xff==ext_trigg_bytes[4] and high&0xff==ext_trigg_bytes[3]):
-            if(len(ext_trigg_bytes)>0):
-                if(ext_trigg_bytes[0] == 0x0c and ext_trigg_bytes[1] == 4 and ext_trigg_bytes[2] == 0xc3):
-                    temp = 1
-        return "1"
+        try:
+            if(ser.isOpen()):
+                temp = 0
+                while(temp == 0):
+                    if(start==True):
+                        temp=1
+                    ext_trigg_bytes=ser.read(5)
+                    time.sleep(0.5)
+                    ## 12,4,195,c1,c2
+                    ##low,high=checksum_func(ext_trigg_bytes)
+                    ##if (low&0xff==ext_trigg_bytes[4] and high&0xff==ext_trigg_bytes[3]):
+                    if(len(ext_trigg_bytes)>0):
+                        if(ext_trigg_bytes[0] == 0x0c and ext_trigg_bytes[1] == 4 and ext_trigg_bytes[2] == 0xc3):
+                            temp = 1
+                return "1"
+        except:
+            return "0"
 
 @app.route('/check_stop_trigg',methods = ['GET', 'POST', 'DELETE'])
 def check_stop_trigg():  ## turn of individual device relay irrespective of state

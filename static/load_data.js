@@ -49,6 +49,7 @@ $('#exampleModalCenter').on('show.bs.modal', function (event) {
     document.getElementById("alert").textContent = "Please Wait your file is being processed...";
     var start_date = document.getElementById("start_date").value;
     var end_date = document.getElementById("end_date").value;
+    var name = document.getElementById("name").value;
     console.log(start_date);
     if (start_date == "") {
       document.getElementById("alert").textContent = "Please Enter Start Date";
@@ -60,11 +61,16 @@ $('#exampleModalCenter').on('show.bs.modal', function (event) {
       $("#alert").css({ "color": "red" });
       return
     }
+    if (name == "") {
+      document.getElementById("alert").textContent = "Please Enter Name Of Organization";
+      $("#alert").css({ "color": "red" });
+      return
+    }
     console.log(start_date, end_date)
     $.ajax({
       type: "POST",
       url: "/csv_dated",
-      data: JSON.stringify({ start_date: start_date, end_date: end_date }),  // serializes the form's elements.
+      data: JSON.stringify({ org: name, start_date: start_date, end_date: end_date }),  // serializes the form's elements.
       success: data => {
         document.getElementById("alert").textContent = "Status: " + data;
       }

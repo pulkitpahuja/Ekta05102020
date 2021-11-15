@@ -27,8 +27,8 @@ byte_val={
          "10":bytearray([0x06,0x03,000,000,000,0x02,0xc5,0xbc]),
         }
 
-to_on_write=bytearray([byte_val["3"][0],0x03,155,000,000,0x04])
-to_off_write=bytearray([byte_val["3"][0],0x03,215,000,000,0x04])
+to_on_write=bytearray([byte_val["4"][0],0x03,155,000,000,0x04])
+to_off_write=bytearray([byte_val["4"][0],0x03,215,000,000,0x04])
 
 global ser
 ser = serial.Serial("COM3",9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=.3)
@@ -139,8 +139,14 @@ def cal_checksum_func(arr):
     checksum = checksum<<8
     highCRC = (checksum>>8)% 256
     return(lowCRC,highCRC)        
-        
-ser.write(byte_val["3"])
+
+on_relay()
+
+time.sleep(3)
+off_relay()
+time.sleep(.5)
+
+ser.write(byte_val["2"])
 ser.flush()
 time.sleep(.4)
 
@@ -155,7 +161,3 @@ if (low&0xff==bytes_rec[8] and high&0xff==bytes_rec[7]):
 list1=[bytes_rec[4],bytes_rec[3],bytes_rec[6],bytes_rec[5]]
 final_val=list(struct.unpack('<f', bytearray(list1)))
 print(final_val)
-on_relay()
-
-time.sleep(3)
-off_relay()
