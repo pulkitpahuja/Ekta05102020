@@ -50,16 +50,16 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 byte_val={
-         "1":bytearray([0x03,0x03,000,000,000,0x04,0x45,0xeb]),
-         "2":bytearray([0x07,0x03,000,000,000,0x02,0xc4,0x6d]),
-         "3":bytearray([0x09,0x03,000,000,000,0x02,0xc5,0x43]),
-         "4":bytearray([0x01,0x03,000,000,000,0x02,0xc4,0x0b]),
-         "5":bytearray([0x0b,0x03,000,000,000,0x06,0xc5,0x62]),
-         "6":bytearray([0x02,0x03,000,000,000,0x02,0xc4,0x38]),
-         "7":bytearray([0x04,0x03,000,000,000,0x02,0xc4,0x5e]),
-         "8":bytearray([0x05,0x03,000,000,000,0x02,0xc5,0x8f]),
-         "9":bytearray([0x08,0x03,000,000,000,0x02,0xc4,0x92]),
-         "10":bytearray([0x06,0x03,000,000,000,0x02,0xc5,0xbc]),
+         "1":bytearray([0x03,0x03,000,000,000,0x04,0x45,0xeb]),  #kV
+         "2":bytearray([0x07,0x03,000,000,000,0x02,0xc4,0x6d]),  #mA
+         "3":bytearray([0x09,0x03,000,000,000,0x02,0xc5,0x43]),  #insulatiom
+         "4":bytearray([0x01,0x03,000,000,000,0x02,0xc4,0x0b]),  #voltmeter
+         "5":bytearray([0x0b,0x03,000,000,000,0x06,0xc5,0x62]),  #VAW
+         "6":bytearray([0x02,0x03,000,000,000,0x02,0xc4,0x38]), #micro
+         "7":bytearray([0x04,0x03,000,000,000,0x02,0xc4,0x5e]), #pF
+         "8":bytearray([0x05,0x03,000,000,000,0x02,0xc5,0x8f]), #20V
+         "9":bytearray([0x08,0x03,000,000,000,0x02,0xc4,0x92]), #30A
+         "10":bytearray([0x06,0x03,000,000,000,0x02,0xc5,0xbc]), #Freq
         }
 
 @app.route('/')
@@ -684,13 +684,14 @@ def get_fac_data():
         tempdict={"save_status":"Failed","transfer_status":"Failed"}
         data =request.form.to_dict()
 
-        ##SERIAL PORT DATA TRANSFER TO METER TAKES PLACE HERE##
-        try:
-            with open('static/data_storage/'+data["calib_number"]+'.json', 'w') as outfile:
-                json.dump(data, outfile)
+        with open('static/data_storage/'+data["calib_number"]+'.json', 'w') as outfile:
+            json.dump(data, outfile)
             tempdict["save_status"]="Success"
-        except:
-            tempdict["save_status"]="Failed"
+        ##SERIAL PORT DATA TRANSFER TO METER TAKES PLACE HERE##
+        # try:
+            
+        # except:
+        #     tempdict["save_status"]="Failed"
 
         return jsonify(tempdict)
 
@@ -701,7 +702,7 @@ def save_curr_config():
         data =request.get_json(force=True)
         
         try:        
-            with open('static/data_storage/'+data["device_id"]+'.json', 'w') as outfile:
+            with open('/static/data_storage/'+data["device_id"]+'.json', 'w') as outfile:
                 json.dump(data, outfile)
             return "Success"
         except:

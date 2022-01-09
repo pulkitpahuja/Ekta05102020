@@ -43,7 +43,8 @@
       <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link btn btn-primary" style="color: #f8fcf7;" href="{{ url_for('load_data') }}">Load Previous Data</a>
+            <a class="nav-link btn btn-primary" style="color: #f8fcf7;" href="{{ url_for('load_data') }}">Load Previous
+              Data</a>
           </li>
           <li class="nav-item">
             <h5 class="m-2 ml-3">Device ID:</h5>
@@ -120,12 +121,14 @@
               aria-describedby="textHelp">
             <input style="border: 0;" disabled type="text" class="form-control mt-2 text-center" id=""
               aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="name_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="name_9" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="name_8" aria-describedby="textHelp">
             <input style="border: 0;" disabled type="text" class="form-control mt-2 text-center" id="name_13"
               aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="name_10" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="name_11" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="name_resistance" aria-describedby="textHelp">
+
             <input type="text" class="form-control mt-1 text-center" id="name_12" aria-describedby="textHelp">
 
           </div>
@@ -138,11 +141,13 @@
             <input type="text" class="form-control mt-1 text-center" id="param_5" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_6" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_7" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="param_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_9" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="param_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_13" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_10" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="param_11" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="param_resistance" aria-describedby="textHelp">
+
             <input type="text" class="form-control mt-1 text-center" id="param_12" aria-describedby="textHelp">
           </div>
           <div class="col-2">
@@ -155,12 +160,14 @@
             <input type="text" class="form-control mt-1 text-center" id="min_5" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_6" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_7" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="min_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_13" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="min_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_10" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_11" aria-describedby="textHelp">
-            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="min_12" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="min_resistance" aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="min_12"
+              aria-describedby="textHelp">
           </div>
           <div class="col-2">
             <h5><u>Max</u></h5>
@@ -172,12 +179,17 @@
             <input type="text" class="form-control mt-1 text-center" id="max_5" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_6" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_7" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="max_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_13" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="max_9" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="max_10" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="max_11" aria-describedby="textHelp">
-            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="max_12" aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="max_10"
+              aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="max_11"
+              aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="max_resistance"
+              aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled class="form-control mt-1 text-center" id="max_12"
+              aria-describedby="textHelp">
           </div>
           <div class="col-2">
             <h5><u>Time</u></h5>
@@ -191,12 +203,15 @@
               aria-describedby="textHelp">
             <input style="border: 0;" type="text" class="form-control mt-1 text-center" id="time_7" disabled
               aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="time_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="time_8" aria-describedby="textHelp">
+
             <input style="border: 0;" type="text" class="form-control mt-1 text-center" id="time_13" disabled
               aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="time_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="time_10" aria-describedby="textHelp">
             <input style="border: 0;" disabled type="text" class="form-control mt-1 text-center" id="time_11"
+              aria-describedby="textHelp">
+            <input style="border: 0;" disabled type="text" class="form-control mt-1 text-center" id="time_resistance"
               aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="time_12" aria-describedby="textHelp">
 
@@ -217,18 +232,22 @@
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1 text-center" id="result_7"
               aria-describedby="textHelp">
+
+            <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_9"
+              aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_8"
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_13"
-              aria-describedby="textHelp">
-            <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_9"
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_10"
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_11"
               aria-describedby="textHelp">
+            <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="resistance"
+              aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_12"
               aria-describedby="textHelp">
+
           </div>
 
         </div>
