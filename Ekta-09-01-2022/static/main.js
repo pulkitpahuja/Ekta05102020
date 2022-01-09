@@ -68,6 +68,7 @@ function reset() {
     document.getElementById("result_" + i).value = "";
   }
   document.getElementById("result_13").value = "";
+  document.getElementById("result_resistance").value = "";
   document.getElementById("strt_butt").innerHTML = "Start";
   document.getElementById("device_id").value = "";
   clearInterval(timer);

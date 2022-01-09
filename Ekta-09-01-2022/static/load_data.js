@@ -21,7 +21,7 @@ const displayContents = contents => {
   document.getElementById('device_id').textContent = contents["device_id"];
   document.getElementById('datetime').textContent = contents["datetime"];
 
-  for (var i = 1; i <= 13; i++) {
+  for (var i = 1; i <= 14; i++) {
 
     document.getElementById('name_' + i).textContent = contents[i.toString()]["name"];
     document.getElementById('result_' + i).textContent = contents[i.toString()]["result"] + "\n" + contents[i.toString()]["param"];
