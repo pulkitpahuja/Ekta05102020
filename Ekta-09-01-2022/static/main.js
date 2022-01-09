@@ -184,9 +184,15 @@ function main_task(device) {
         } else {
           turn_off_device_relay(overall_device);
           if (overall_device != 6) {
-            overall_device++;
+            if (overall_device == 5) {
+              overall_device = 7;
+            } else if (overall_device == 7) {
+              overall_device = 6;
+            } else {
+              overall_device++;
+            }
           } else if (overall_device == 6 && secondMicro == "true") {
-            overall_device++;
+            overall_device = 8;
             secondMicro = "false";
           } else {
             secondMicro = "true";
