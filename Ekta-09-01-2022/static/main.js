@@ -9,21 +9,135 @@ var status;
 var hasReturned = "false";
 var secondMicro = "false";
 
+//<input type="text" class="form-control mt-1 text-center" id="max_2" aria-describedby="textHelp">
+
+//for inputs
+//<input style="border: 0;" type="text" class="form-control mt-1 text-center" id="time_7" disabled
+//aria-describedby="textHelp">
+
+//for result
+//<input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_5"
+//aria-describedby="textHelp">
+const initValues = [
+  { name: "kV", params: [{ name: "kV", min: 0, max: 0 }], time: 0 },
+  { name: "mA", params: [{ name: "mA", min: 0, max: 0 }], time: null },
+  { name: "Insulation", params: [{ name: "MΩ", min: 0, max: 0 }], time: 0 },
+  { name: "Voltmeter", params: [{ name: "V", min: 0, max: 0 }], time: 0 },
+  {
+    name: "VAW",
+    params: [
+      { name: "V", min: 0, max: 0 },
+      { name: "A", min: 0, max: 0 },
+      { name: "W", min: 0, max: 0 },
+    ],
+    time: 0,
+  },
+  {
+    name: "MicroAmpere",
+    params: [
+      { name: "μA-1", min: 0, max: 0 },
+      { name: "μA-2", min: 0, max: 0 },
+    ],
+    time: 0,
+  },
+  { name: "PF", params: [{ name: "", min: 0, max: 0 }], time: 0 },
+  { name: "20V", params: [{ name: "V", min: 0, max: 0 }], time: 0 },
+  { name: "30A", params: [{ name: "A", min: 0, max: 0 }], time: 0 },
+  { name: "Frequency", params: [{ name: "Hz", min: null, max: null }], time: 0 },
+];
+
+const returnDisabledInput = (value, name, id) => {
+  return `<input style="border: 0;" readonly disabled type="text" 
+    class="form-control mt-1 text-center" id="${id}_disabled"
+     aria-describedby="textHelp">`;
+};
+
+const returnInput = (value, id) => {
+  return `<input type="text" class="form-control mt-1
+    text-center" value="${value}" id="${id}"
+     aria-describedby="textHelp">`;
+};
+
+initValues.forEach((val, idx) => {
+  if (val.params.length > 1) {
+    $("#name-container").append(
+      `<input type="text" class="form-control mt-1 text-center" value="${val.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
+    );
+
+    for (var i = 0; i < val.params.length - 1; i++) {
+      $("#name-container")
+        .append(`<input style="border: 0;" readonly disabled type="text" 
+                class="form-control mt-1 text-center" id="name_${val.name}_${idx}_disabled"
+                 aria-describedby="textHelp">`);
+    }
+  } else {
+    $("#name-container").append(
+      `<input type="text" class="form-control mt-1 text-center" value="${val.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
+    );
+  }
+
+  if (val.time !== null) {
+    $("#time-container").append(
+      `<input type="text" class="form-control mt-1 text-center" value="${val.time}" id="time_${val.name}_${idx}" aria-describedby="textHelp">`
+    );
+    if (val.params.length > 1) {
+      for (var i = 0; i < val.params.length - 1; i++) {
+        $("#time-container")
+          .append(`<input style="border: 0;" readonly disabled type="text" 
+                            class="form-control mt-1 text-center" id="time_${val.name}_${idx}_disabled"
+                             aria-describedby="textHelp">`);
+      }
+    }
+  } else {
+    for (var i = 0; i < val.params.length - 1; i++) {}
+    $("#time-container")
+      .append(`<input style="border: 0;" readonly disabled type="text" 
+                          class="form-control mt-1 text-center" id="time_${val.name}_${idx}_disabled"
+                           aria-describedby="textHelp">`);
+  }
+  val.params.forEach((param, idx) => {
+    $("#result-container").append(
+      `<input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_${val.name}_${idx}"
+        aria-describedby="textHelp">`
+    );
+    $("#params-container").append(
+      `<input type="text" class="form-control mt-1 text-center" value="${param.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
+    );
+    if (param.min !== null) {
+      $("#min-container").append(
+        `<input type="text" class="form-control mt-1 text-center" value="${param.min}" id="min_${val.name}_${idx}" aria-describedby="textHelp">`
+      );
+    } else {
+      $("#min-container")
+        .append(`<input style="border: 0;" readonly disabled type="text" 
+                                class="form-control mt-1 text-center" id="min_${val.name}_${idx}_disabled"
+                                 aria-describedby="textHelp">`);
+    }
+    if (param.max !== null) {
+      $("#max-container").append(
+        `<input type="text" class="form-control mt-1 text-center" value="${param.max}" id="max_${val.name}_${idx}" aria-describedby="textHelp">`
+      );
+    } else {
+      $("#max-container")
+        .append(`<input style="border: 0;" readonly disabled type="text" 
+                                class="form-control mt-1 text-center" id="max_${val.name}_${idx}_disabled"
+                                 aria-describedby="textHelp">`);
+    }
+  });
+});
+
 for (var i = 1; i <= 12; i++) {
-    if (i == 1) {
+  if (i == 1) {
+  } else {
+    document.getElementById("max_" + i).value = 0;
+    document.getElementById("min_" + i).value = 0;
+  }
 
-    } else {
-        document.getElementById("max_" + i).value = 0;
-        document.getElementById("min_" + i).value = 0;
-    }
-
-    if (document.getElementById("time_" + i).disabled) {
-        document.getElementById("time_" + i).value = "";
-    } else {
-        document.getElementById("time_" + i).value = 0;
-
-    }
-
+  if (document.getElementById("time_" + i).disabled) {
+    document.getElementById("time_" + i).value = "";
+  } else {
+    document.getElementById("time_" + i).value = 0;
+  }
 }
 
 document.getElementById("max_13").value = 0;
@@ -40,7 +154,6 @@ document.getElementById("name_10").value = "20V";
 document.getElementById("name_11").value = "30A";
 document.getElementById("name_12").value = "Frequency";
 
-
 document.getElementById("param_1").value = "kV";
 document.getElementById("param_2").value = "mA";
 document.getElementById("param_3").value = "MΩ";
@@ -55,577 +168,562 @@ document.getElementById("param_10").value = "V";
 document.getElementById("param_11").value = "A";
 document.getElementById("param_12").value = "Hz";
 
-
-document.getElementById("datetime").innerHTML = Date.today().toString("MMMM d yyyy") + " " + new Date().toString("HH:mm:ss");
-
-
-
+document.getElementById("datetime").innerHTML =
+  Date.today().toString("MMMM d yyyy") + " " + new Date().toString("HH:mm:ss");
 
 function reset() {
-    for (var i = 1; i <= 12; i++) {
-        document.getElementById("result_" + i).value = "";
-    }
-    document.getElementById("result_13").value = "";
-    document.getElementById("strt_butt").innerHTML = "Start";
-    document.getElementById("device_id").value = "";
-    clearInterval(timer);
-    clearInterval(task_interval);
-    overall_device = 1;
-    count = 0;
-    delay_count = 0
-    start_counter = 0;
-    check_ext_trigg();
-
+  for (var i = 1; i <= 12; i++) {
+    document.getElementById("result_" + i).value = "";
+  }
+  document.getElementById("result_13").value = "";
+  document.getElementById("strt_butt").innerHTML = "Start";
+  document.getElementById("device_id").value = "";
+  clearInterval(timer);
+  clearInterval(task_interval);
+  overall_device = 1;
+  count = 0;
+  delay_count = 0;
+  start_counter = 0;
+  check_ext_trigg();
 }
 
 function turn_off_device_relay(device) {
-    //turn off individual device relay
-    $.ajax({
-        type: "POST",
-        url: "/turn_off_relay",
-        data: { "device": device, "com_port": document.getElementById("com_port").value },  // serializes the form's elements.
-        success: function (data) {
-            console.log("Relay Status : " + data);
-        }
-    });
+  //turn off individual device relay
+  $.ajax({
+    type: "POST",
+    url: "/turn_off_relay",
+    data: {
+      device: device,
+      com_port: document.getElementById("com_port").value,
+    }, // serializes the form's elements.
+    success: function (data) {
+      console.log("Relay Status : " + data);
+    },
+  });
 }
 
 function main_task(device) {
-
-    console.log(device);
-    if (device == 1 || device == 2) {
-
-        if (delay_count <= parseInt(document.getElementById("delay").value)) {
-
-            run_task("false", device);
-            if (overall_device == 2) {
-                overall_device = 1;
-            } else if (overall_device == 1) {
-                overall_device = 2;
-            }
-            delay_count++;
-        } else {
-
-            if (count <= parseInt(document.getElementById("time_1").value)) {
-                run_task("true", device);
-                if (overall_device == 2) {
-                    overall_device = 1;
-                } else if (overall_device == 1) {
-                    overall_device = 2;
-                }
-            } else {
-                overall_device = 3;
-                turn_off_device_relay(2);
-
-                delay_count = 0;
-                count = 0;
-
-            }
+  console.log(device);
+  if (device == 1 || device == 2) {
+    if (delay_count <= parseInt(document.getElementById("delay").value)) {
+      run_task("false", device);
+      if (overall_device == 2) {
+        overall_device = 1;
+      } else if (overall_device == 1) {
+        overall_device = 2;
+      }
+      delay_count++;
+    } else {
+      if (count <= parseInt(document.getElementById("time_1").value)) {
+        run_task("true", device);
+        if (overall_device == 2) {
+          overall_device = 1;
+        } else if (overall_device == 1) {
+          overall_device = 2;
         }
-    } else if (device == 8 || device == 9) {
+      } else {
+        overall_device = 3;
+        turn_off_device_relay(2);
 
-        if (delay_count <= parseInt(document.getElementById("delay").value)) {
-            run_task("false", device);
-            if (overall_device == 8) {
-                overall_device = 9;
-            } else if (overall_device == 9) {
-                overall_device = 8;
-            }
-            delay_count++;
-        } else {
-
-            if (count <= parseInt(document.getElementById("time_10").value)) {
-                run_task("true", device);
-                if (overall_device == 8) {
-                    overall_device = 9;
-                } else if (overall_device == 9) {
-                    overall_device = 8;
-                }
-            } else {
-                setTimeout(function () {
-                    turn_off_device_relay(8);
-                    setTimeout(function () {
-                        turn_off_device_relay(9);
-                    }, 500);
-                }, 500);
-
-                overall_device = 10;
-                delay_count = 0;
-                count = 0;
-
-            }
-        }
+        delay_count = 0;
+        count = 0;
+      }
     }
-    else {
-
-        if (delay_count <= parseInt(document.getElementById("delay").value)) {
-            run_task("false", device);
-            delay_count++;
-        } else {
-            var time = device;
-            if (device == 6) {
-                time = 8;
-            } else if (device == 7) {
-                time = 9;
-            } else if (device == 10) {
-                time = 12;
-            }
-            if (count <= parseInt(document.getElementById("time_" + time).value)) {
-                run_task("true", device);
-            } else {
-                if (device == 10) {
-
-                    setTimeout(function () {
-                        turn_off_device_relay(10);
-                    }, 500);
-
-
-                    overall_device = 1;
-                    delay_count = 0;
-                    count = 0;
-                    setTimeout(function () {
-                        stop();
-                        secondMicro = "false";
-                        save_result_data();
-                        start_counter = 0;
-
-                    }, 500);
-
-                } else {
-
-                    turn_off_device_relay(overall_device);
-                    if (overall_device != 6) {
-                        overall_device++;
-                    } else if (overall_device == 6 && secondMicro == "true") {
-                        overall_device++;
-                        secondMicro = "false";
-                    } else {
-                        secondMicro = "true";
-                    }
-                    delay_count = 0;
-                    count = 0;
-                }
-
-            }
-
+  } else if (device == 8 || device == 9) {
+    if (delay_count <= parseInt(document.getElementById("delay").value)) {
+      run_task("false", device);
+      if (overall_device == 8) {
+        overall_device = 9;
+      } else if (overall_device == 9) {
+        overall_device = 8;
+      }
+      delay_count++;
+    } else {
+      if (count <= parseInt(document.getElementById("time_10").value)) {
+        run_task("true", device);
+        if (overall_device == 8) {
+          overall_device = 9;
+        } else if (overall_device == 9) {
+          overall_device = 8;
         }
+      } else {
+        setTimeout(function () {
+          turn_off_device_relay(8);
+          setTimeout(function () {
+            turn_off_device_relay(9);
+          }, 500);
+        }, 500);
+
+        overall_device = 10;
+        delay_count = 0;
+        count = 0;
+      }
     }
+  } else {
+    if (delay_count <= parseInt(document.getElementById("delay").value)) {
+      run_task("false", device);
+      delay_count++;
+    } else {
+      var time = device;
+      if (device == 6) {
+        time = 8;
+      } else if (device == 7) {
+        time = 9;
+      } else if (device == 10) {
+        time = 12;
+      }
+      if (count <= parseInt(document.getElementById("time_" + time).value)) {
+        run_task("true", device);
+      } else {
+        if (device == 10) {
+          setTimeout(function () {
+            turn_off_device_relay(10);
+          }, 500);
 
-
+          overall_device = 1;
+          delay_count = 0;
+          count = 0;
+          setTimeout(function () {
+            stop();
+            secondMicro = "false";
+            save_result_data();
+            start_counter = 0;
+          }, 500);
+        } else {
+          turn_off_device_relay(overall_device);
+          if (overall_device != 6) {
+            overall_device++;
+          } else if (overall_device == 6 && secondMicro == "true") {
+            overall_device++;
+            secondMicro = "false";
+          } else {
+            secondMicro = "true";
+          }
+          delay_count = 0;
+          count = 0;
+        }
+      }
+    }
+  }
 }
 
 function stop() {
-    start_counter = 0;
-    stop_sequence();
-    turn_off_device_relay(overall_device);
-    check_ext_trigg();
+  start_counter = 0;
+  stop_sequence();
+  turn_off_device_relay(overall_device);
+  check_ext_trigg();
 
-    if (overall_device != 1) {
-        document.getElementById("strt_butt").innerHTML = "Resume";
-    }
+  if (overall_device != 1) {
+    document.getElementById("strt_butt").innerHTML = "Resume";
+  }
 
-    clearInterval(timer);
-    clearInterval(task_interval);
-
+  clearInterval(timer);
+  clearInterval(task_interval);
 }
 
 function start() {
-    if (document.getElementById("device_id").value == "") {
-        alert("Enter Device ID");
-        start_counter = 0;
+  if (document.getElementById("device_id").value == "") {
+    alert("Enter Device ID");
+    start_counter = 0;
 
-        check_ext_trigg();
+    check_ext_trigg();
 
-        return;
+    return;
+  }
+  if (document.getElementById("ser_status").innerHTML == "Disconnected") {
+    alert("Serial Connection Not Found");
+    start_counter = 0;
+    if (hasReturned == "true") {
+      hasReturned = "false";
     }
-    if (document.getElementById("ser_status").innerHTML == "Disconnected") {
-        alert("Serial Connection Not Found");
-        start_counter = 0;
-        if (hasReturned == "true") {
-            hasReturned = "false";
-        }
-        load_config();
-        return;
-    }
-    console.log("STarting TASK");
-    //check_stop_trigg();
+    load_config();
+    return;
+  }
+  console.log("STarting TASK");
+  //check_stop_trigg();
+  start_counter = 1;
+  start_sequence();
+  if (document.getElementById("strt_butt").innerHTML == "Resume") {
+    var val = document.getElementById("device_id").value;
+    reset();
     start_counter = 1;
     start_sequence();
-    if (document.getElementById("strt_butt").innerHTML == "Resume") {
-        var val = document.getElementById("device_id").value;
-        reset();
-        start_counter = 1;
-        start_sequence();
-        document.getElementById("device_id").value = val;
-        document.getElementById("strt_butt").innerHTML = "Start";
-    }
-    clearInterval(status);
-    timer = setInterval(function () {
-        count++;
-    }, 1000);
-    task_interval = setInterval(function () {
-        main_task(overall_device);
-    }, 1600);
+    document.getElementById("device_id").value = val;
+    document.getElementById("strt_butt").innerHTML = "Start";
+  }
+  clearInterval(status);
+  timer = setInterval(function () {
+    count++;
+  }, 1000);
+  task_interval = setInterval(function () {
+    main_task(overall_device);
+  }, 1600);
 }
 
 function start_sequence() {
-    //##turning relay on or off
-    $.ajax({
-        type: "POST",
-        url: "/sequence_init",
-        data: { "type": "start", "com_port": document.getElementById("com_port").value },  // serializes the form's elements.
-        success: function (data) {
-            console.log("Result Status : " + data);
-        }
-    });
+  //##turning relay on or off
+  $.ajax({
+    type: "POST",
+    url: "/sequence_init",
+    data: {
+      type: "start",
+      com_port: document.getElementById("com_port").value,
+    }, // serializes the form's elements.
+    success: function (data) {
+      console.log("Result Status : " + data);
+    },
+  });
 }
 
 function stop_sequence() {
-    //##turning relay on or off
+  //##turning relay on or off
 
-    $.ajax({
-        type: "POST",
-        url: "/sequence_init",
-        data: { "type": "stop", "com_port": document.getElementById("com_port").value },  // serializes the form's elements.
-        success: function (data) {
-            console.log("Result Status : " + data);
-        }
-    });
-
+  $.ajax({
+    type: "POST",
+    url: "/sequence_init",
+    data: { type: "stop", com_port: document.getElementById("com_port").value }, // serializes the form's elements.
+    success: function (data) {
+      console.log("Result Status : " + data);
+    },
+  });
 }
 
-
 function check_ext_trigg() {
-    //##checking external trigger
+  //##checking external trigger
 
-    $.ajax({
-        type: "POST",
-        url: "/check_ext_trigg",
-        data: { "com_port": document.getElementById("com_port").value },
-        success: function (data) {
-            hasReturned = "true";
-            if (data == "1") {
-                console.log(data);
-                if (start_counter == 1) {
-
-                } else {
-                    start_counter = 1;
-                    start();
-                }
-            }
-
+  $.ajax({
+    type: "POST",
+    url: "/check_ext_trigg",
+    data: { com_port: document.getElementById("com_port").value },
+    success: function (data) {
+      hasReturned = "true";
+      if (data == "1") {
+        console.log(data);
+        if (start_counter == 1) {
+        } else {
+          start_counter = 1;
+          start();
         }
-    });
-
+      }
+    },
+  });
 }
 
 function check_stop_trigg() {
-    //##checking external trigger
+  //##checking external trigger
 
-    $.ajax({
-        type: "POST",
-        url: "/check_stop_trigg",
-        data: { "com_port": document.getElementById("com_port").value },
-        success: function (data) {
-            hasReturned = "true";
-            if (data == "1") {
-                console.log(data);
-                if (start_counter == 1) {
-
-                } else {
-                    start_counter = 1;
-                    stop();
-                }
-            }
-
+  $.ajax({
+    type: "POST",
+    url: "/check_stop_trigg",
+    data: { com_port: document.getElementById("com_port").value },
+    success: function (data) {
+      hasReturned = "true";
+      if (data == "1") {
+        console.log(data);
+        if (start_counter == 1) {
+        } else {
+          start_counter = 1;
+          stop();
         }
-    });
-
+      }
+    },
+  });
 }
 
-
 function stop_task() {
-    clearInterval(task_interval);
+  clearInterval(task_interval);
 }
 
 function save_result_data() {
-    var curr_config = {};
-    curr_config["device_id"] = document.getElementById("device_id").value;
-    for (var i = 1; i <= 13; i++) {
-        var temp_config = {};
-        if (i > 5 && i < 8) {
-            temp_config["name"] = document.getElementById("name_5").value;
+  var curr_config = {};
+  curr_config["device_id"] = document.getElementById("device_id").value;
+  for (var i = 1; i <= 13; i++) {
+    var temp_config = {};
+    if (i > 5 && i < 8) {
+      temp_config["name"] = document.getElementById("name_5").value;
 
-            temp_config["param"] = document.getElementById("param_" + i).value;
-            temp_config["result"] = document.getElementById("result_" + i).value;
-            if (document.getElementById("result_" + i).style.color == "red") {
-                temp_config["status"] = "Failed";
-            } else {
-                temp_config["status"] = "Passed";
-            }
-            curr_config[i.toString()] = temp_config;
-        } else if (i == 13) {
-            temp_config["name"] = document.getElementById("name_8").value;
-            if (document.getElementById("result_" + i).style.color == "red") {
-                temp_config["status"] = "Failed";
-            } else {
-                temp_config["status"] = "Passed";
-            }
-            temp_config["param"] = document.getElementById("param_" + i).value;
-            temp_config["result"] = document.getElementById("result_" + i).value;
-            curr_config[i.toString()] = temp_config;
-        } else {
-            temp_config["name"] = document.getElementById("name_8").value;
-            temp_config["name"] = document.getElementById("name_" + i).value;
-            if (document.getElementById("result_" + i).style.color == "red") {
-                temp_config["status"] = "Failed";
-            } else {
-                temp_config["status"] = "Passed";
-            }
-            temp_config["param"] = document.getElementById("param_" + i).value;
-            temp_config["result"] = document.getElementById("result_" + i).value;
-            curr_config[i.toString()] = temp_config;
-        }
-
+      temp_config["param"] = document.getElementById("param_" + i).value;
+      temp_config["result"] = document.getElementById("result_" + i).value;
+      if (document.getElementById("result_" + i).style.color == "red") {
+        temp_config["status"] = "Failed";
+      } else {
+        temp_config["status"] = "Passed";
+      }
+      curr_config[i.toString()] = temp_config;
+    } else if (i == 13) {
+      temp_config["name"] = document.getElementById("name_8").value;
+      if (document.getElementById("result_" + i).style.color == "red") {
+        temp_config["status"] = "Failed";
+      } else {
+        temp_config["status"] = "Passed";
+      }
+      temp_config["param"] = document.getElementById("param_" + i).value;
+      temp_config["result"] = document.getElementById("result_" + i).value;
+      curr_config[i.toString()] = temp_config;
+    } else {
+      temp_config["name"] = document.getElementById("name_8").value;
+      temp_config["name"] = document.getElementById("name_" + i).value;
+      if (document.getElementById("result_" + i).style.color == "red") {
+        temp_config["status"] = "Failed";
+      } else {
+        temp_config["status"] = "Passed";
+      }
+      temp_config["param"] = document.getElementById("param_" + i).value;
+      temp_config["result"] = document.getElementById("result_" + i).value;
+      curr_config[i.toString()] = temp_config;
     }
+  }
 
-    curr_config["datetime"] = Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH-mm-ss");
+  curr_config["datetime"] =
+    Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH-mm-ss");
 
-    $.ajax({
-        type: "POST",
-        url: "/save_result",
-        data: JSON.stringify(curr_config),  // serializes the form's elements.
-        success: function (data) {
-            alert("Result Status : " + data);
-        }
-    });
+  $.ajax({
+    type: "POST",
+    url: "/save_result",
+    data: JSON.stringify(curr_config), // serializes the form's elements.
+    success: function (data) {
+      alert("Result Status : " + data);
+    },
+  });
 
-    $.ajax({
-        type: "POST",
-        url: "/download_csv",
-        data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }),  // serializes the form's elements.
-        success: data => {
-            alert(data);
-        }
-    });
+  $.ajax({
+    type: "POST",
+    url: "/download_csv",
+    data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }), // serializes the form's elements.
+    success: (data) => {
+      alert(data);
+    },
+  });
 }
 
-
 function save_curr_config() {
-    var curr_config = {};
-    $(document).ready(function () {
-        curr_config["device_id"] = document.getElementById("config_id").value;
-        curr_config["delay"] = document.getElementById("delay").value;
-        curr_config["com_port"] = document.getElementById("com_port").value;
-        for (var i = 1; i <= 13; i++) {
-            var temp_config = {};
-            if (i > 5 && i < 8) {
-                temp_config["name"] = document.getElementById("name_5").value;
-                temp_config["max"] = document.getElementById("max_" + i).value;
-                temp_config["min"] = document.getElementById("min_" + i).value;
-                temp_config["param"] = document.getElementById("param_" + i).value;
-                curr_config[i.toString()] = temp_config;
-            } else if (i == 13) {
-                temp_config["name"] = document.getElementById("name_8").value;
-                temp_config["time"] = document.getElementById("time_8").value;
-                temp_config["max"] = document.getElementById("max_13").value;
-                temp_config["min"] = document.getElementById("min_13").value;
-                temp_config["param"] = document.getElementById("param_13").value;
-                curr_config[i.toString()] = temp_config;
-            } else {
-                temp_config["name"] = document.getElementById("name_" + i).value;
-                temp_config["time"] = document.getElementById("time_" + i).value;
-                temp_config["max"] = document.getElementById("max_" + i).value;
-                temp_config["min"] = document.getElementById("min_" + i).value;
-                temp_config["param"] = document.getElementById("param_" + i).value;
-                curr_config[i.toString()] = temp_config;
-            }
-        }
+  var curr_config = {};
+  $(document).ready(function () {
+    curr_config["device_id"] = document.getElementById("config_id").value;
+    curr_config["delay"] = document.getElementById("delay").value;
+    curr_config["com_port"] = document.getElementById("com_port").value;
+    for (var i = 1; i <= 13; i++) {
+      var temp_config = {};
+      if (i > 5 && i < 8) {
+        temp_config["name"] = document.getElementById("name_5").value;
+        temp_config["max"] = document.getElementById("max_" + i).value;
+        temp_config["min"] = document.getElementById("min_" + i).value;
+        temp_config["param"] = document.getElementById("param_" + i).value;
+        curr_config[i.toString()] = temp_config;
+      } else if (i == 13) {
+        temp_config["name"] = document.getElementById("name_8").value;
+        temp_config["time"] = document.getElementById("time_8").value;
+        temp_config["max"] = document.getElementById("max_13").value;
+        temp_config["min"] = document.getElementById("min_13").value;
+        temp_config["param"] = document.getElementById("param_13").value;
+        curr_config[i.toString()] = temp_config;
+      } else {
+        temp_config["name"] = document.getElementById("name_" + i).value;
+        temp_config["time"] = document.getElementById("time_" + i).value;
+        temp_config["max"] = document.getElementById("max_" + i).value;
+        temp_config["min"] = document.getElementById("min_" + i).value;
+        temp_config["param"] = document.getElementById("param_" + i).value;
+        curr_config[i.toString()] = temp_config;
+      }
+    }
 
-        $.ajax({
-            type: "POST",
-            url: "/save_curr_config",
-            data: JSON.stringify(curr_config),  // serializes the form's elements.
-            success: function (data) {
-                alert("Save Status : " + data);
-            }
-        });
-
+    $.ajax({
+      type: "POST",
+      url: "/save_curr_config",
+      data: JSON.stringify(curr_config), // serializes the form's elements.
+      success: function (data) {
+        alert("Save Status : " + data);
+      },
     });
+  });
 }
 
 function run_task(truth, device) {
+  if (device == 5) {
+    var to_send = {
+      secondMicro: "false",
+      truth: truth,
+      com: document.getElementById("com_port").value,
+      device: device,
+      maximum: [
+        document.getElementById("max_5").value,
+        document.getElementById("max_6").value,
+        document.getElementById("max_7").value,
+      ].toString(),
+      minimum: [
+        document.getElementById("min_5").value,
+        document.getElementById("min_6").value,
+        document.getElementById("min_7").value,
+      ].toString(),
+    };
+  } else if (device == 6 && secondMicro == "true") {
+    var to_send = {
+      secondMicro: secondMicro,
+      truth: truth,
+      com: document.getElementById("com_port").value,
+      device: device,
+      maximum: document.getElementById("max_13").value,
+      minimum: document.getElementById("min_13").value,
+    };
+  } else {
+    var val = device;
+    if (device > 5) {
+      val = device + 2;
+    }
+    var to_send = {
+      secondMicro: "false",
+      truth: truth,
+      com: document.getElementById("com_port").value,
+      device: device,
+      maximum: document.getElementById("max_" + val).value,
+      minimum: document.getElementById("min_" + val).value,
+    };
+  }
 
-    if (device == 5) {
-        var to_send = {
-            "secondMicro": "false", "truth": truth, "com": document.getElementById("com_port").value, "device": device, "maximum": [document.getElementById("max_5").value, document.getElementById("max_6").value, document.getElementById("max_7").value].toString(),
-            "minimum": [document.getElementById("min_5").value, document.getElementById("min_6").value, document.getElementById("min_7").value].toString()
-        };
-    } else if (device == 6 && secondMicro == "true") {
-        var to_send = {
-            "secondMicro": secondMicro, "truth": truth, "com": document.getElementById("com_port").value, "device": device, "maximum": document.getElementById("max_13").value,
-            "minimum": document.getElementById("min_13").value
-        };
-    } else {
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    data: to_send, // serializes the form's elements.
+
+    success: function (response) {
+      if (device == 5) {
+        list = Object.values(JSON.parse(response))[0];
+        for (var i = 0; i < list.length; i++) {
+          var val = device + i;
+          var max = document.getElementById("max_" + val).value;
+          var min = document.getElementById("min_" + val).value;
+          document.getElementById("result_" + val).value = list[i];
+          if (list[i] <= parseFloat(max) && list[i] >= parseFloat(min)) {
+            $("#result_" + val).css({ color: "green" });
+          } else {
+            $("#result_" + val).css({ color: "red" });
+            //stop();
+          }
+        }
+      } else if (device == 1) {
+        list = Object.values(JSON.parse(response))[0];
+        document.getElementById("result_1").value =
+          list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
+        if (list[1] == 2) {
+          stop();
+          $("#result_1").css({ color: "red" });
+        } else {
+          $("#result_1").css({ color: "green" });
+        }
+      } else if (device == 6 && secondMicro == "true") {
+        document.getElementById("result_13").value = response;
+        if (
+          parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+          parseFloat(response) >= parseFloat(to_send["minimum"])
+        ) {
+          $("#result_13").css({ color: "green" });
+        } else {
+          $("#result_13").css({ color: "red" });
+        }
+      } else {
         var val = device;
         if (device > 5) {
-            val = device + 2;
+          val = device + 2;
         }
-        var to_send = {
-            "secondMicro": "false", "truth": truth, "com": document.getElementById("com_port").value, "device": device, "maximum": document.getElementById("max_" + val).value,
-            "minimum": document.getElementById("min_" + val).value
-        };
-    }
-
-
-    $.ajax({
-        type: "POST",
-        url: "/run_task",
-        cache: false,
-        data: to_send,  // serializes the form's elements.
-
-        success: function (response) {
-            if (device == 5) {
-                list = Object.values(JSON.parse(response))[0];
-                for (var i = 0; i < list.length; i++) {
-                    var val = device + i;
-                    var max = document.getElementById("max_" + val).value;
-                    var min = document.getElementById("min_" + val).value;
-                    document.getElementById("result_" + val).value = list[i];
-                    if (list[i] <= parseFloat(max) && list[i] >= parseFloat(min)) {
-
-                        $("#result_" + val).css({ "color": "green" });
-                    } else {
-                        $("#result_" + val).css({ "color": "red" });
-                        //stop();
-                    }
-                }
-            } else if (device == 1) {
-                list = Object.values(JSON.parse(response))[0];
-                document.getElementById("result_1").value = list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
-                if (list[1] == 2) {
-                    stop();
-                    $("#result_1").css({ "color": "red" });
-                } else {
-                    $("#result_1").css({ "color": "green" });
-                }
-            } else if (device == 6 && secondMicro == "true") {
-                document.getElementById("result_13").value = response;
-                if (parseFloat(response) <= parseFloat(to_send["maximum"]) && parseFloat(response) >= parseFloat(to_send["minimum"])) {
-                    $("#result_13").css({ "color": "green" });
-                } else {
-                    $("#result_13").css({ "color": "red" });
-                }
+        if (val === 9) {
+          document.getElementById("result_" + val).value = Math.abs(response);
+        } else {
+          document.getElementById("result_" + val).value = response;
+        }
+        if (
+          parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+          parseFloat(response) >= parseFloat(to_send["minimum"])
+        ) {
+          $("#result_" + val).css({ color: "green" });
+        } else {
+          if (device == 3) {
+            var temp = parseInt(document.getElementById("delay").value);
+            if (delay_count <= temp) {
             } else {
-                var val = device;
-                if (device > 5) {
-                    val = device + 2;
-                }
-                if(val===9){
-                    document.getElementById("result_" + val).value = Math.abs(response);
-                }else{
-                    document.getElementById("result_" + val).value = response;
-                }
-                if (parseFloat(response) <= parseFloat(to_send["maximum"]) && parseFloat(response) >= parseFloat(to_send["minimum"])) {
-                    $("#result_" + val).css({ "color": "green" });
-                } else {
-                    if (device == 3) {
-
-                        var temp = parseInt(document.getElementById("delay").value);
-                        if (delay_count <= temp) {
-
-                        } else {
-                            setTimeout(function () {
-                                stop();
-                            }, 2500);
-                        }
-
-
-                    }
-                    $("#result_" + val).css({ "color": "red" });
-                }
+              setTimeout(function () {
+                stop();
+              }, 2500);
             }
-
+          }
+          $("#result_" + val).css({ color: "red" });
         }
-    });
+      }
+    },
+  });
 }
 
 function get_connect_status() {
-    $.ajax({
-        type: "POST",
-        url: "/connected",
-        data: { "com_port": document.getElementById("com_port").value },  // serializes the form's elements.
-        success: function (data) {
-            if (data == "true") {
-                document.getElementById("ser_status").innerHTML = "Connected";
-                $("#ser_status").css({ "color": "green" });
-                check_ext_trigg();
-            } else {
-                document.getElementById("ser_status").innerHTML = "Disconnected";
-                $("#ser_status").css({ "color": "red" });
-
-            }
-        }
-    });
+  $.ajax({
+    type: "POST",
+    url: "/connected",
+    data: { com_port: document.getElementById("com_port").value }, // serializes the form's elements.
+    success: function (data) {
+      if (data == "true") {
+        document.getElementById("ser_status").innerHTML = "Connected";
+        $("#ser_status").css({ color: "green" });
+        check_ext_trigg();
+      } else {
+        document.getElementById("ser_status").innerHTML = "Disconnected";
+        $("#ser_status").css({ color: "red" });
+      }
+    },
+  });
 }
 
-
-
 function load_config() {
-
-    $.ajax({
-        type: "POST",
-        url: "/load_config",
-        data: { "device_id": document.getElementById("config_id").value },  // serializes the form's elements.
-        success: function (data) {
-            if (typeof data == "string") {
-                alert("Load Status: " + data);
+  $.ajax({
+    type: "POST",
+    url: "/load_config",
+    data: { device_id: document.getElementById("config_id").value }, // serializes the form's elements.
+    success: function (data) {
+      if (typeof data == "string") {
+        alert("Load Status: " + data);
+      } else {
+        for (var i = 1; i <= 13; i++) {
+          if (i > 5 && i < 8) {
+            document.getElementById("max_" + i).value = data[i]["max"];
+            document.getElementById("min_" + i).value = data[i]["min"];
+            document.getElementById("param_" + i).value = data[i]["param"];
+          } else if (i == 13) {
+            document.getElementById("time_8").value = data[i]["time"];
+            document.getElementById("max_13").value = data[i]["max"];
+            document.getElementById("min_13").value = data[i]["min"];
+            document.getElementById("param_13").value = data[i]["param"];
+            document.getElementById("name_8").value = data[i]["name"];
+          } else {
+            if (i != 1) {
+              document.getElementById("time_" + i).value = data[i]["time"];
+              document.getElementById("max_" + i).value = data[i]["max"];
+              document.getElementById("min_" + i).value = data[i]["min"];
+              document.getElementById("param_" + i).value = data[i]["param"];
+              document.getElementById("name_" + i).value = data[i]["name"];
             } else {
-                for (var i = 1; i <= 13; i++) {
-                    if (i > 5 && i < 8) {
-                        document.getElementById("max_" + i).value = data[i]["max"];
-                        document.getElementById("min_" + i).value = data[i]["min"];
-                        document.getElementById("param_" + i).value = data[i]["param"];
-                    } else if (i == 13) {
-                        document.getElementById("time_8").value = data[i]["time"];
-                        document.getElementById("max_13").value = data[i]["max"];
-                        document.getElementById("min_13").value = data[i]["min"];
-                        document.getElementById("param_13").value = data[i]["param"];
-                        document.getElementById("name_8").value = data[i]["name"];
-                    } else {
-                        if (i != 1) {
-                            document.getElementById("time_" + i).value = data[i]["time"];
-                            document.getElementById("max_" + i).value = data[i]["max"];
-                            document.getElementById("min_" + i).value = data[i]["min"];
-                            document.getElementById("param_" + i).value = data[i]["param"];
-                            document.getElementById("name_" + i).value = data[i]["name"];
-                        } else {
-                            document.getElementById("time_" + i).value = data[i]["time"];
-                            document.getElementById("param_" + i).value = data[i]["param"];
-                            document.getElementById("name_" + i).value = data[i]["name"];
-                        }
-                    }
-
-                }
-                document.getElementById("delay").value = data["delay"];
-                document.getElementById("com_port").value = data["com_port"];
-                alert("Load Successful");
-                get_connect_status();
-                var i = 60;
-                var thisinter = setInterval(() => {
-                    if (i <= 0) {
-                        clearInterval(thisinter);
-                        reset();
-                        i = 60;
-                    }
-                    if (start_counter == 0) {
-                        i--;
-                    } else {
-                        clearInterval(thisinter);
-                        i = 60;
-                    }
-                }, 1000);
+              document.getElementById("time_" + i).value = data[i]["time"];
+              document.getElementById("param_" + i).value = data[i]["param"];
+              document.getElementById("name_" + i).value = data[i]["name"];
             }
+          }
         }
-    });
+        document.getElementById("delay").value = data["delay"];
+        document.getElementById("com_port").value = data["com_port"];
+        alert("Load Successful");
+        get_connect_status();
+        var i = 60;
+        var thisinter = setInterval(() => {
+          if (i <= 0) {
+            clearInterval(thisinter);
+            reset();
+            i = 60;
+          }
+          if (start_counter == 0) {
+            i--;
+          } else {
+            clearInterval(thisinter);
+            i = 60;
+          }
+        }, 1000);
+      }
+    },
+  });
 }
