@@ -61,7 +61,423 @@ document.getElementById("param_resistance").value = "Ω";
 document.getElementById("datetime").innerHTML =
   Date.today().toString("MMMM d yyyy") + " " + new Date().toString("HH:mm:ss");
 
-const processKVandmA = () => {};
+const processKV = (truth) => {
+  console.log("processKV");
+  const to_send = {
+    secondMicro: false,
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 1,
+    maximum: -10000,
+    minimum: 10000,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      list = Object.values(JSON.parse(response))[0];
+      document.getElementById("result_1").value =
+        list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
+      if (list[1] == 2) {
+        stop();
+        $("#result_1").css({ color: "red" });
+      } else {
+        $("#result_1").css({ color: "green" });
+      }
+    },
+  });
+};
+
+const processmA = (truth) => {
+  console.log("processmA");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 2,
+    maximum: document.getElementById("max_2").value,
+    minimum: document.getElementById("min_2").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    async: false,
+    url: "/run_task",
+    cache: false,
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById("result_2").value = response;
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $("#result_2").css({ color: "green" });
+      } else {
+        $("#result_2").css({ color: "red" });
+        turn_off_device_relay(2);
+      }
+    },
+  });
+};
+
+const processInsulation = (truth) => {
+  console.log("processInsulation");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 3,
+    maximum: document.getElementById("max_3").value,
+    minimum: document.getElementById("min_3").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    async: false,
+
+    url: "/run_task",
+    cache: false,
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById("result_3").value = response;
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $("#result_3").css({ color: "green" });
+      } else {
+        turn_off_device_relay(3);
+        setTimeout(function () {
+          stop();
+        }, 2500);
+        $("#result_3").css({ color: "red" });
+      }
+    },
+  });
+};
+
+const processVoltmeter = (truth) => {
+  console.log("processVoltmeter");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 4,
+    maximum: document.getElementById("max_4").value,
+    minimum: document.getElementById("min_4").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    async: false,
+
+    url: "/run_task",
+    cache: false,
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById("result_4").value = response;
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $("#result_4").css({ color: "green" });
+      } else {
+        turn_off_device_relay(4);
+        $("#result_4").css({ color: "red" });
+      }
+    },
+  });
+};
+
+const processVAW = (truth) => {
+  console.log("processVAW");
+  var to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 5,
+    maximum: [
+      document.getElementById("max_5").value,
+      document.getElementById("max_6").value,
+      document.getElementById("max_7").value,
+    ].toString(),
+    minimum: [
+      document.getElementById("min_5").value,
+      document.getElementById("min_6").value,
+      document.getElementById("min_7").value,
+    ].toString(),
+  };
+
+  $.ajax({
+    type: "POST",
+    async: false,
+    url: "/run_task",
+    cache: false,
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      list = Object.values(JSON.parse(response))[0];
+      for (var i = 0; i < list.length; i++) {
+        var val = 5 + i;
+        var max = document.getElementById("max_" + val).value;
+        var min = document.getElementById("min_" + val).value;
+        document.getElementById("result_" + val).value = list[i];
+        if (list[i] <= parseFloat(max) && list[i] >= parseFloat(min)) {
+          $("#result_" + val).css({ color: "green" });
+        } else {
+          $("#result_" + val).css({ color: "red" });
+          turn_off_device_relay(5);
+        }
+      }
+    },
+  });
+};
+
+const processPF = (truth) => {
+  console.log("processPF");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 7,
+    maximum: document.getElementById("max_9").value,
+    minimum: document.getElementById("min_9").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById("result_9").value = Math.abs(response);
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $("#result_9").css({ color: "green" });
+      } else {
+        $("#result_9").css({ color: "red" });
+        turn_off_device_relay(7);
+      }
+    },
+  });
+};
+
+const processMicroAmp = (secondMicro, truth) => {
+  console.log("processMicroAmp");
+  let identifier = 9;
+  if (secondMicro) {
+    identifier = 13;
+  }
+  const to_send = {
+    secondMicro: secondMicro,
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 6,
+    maximum: document.getElementById(`max_${identifier}`).value,
+    minimum: document.getElementById(`min_${identifier}`).value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_${identifier}`).value = response;
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $(`#result_${identifier}`).css({ color: "green" });
+      } else {
+        $(`#result_${identifier}`).css({ color: "red" });
+        turn_off_device_relay(6);
+      }
+    },
+  });
+};
+
+const process20V = (truth) => {
+  console.log("process20V");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 8,
+    maximum: 100000,
+    minimum: document.getElementById("min_10").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_10`).value = response;
+
+      if (parseFloat(response) >= parseFloat(to_send["minimum"])) {
+        $("#result_10").css({ color: "green" });
+      } else {
+        $("#result_10").css({ color: "red" });
+        turn_off_device_relay(8);
+      }
+    },
+  });
+};
+
+const process30A = (truth) => {
+  console.log("process30A");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 9,
+    maximum: 100000,
+    minimum: document.getElementById("min_11").value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_11`).value = response;
+
+      if (parseFloat(response) >= parseFloat(to_send["minimum"])) {
+        $("#result_11").css({ color: "green" });
+      } else {
+        $("#result_11").css({ color: "red" });
+        turn_off_device_relay(9);
+      }
+    },
+  });
+};
+
+const processResistance = () => {
+  console.log("processResistance");
+  const twentyvolt = document.getElementById("result_10").value;
+  const twentyvoltmin = document.getElementById("min_10").value;
+  const thirtyamp = document.getElementById("result_11").value;
+  const resis = (twentyvolt - twentyvoltmin) / thirtyamp;
+  document.getElementById("result_resistance").value = resis;
+  if (resis > document.getElementById("min_resistance").value) {
+    $("#result_resistance").css({ color: "green" });
+  } else {
+    $("#result_resistance").css({ color: "red" });
+  }
+};
+
+const processFrequency = (truth) => {
+  console.log("processFrequency");
+  const to_send = {
+    secondMicro: "false",
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 10,
+    maximum: 100000,
+    minimum: -1000000,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_12`).value = response;
+    },
+  });
+};
+
+const delayedFunction = (wrapper) => {
+  const delayVal = parseInt(document.getElementById("delay").value);
+  for (let i = 0; i < delayVal; i++) {
+    wrapper(false);
+  }
+};
+
+const timedFnction = (wrapper, time) => {
+  let timed = 0;
+  const delayedInterval = setInterval(() => {
+    if (timed < time) {
+      wrapper(true);
+    } else {
+      clearInterval(delayedInterval);
+    }
+    timed++;
+  }, 1700);
+};
+
+const majorStart = () => {
+  delayedFunction(processKV);
+  for (let i = 0; i < parseInt(document.getElementById("time_1").value); i++) {
+    processKV(true);
+    processmA(true);
+  }
+
+  delayedFunction(processInsulation);
+  for (let i = 0; i < parseInt(document.getElementById("time_3").value); i++) {
+    processInsulation(true);
+  }
+  delayedFunction(processVoltmeter);
+  for (let i = 0; i < parseInt(document.getElementById("time_4").value); i++) {
+    processInsulation(true);
+  }
+  delayedFunction(processVAW);
+  for (let i = 0; i < parseInt(document.getElementById("time_5").value); i++) {
+    processVAW(true);
+  }
+
+  delayedFunction(processPF);
+  for (let i = 0; i < parseInt(document.getElementById("time_9").value); i++) {
+    processPF(true);
+  }
+
+  delayedFunction(processMicroAmp);
+  for (let i = 0; i < parseInt(document.getElementById("time_8").value); i++) {
+    processMicroAmp(true);
+  }
+
+  delayedFunction(process20V);
+  for (let i = 0; i < parseInt(document.getElementById("time_10").value); i++) {
+    process20V(true);
+    process30A(true);
+    processResistance();
+  }
+
+  delayedFunction(processFrequency);
+  for (let i = 0; i < parseInt(document.getElementById("time_12").value); i++) {
+    processFrequency(true);
+  }
+
+  clearInterval(timer);
+  setTimeout(function () {
+    stop();
+    save_result_data();
+    start_counter = 0;
+  }, 2000);
+};
 
 function reset() {
   for (var i = 1; i <= 12; i++) {
@@ -221,6 +637,9 @@ function stop() {
 }
 
 function start() {
+  // timer = setInterval(() => {
+  //   majorStart();
+  // }, 1000);
   if (document.getElementById("device_id").value == "") {
     alert("Enter Device ID");
     start_counter = 0;
