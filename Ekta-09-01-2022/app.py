@@ -702,7 +702,7 @@ def save_curr_config():
         data =request.get_json(force=True)
         
         try:        
-            with open('/static/data_storage/'+data["device_id"]+'.json', 'w') as outfile:
+            with open('static/data_storage/'+data["device_id"]+'.json', 'w') as outfile:
                 json.dump(data, outfile)
             return "Success"
         except:

@@ -61,6 +61,8 @@ document.getElementById("param_resistance").value = "Ω";
 document.getElementById("datetime").innerHTML =
   Date.today().toString("MMMM d yyyy") + " " + new Date().toString("HH:mm:ss");
 
+const processKVandmA = () => {};
+
 function reset() {
   for (var i = 1; i <= 12; i++) {
     document.getElementById("result_" + i).value = "";
@@ -541,6 +543,20 @@ function run_task(truth, device) {
         } else {
           document.getElementById("result_" + val).value = response;
         }
+
+        if (val === 11) {
+          const twentyvolt = document.getElementById("result_10").value;
+          const twentyvoltmin = document.getElementById("min_10").value;
+          const thirtyamp = document.getElementById("result_11").value;
+          const resis = (twentyvolt - twentyvoltmin) / thirtyamp;
+          document.getElementById("result_resistance").value = resis;
+          if (resis > document.getElementById("min_resistance").value) {
+            $("#result_resistance").css({ color: "green" });
+          } else {
+            $("#result_resistance").css({ color: "red" });
+          }
+        }
+
         if (
           parseFloat(response) <= parseFloat(to_send["maximum"]) &&
           parseFloat(response) >= parseFloat(to_send["minimum"])
@@ -606,7 +622,8 @@ function load_config() {
           } else if (i == 14) {
             // document.getElementById("max_resistance").value = data[i]["max"];
             document.getElementById("min_resistance").value = data[i]["min"];
-            document.getElementById("param_resistance").value = data[i]["param"];
+            document.getElementById("param_resistance").value =
+              data[i]["param"];
             document.getElementById("name_resistance").value = data[i]["name"];
           } else {
             if (i != 1) {
