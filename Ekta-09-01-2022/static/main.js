@@ -1,4 +1,4 @@
-alert("Before Starting Please ensure Serial device is connected");
+// alert("Before Starting Please ensure Serial device is connected");
 var overall_device = 1;
 var count = 0;
 var delay_count = 0;
@@ -9,125 +9,8 @@ var status;
 var hasReturned = "false";
 var secondMicro = "false";
 
-//<input type="text" class="form-control mt-1 text-center" id="max_2" aria-describedby="textHelp">
-
-//for inputs
-//<input style="border: 0;" type="text" class="form-control mt-1 text-center" id="time_7" disabled
-//aria-describedby="textHelp">
-
-//for result
-//<input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_5"
-//aria-describedby="textHelp">
-const initValues = [
-  { name: "kV", params: [{ name: "kV", min: 0, max: 0 }], time: 0 },
-  { name: "mA", params: [{ name: "mA", min: 0, max: 0 }], time: null },
-  { name: "Insulation", params: [{ name: "MΩ", min: 0, max: 0 }], time: 0 },
-  { name: "Voltmeter", params: [{ name: "V", min: 0, max: 0 }], time: 0 },
-  {
-    name: "VAW",
-    params: [
-      { name: "V", min: 0, max: 0 },
-      { name: "A", min: 0, max: 0 },
-      { name: "W", min: 0, max: 0 },
-    ],
-    time: 0,
-  },
-  {
-    name: "MicroAmpere",
-    params: [
-      { name: "μA-1", min: 0, max: 0 },
-      { name: "μA-2", min: 0, max: 0 },
-    ],
-    time: 0,
-  },
-  { name: "PF", params: [{ name: "", min: 0, max: 0 }], time: 0 },
-  { name: "20V", params: [{ name: "V", min: 0, max: 0 }], time: 0 },
-  { name: "30A", params: [{ name: "A", min: 0, max: 0 }], time: 0 },
-  { name: "Frequency", params: [{ name: "Hz", min: null, max: null }], time: 0 },
-];
-
-const returnDisabledInput = (value, name, id) => {
-  return `<input style="border: 0;" readonly disabled type="text" 
-    class="form-control mt-1 text-center" id="${id}_disabled"
-     aria-describedby="textHelp">`;
-};
-
-const returnInput = (value, id) => {
-  return `<input type="text" class="form-control mt-1
-    text-center" value="${value}" id="${id}"
-     aria-describedby="textHelp">`;
-};
-
-initValues.forEach((val, idx) => {
-  if (val.params.length > 1) {
-    $("#name-container").append(
-      `<input type="text" class="form-control mt-1 text-center" value="${val.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
-    );
-
-    for (var i = 0; i < val.params.length - 1; i++) {
-      $("#name-container")
-        .append(`<input style="border: 0;" readonly disabled type="text" 
-                class="form-control mt-1 text-center" id="name_${val.name}_${idx}_disabled"
-                 aria-describedby="textHelp">`);
-    }
-  } else {
-    $("#name-container").append(
-      `<input type="text" class="form-control mt-1 text-center" value="${val.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
-    );
-  }
-
-  if (val.time !== null) {
-    $("#time-container").append(
-      `<input type="text" class="form-control mt-1 text-center" value="${val.time}" id="time_${val.name}_${idx}" aria-describedby="textHelp">`
-    );
-    if (val.params.length > 1) {
-      for (var i = 0; i < val.params.length - 1; i++) {
-        $("#time-container")
-          .append(`<input style="border: 0;" readonly disabled type="text" 
-                            class="form-control mt-1 text-center" id="time_${val.name}_${idx}_disabled"
-                             aria-describedby="textHelp">`);
-      }
-    }
-  } else {
-    for (var i = 0; i < val.params.length - 1; i++) {}
-    $("#time-container")
-      .append(`<input style="border: 0;" readonly disabled type="text" 
-                          class="form-control mt-1 text-center" id="time_${val.name}_${idx}_disabled"
-                           aria-describedby="textHelp">`);
-  }
-  val.params.forEach((param, idx) => {
-    $("#result-container").append(
-      `<input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_${val.name}_${idx}"
-        aria-describedby="textHelp">`
-    );
-    $("#params-container").append(
-      `<input type="text" class="form-control mt-1 text-center" value="${param.name}" id="name_${val.name}_${idx}" aria-describedby="textHelp">`
-    );
-    if (param.min !== null) {
-      $("#min-container").append(
-        `<input type="text" class="form-control mt-1 text-center" value="${param.min}" id="min_${val.name}_${idx}" aria-describedby="textHelp">`
-      );
-    } else {
-      $("#min-container")
-        .append(`<input style="border: 0;" readonly disabled type="text" 
-                                class="form-control mt-1 text-center" id="min_${val.name}_${idx}_disabled"
-                                 aria-describedby="textHelp">`);
-    }
-    if (param.max !== null) {
-      $("#max-container").append(
-        `<input type="text" class="form-control mt-1 text-center" value="${param.max}" id="max_${val.name}_${idx}" aria-describedby="textHelp">`
-      );
-    } else {
-      $("#max-container")
-        .append(`<input style="border: 0;" readonly disabled type="text" 
-                                class="form-control mt-1 text-center" id="max_${val.name}_${idx}_disabled"
-                                 aria-describedby="textHelp">`);
-    }
-  });
-});
-
 for (var i = 1; i <= 12; i++) {
-  if (i == 1) {
+  if (i == 1 || i == 12) {
   } else {
     document.getElementById("max_" + i).value = 0;
     document.getElementById("min_" + i).value = 0;
@@ -148,8 +31,8 @@ document.getElementById("name_2").value = "mA";
 document.getElementById("name_3").value = "Insulation";
 document.getElementById("name_4").value = "Voltmeter";
 document.getElementById("name_5").value = "VAW";
-document.getElementById("name_8").value = "MicroAmpere";
-document.getElementById("name_9").value = "PF";
+document.getElementById("name_8").value = "PF";
+document.getElementById("name_9").value = "MicroAmpere";
 document.getElementById("name_10").value = "20V";
 document.getElementById("name_11").value = "30A";
 document.getElementById("name_12").value = "Frequency";
@@ -161,9 +44,9 @@ document.getElementById("param_4").value = "V";
 document.getElementById("param_5").value = "V";
 document.getElementById("param_6").value = "A";
 document.getElementById("param_7").value = "W";
-document.getElementById("param_8").value = "μA-1";
+document.getElementById("param_9").value = "μA-1";
 document.getElementById("param_13").value = "μA-2";
-document.getElementById("param_9").value = "";
+document.getElementById("param_8").value = "";
 document.getElementById("param_10").value = "V";
 document.getElementById("param_11").value = "A";
 document.getElementById("param_12").value = "Hz";
