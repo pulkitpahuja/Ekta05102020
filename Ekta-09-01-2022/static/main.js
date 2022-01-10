@@ -601,15 +601,9 @@ function main_task(device) {
         } else {
           turn_off_device_relay(overall_device);
           if (overall_device != 6) {
-            if (overall_device == 5) {
-              overall_device = 7;
-            } else if (overall_device == 7) {
-              overall_device = 6;
-            } else {
-              overall_device++;
-            }
+            overall_device++;
           } else if (overall_device == 6 && secondMicro == "true") {
-            overall_device = 8;
+            overall_device++;
             secondMicro = "false";
           } else {
             secondMicro = "true";
@@ -624,6 +618,7 @@ function main_task(device) {
 
 function stop() {
   start_counter = 0;
+  overall_device = 1;
   stop_sequence();
   turn_off_device_relay(overall_device);
   check_ext_trigg();
@@ -633,45 +628,45 @@ function stop() {
 }
 
 function start() {
-  timer = setInterval(() => {
-    majorStart();
-  }, 1000);
-  // if (document.getElementById("device_id").value == "") {
-  //   alert("Enter Device ID");
-  //   start_counter = 0;
-
-  //   check_ext_trigg();
-
-  //   return;
-  // }
-  // if (document.getElementById("ser_status").innerHTML == "Disconnected") {
-  //   alert("Serial Connection Not Found");
-  //   start_counter = 0;
-  //   if (hasReturned == "true") {
-  //     hasReturned = "false";
-  //   }
-  //   load_config();
-  //   return;
-  // }
-  // console.log("STarting TASK");
-  // //check_stop_trigg();
-  // start_counter = 1;
-  // start_sequence();
-  // if (document.getElementById("strt_butt").innerHTML == "Resume") {
-  //   var val = document.getElementById("device_id").value;
-  //   reset();
-  //   start_counter = 1;
-  //   start_sequence();
-  //   document.getElementById("device_id").value = val;
-  //   document.getElementById("strt_butt").innerHTML = "Start";
-  // }
-  // clearInterval(status);
-  // timer = setInterval(function () {
-  //   count++;
+  // timer = setInterval(() => {
+  //   majorStart();
   // }, 1000);
-  // task_interval = setInterval(function () {
-  //   main_task(overall_device);
-  // }, 1600);
+  if (document.getElementById("device_id").value == "") {
+    alert("Enter Device ID");
+    start_counter = 0;
+
+    check_ext_trigg();
+
+    return;
+  }
+  if (document.getElementById("ser_status").innerHTML == "Disconnected") {
+    alert("Serial Connection Not Found");
+    start_counter = 0;
+    if (hasReturned == "true") {
+      hasReturned = "false";
+    }
+    load_config();
+    return;
+  }
+  console.log("STarting TASK");
+  //check_stop_trigg();
+  start_counter = 1;
+  start_sequence();
+  if (document.getElementById("strt_butt").innerHTML == "Resume") {
+    var val = document.getElementById("device_id").value;
+    reset();
+    start_counter = 1;
+    start_sequence();
+    document.getElementById("device_id").value = val;
+    document.getElementById("strt_butt").innerHTML = "Start";
+  }
+  clearInterval(status);
+  timer = setInterval(function () {
+    count++;
+  }, 1000);
+  task_interval = setInterval(function () {
+    main_task(overall_device);
+  }, 1600);
 }
 
 function start_sequence() {
@@ -1085,3 +1080,17 @@ function load_config() {
     },
   });
 }
+
+const MAIN = {
+  KV: processKV,
+  mA: processmA,
+  Resistance: processResistance,
+  MicroAmpere: processMicroAmp,
+  Voltmeter: processVoltmeter,
+  VAW: processVAW,
+  PF: processPF,
+  "20V": process20V,
+  "30A": process30A,
+  Frequency: processFrequency,
+  Insulation: processInsulation,
+};
