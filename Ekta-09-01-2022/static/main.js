@@ -828,7 +828,7 @@ function save_result_data() {
 function save_curr_config() {
   var curr_config = {};
   $(document).ready(function () {
-    curr_config["device_id"] = document.getElementById("device_id").value;
+    curr_config["device_id"] = document.getElementById("config_id").value;
     curr_config["delay"] = document.getElementById("delay").value;
     curr_config["com_port"] = document.getElementById("com_port").value;
     for (var i = 1; i <= 14; i++) {
