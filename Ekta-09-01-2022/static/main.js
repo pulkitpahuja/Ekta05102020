@@ -27,6 +27,7 @@ for (var i = 1; i <= 12; i++) {
 }
 
 document.getElementById("max_resistance").value = 0;
+document.getElementById("delay").value = 1;
 
 document.getElementById("max_13").value = 0;
 document.getElementById("min_13").value = 0;
@@ -560,8 +561,8 @@ function main_task(device) {
           turn_off_device_relay(8);
           setTimeout(function () {
             turn_off_device_relay(9);
-          }, 500);
-        }, 500);
+          }, 1000);
+        }, 1000);
 
         overall_device = 10;
         delay_count = 0;
@@ -1040,8 +1041,8 @@ function load_config() {
             document.getElementById("param_13").value = data[i]["param"];
             document.getElementById("name_8").value = data[i]["name"];
           } else if (i == 14) {
-            // document.getElementById("max_resistance").value = data[i]["max"];
-            document.getElementById("min_resistance").value = data[i]["min"];
+             document.getElementById("max_resistance").value = data[i]["max"];
+            //document.getElementById("min_resistance").value = data[i]["min"];
             document.getElementById("param_resistance").value =
               data[i]["param"];
             document.getElementById("name_resistance").value = data[i]["name"];
