@@ -26,7 +26,7 @@ for (var i = 1; i <= 12; i++) {
   }
 }
 
-document.getElementById("min_resistance").value = 0;
+document.getElementById("max_resistance").value = 0;
 
 document.getElementById("max_13").value = 0;
 document.getElementById("min_13").value = 0;
@@ -771,7 +771,7 @@ function save_result_data() {
       curr_config[i.toString()] = temp_config;
     } else if (i == 14) {
       temp_config["name"] = document.getElementById("name_resistance").value;
-      if (document.getElementById("result_" + i).style.color == "red") {
+      if (document.getElementById("result_resistance").style.color == "red") {
         temp_config["status"] = "Failed";
       } else {
         temp_config["status"] = "Passed";
@@ -962,12 +962,13 @@ function run_task(truth, device) {
         }
 
         if (val === 11) {
+          $("#result_" + val).css({ color: "green" });
           const twentyvolt = document.getElementById("result_10").value;
           const twentyvoltmin = document.getElementById("min_10").value;
           const thirtyamp = document.getElementById("result_11").value;
-          const resis = (twentyvolt - twentyvoltmin) / thirtyamp;
+          const resis = ((twentyvolt - twentyvoltmin) / thirtyamp).toFixed(3);
           document.getElementById("result_resistance").value = resis;
-          if (resis > document.getElementById("min_resistance").value) {
+          if (resis < document.getElementById("max_resistance").value) {
             $("#result_resistance").css({ color: "green" });
           } else {
             $("#result_resistance").css({ color: "red" });
@@ -989,7 +990,9 @@ function run_task(truth, device) {
               }, 2500);
             }
           }
-          $("#result_" + val).css({ color: "red" });
+          if (val !== 11) {
+            $("#result_" + val).css({ color: "red" });
+          }
         }
       }
     },

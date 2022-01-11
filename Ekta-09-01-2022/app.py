@@ -223,6 +223,12 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
     global final_val0
     device=int(device)
 
+    if(maximum=="-" ):
+        maximum=100000
+
+    if(minimum=="-"):
+        minimum=-100000
+
     ##################################
     if(device==1):
         byte_to_write=bytearray([0x0c,0x03,160+device,000,000,0x04])
@@ -415,6 +421,15 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             import random
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
+            if(flag["10"]!="True"):
+                to_write=bytearray([0x06,0x03,155,000,000,0x04])
+                low,high=cal_checksum_func(to_write)
+                to_write.append(high)
+                to_write.append(low)
+                ser.write(to_write)
+                time.sleep(.5)
+                print("RELAY On")
+                flag["10"]="True"
             return ran
         elif(device==7):
             import random
@@ -543,6 +558,7 @@ def overall_csv(data,name):
         except:
             temp_dict[header[9]] =  str("___")
         temp_dict[header[10]] = str(obj["9"]["result"]) +"-"+ str(obj["9"]["status"])
+        temp_dict[header[14]] = str(obj["14"]["result"]) +"-"+ str(obj["14"]["status"])
         if (str(obj["10"]["result"]) == "0.0"):
             if(not flag1):
                 header.pop(-4)
@@ -564,7 +580,6 @@ def overall_csv(data,name):
         temp_dict[header[-1]]=obj["datetime"]
         temp_list.append(temp_dict)
 
-    print(header)
     for col_num, data_data in enumerate(header):
         worksheet.write(row_count, col_num, data_data,border)
     row_count+=1    

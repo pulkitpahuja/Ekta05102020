@@ -10,7 +10,7 @@
 
     input[type="text"] {
       font-weight: bold;
-      font-size: 17px;
+      font-size: 13px;
     }
 
     input[type="text"]:read-only {
@@ -164,7 +164,8 @@
             <input type="text" class="form-control mt-1 text-center" id="min_9" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_10" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="min_11" aria-describedby="textHelp">
-            <input type="text" class="form-control mt-1 text-center" id="min_resistance" aria-describedby="textHelp">
+            <input type="text" style="border: 0;" value=-100000 hidden readonly class="form-control mt-1 text-center"
+              id="min_resistance" aria-describedby="textHelp">
             <input type="text" style="border: 0;" hidden value=-100000 readonly class="form-control mt-1 text-center"
               id="min_12" aria-describedby="textHelp">
 
@@ -182,12 +183,10 @@
             <input type="text" class="form-control mt-1 text-center" id="max_8" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_13" aria-describedby="textHelp">
             <input type="text" class="form-control mt-1 text-center" id="max_9" aria-describedby="textHelp">
-            <input type="text" style="border: 0;" hidden value=100000 readonly class="form-control mt-1 text-center"
-              id="max_10" aria-describedby="textHelp">
-            <input type="text" style="border: 0;" hidden value=100000 readonly class="form-control mt-1 text-center"
+            <input type="text" class="form-control mt-1 text-center" id="max_10" aria-describedby="textHelp">
+            <input type="text" style="border: 0;" disabled value=- readonly class="form-control mt-1 text-center"
               id="max_11" aria-describedby="textHelp">
-            <input type="text" style="border: 0;" hidden value=100000 readonly class="form-control mt-1 text-center"
-              id="max_resistance" aria-describedby="textHelp">
+            <input type="text" class="form-control mt-1 text-center" id="max_resistance" aria-describedby="textHelp">
             <input type="text" hidden value=100000 style="border: 0;" readonly class="form-control mt-1 text-center"
               id="max_12" aria-describedby="textHelp">
           </div>
@@ -242,7 +241,7 @@
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_11"
               aria-describedby="textHelp">
-            <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="resistance"
+            <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_resistance"
               aria-describedby="textHelp">
             <input style="border: 0;" readonly type="text" class="form-control mt-1  text-center" id="result_12"
               aria-describedby="textHelp">
