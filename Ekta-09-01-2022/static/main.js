@@ -795,7 +795,7 @@ function save_result_data() {
   }
 
   curr_config["datetime"] =
-    Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH-mm-ss");
+    Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH_mm_ss");
 
   $.ajax({
     type: "POST",
@@ -839,8 +839,8 @@ function save_curr_config() {
         curr_config[i.toString()] = temp_config;
       } else if (i == 14) {
         temp_config["name"] = document.getElementById("name_resistance").value;
-        // temp_config["max"] = document.getElementById("max_resistance").value;
-        temp_config["min"] = document.getElementById("min_resistance").value;
+        temp_config["max"] = document.getElementById("max_resistance").value;
+        //temp_config["min"] = document.getElementById("min_resistance").value;
         temp_config["param"] =
           document.getElementById("param_resistance").value;
         curr_config[i.toString()] = temp_config;

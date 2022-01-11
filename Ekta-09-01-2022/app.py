@@ -268,6 +268,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         low,high=cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
         byte_to_write.append(low)
+        time.sleep(.6)
         ser.write(byte_to_write)
         ser.flush()  
         time.sleep(.6)
@@ -388,7 +389,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
     elif (device==1):
         for val in compute_float(final_rec):
             master_list.append(val)
-              
+
     else:
         if (compute_float(final_rec)<=float(maximum) and compute_float(final_rec)>=float(minimum)):
             final_val=compute_float(final_rec)
@@ -421,15 +422,6 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             import random
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
-            if(flag["10"]!="True"):
-                to_write=bytearray([0x06,0x03,155,000,000,0x04])
-                low,high=cal_checksum_func(to_write)
-                to_write.append(high)
-                to_write.append(low)
-                ser.write(to_write)
-                time.sleep(.5)
-                print("RELAY On")
-                flag["10"]="True"
             return ran
         elif(device==7):
             import random
@@ -457,7 +449,15 @@ def stop_sequence(com):
     to_write.append(high)
     to_write.append(low)   
     ser.write(to_write) 
-    flag["1"]="False"
+    flag={"1":"False",
+      "2":"False",
+      "3":"False",
+      "4":"False",
+      "6":"False",
+      "7":"False",
+      "8":"False",
+      "9":"False",
+      "10":"False"}
     global start
     start = False
     print("RELAY OFF",to_write)
