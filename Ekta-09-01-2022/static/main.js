@@ -152,9 +152,9 @@ const processInsulation = (truth) => {
       ) {
         $("#result_3").css({ color: "green" });
       } else {
-        turn_off_device_relay(3);
         setTimeout(function () {
           stop();
+        turn_off_device_relay(3);
         }, 2500);
         $("#result_3").css({ color: "red" });
       }
@@ -937,6 +937,7 @@ function run_task(truth, device) {
           list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
         if (list[1] == 2) {
           stop();
+          turn_off_device_relay(1);
           $("#result_1").css({ color: "red" });
         } else {
           $("#result_1").css({ color: "green" });
@@ -988,7 +989,8 @@ function run_task(truth, device) {
             } else {
               setTimeout(function () {
                 stop();
-              }, 2500);
+                turn_off_device_relay(3);
+              }, 1000);
             }
           }
           if (val !== 11) {
@@ -1041,7 +1043,7 @@ function load_config() {
             document.getElementById("param_13").value = data[i]["param"];
             document.getElementById("name_8").value = data[i]["name"];
           } else if (i == 14) {
-             document.getElementById("max_resistance").value = data[i]["max"];
+            document.getElementById("max_resistance").value = data[i]["max"];
             //document.getElementById("min_resistance").value = data[i]["min"];
             document.getElementById("param_resistance").value =
               data[i]["param"];
