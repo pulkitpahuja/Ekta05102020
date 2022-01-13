@@ -570,7 +570,7 @@ function main_task(device) {
         if (device == 10) {
           setTimeout(function () {
             turn_off_device_relay(10);
-          }, 500);
+          }, 800);
 
           overall_device = 1;
           delay_count = 0;
@@ -580,7 +580,7 @@ function main_task(device) {
             secondMicro = "false";
             save_result_data();
             start_counter = 0;
-          }, 500);
+          }, 800);
         } else {
           turn_off_device_relay(overall_device);
           if (overall_device != 6) {
@@ -652,7 +652,7 @@ function start() {
   }, 1000);
   task_interval = setInterval(function () {
     main_task(overall_device);
-  }, 1600);
+  }, 1500);
 }
 
 function start_sequence() {
