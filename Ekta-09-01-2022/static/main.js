@@ -612,9 +612,6 @@ function stop() {
 }
 
 function start() {
-  // timer = setInterval(() => {
-  //   majorStart();
-  // }, 1000);
   if (document.getElementById("device_id").value == "") {
     alert("Enter Device ID");
     start_counter = 0;
