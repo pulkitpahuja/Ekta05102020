@@ -407,13 +407,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             else:
                 pass
 
-    if (device==5):
-        
-        temp_dict={"vals":master_list}
-        return json.dumps(temp_dict)
-
-    if (device==1):
-        
+    if (device==1 or device==5):
         temp_dict={"vals":master_list}
         return json.dumps(temp_dict)
 
@@ -423,11 +417,11 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
             return ran
-        elif(device==7):
-            import random
-            sam_Lst = [.995,.996,.997, .998, .999,1.0]
-            ran = random.choice(sam_Lst)
-            return ran
+        # elif(device==7):
+        #     import random
+        #     sam_Lst = [.995,.996,.997, .998, .999,1.0]
+        #     ran = random.choice(sam_Lst)
+        #     return ran
         else:
             return final_val
 

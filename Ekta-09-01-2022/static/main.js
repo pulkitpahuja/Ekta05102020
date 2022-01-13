@@ -154,7 +154,7 @@ const processInsulation = (truth) => {
       } else {
         setTimeout(function () {
           stop();
-        turn_off_device_relay(3);
+          turn_off_device_relay(3);
         }, 2500);
         $("#result_3").css({ color: "red" });
       }
@@ -276,11 +276,44 @@ const processPF = (truth) => {
 const processMicroAmp = (secondMicro, truth) => {
   console.log("processMicroAmp");
   let identifier = 9;
-  if (secondMicro) {
-    identifier = 13;
-  }
   const to_send = {
-    secondMicro: secondMicro,
+    secondMicro: false,
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 6,
+    maximum: document.getElementById(`max_${identifier}`).value,
+    minimum: document.getElementById(`min_${identifier}`).value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_${identifier}`).value = response;
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $(`#result_${identifier}`).css({ color: "green" });
+      } else {
+        $(`#result_${identifier}`).css({ color: "red" });
+        turn_off_device_relay(6);
+      }
+    },
+  });
+};
+
+const processMicroAmp_2 = (truth) => {
+  console.log("processMicroAmp");
+  let identifier = 13;
+
+  const to_send = {
+    secondMicro: true,
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
@@ -430,57 +463,6 @@ const timedFnction = (wrapper, time) => {
   }, 1700);
 };
 
-const majorStart = () => {
-  delayedFunction(processKV);
-  for (let i = 0; i < parseInt(document.getElementById("time_1").value); i++) {
-    processKV(true);
-    processmA(true);
-  }
-
-  delayedFunction(processInsulation);
-  for (let i = 0; i < parseInt(document.getElementById("time_3").value); i++) {
-    processInsulation(true);
-  }
-  delayedFunction(processVoltmeter);
-  for (let i = 0; i < parseInt(document.getElementById("time_4").value); i++) {
-    processInsulation(true);
-  }
-  delayedFunction(processVAW);
-  for (let i = 0; i < parseInt(document.getElementById("time_5").value); i++) {
-    processVAW(true);
-  }
-
-  delayedFunction(processPF);
-  for (let i = 0; i < parseInt(document.getElementById("time_9").value); i++) {
-    processPF(true);
-  }
-
-  delayedFunction(processMicroAmp);
-  for (let i = 0; i < parseInt(document.getElementById("time_8").value); i++) {
-    processMicroAmp(false, true);
-    processMicroAmp(true, true);
-  }
-
-  delayedFunction(process20V);
-  for (let i = 0; i < parseInt(document.getElementById("time_10").value); i++) {
-    process20V(true);
-    process30A(true);
-    processResistance();
-  }
-
-  delayedFunction(processFrequency);
-  for (let i = 0; i < parseInt(document.getElementById("time_12").value); i++) {
-    processFrequency(true);
-  }
-
-  clearInterval(timer);
-  setTimeout(function () {
-    stop();
-    save_result_data();
-    start_counter = 0;
-  }, 2000);
-};
-
 function reset() {
   for (var i = 1; i <= 13; i++) {
     document.getElementById("result_" + i).value = "";
@@ -623,6 +605,7 @@ function stop() {
   stop_sequence();
   turn_off_device_relay(overall_device);
   check_ext_trigg();
+  document.getElementById("strt_butt").disabled = false;
 
   clearInterval(timer);
   clearInterval(task_interval);
@@ -653,9 +636,11 @@ function start() {
   //check_stop_trigg();
   start_counter = 1;
   start_sequence();
+  document.getElementById("strt_butt").disabled = true;
   if (document.getElementById("strt_butt").innerHTML == "Resume") {
     var val = document.getElementById("device_id").value;
     reset();
+    stop();
     start_counter = 1;
     start_sequence();
     document.getElementById("device_id").value = val;
@@ -1086,17 +1071,3 @@ function load_config() {
     },
   });
 }
-
-const MAIN = {
-  KV: processKV,
-  mA: processmA,
-  Resistance: processResistance,
-  MicroAmpere: processMicroAmp,
-  Voltmeter: processVoltmeter,
-  VAW: processVAW,
-  PF: processPF,
-  "20V": process20V,
-  "30A": process30A,
-  Frequency: processFrequency,
-  Insulation: processInsulation,
-};
