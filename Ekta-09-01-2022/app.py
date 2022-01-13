@@ -354,7 +354,6 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
               
               
         else:
-
             new_byte=bytearray([0x00,0x00,000,000,000,0x00,0x00,0x00])
             final_rec=new_byte
 
@@ -378,7 +377,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
                     to_write.append(high)
                     to_write.append(low)
                     ser.write(to_write)
-                    time.sleep(.6)
+                    time.sleep(.5)
                     print("RELAY ON")
                     temp=i
                     i+=1
@@ -401,7 +400,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
                 to_write.append(high)
                 to_write.append(low)
                 ser.write(to_write)
-                time.sleep(.6)
+                time.sleep(.5)
                 print("RELAY On")
                 flag[str(device)]="True"
             else:
@@ -417,11 +416,6 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
             return ran
-        # elif(device==7):
-        #     import random
-        #     sam_Lst = [.995,.996,.997, .998, .999,1.0]
-        #     ran = random.choice(sam_Lst)
-        #     return ran
         else:
             return final_val
 

@@ -570,7 +570,7 @@ function main_task(device) {
         if (device == 10) {
           setTimeout(function () {
             turn_off_device_relay(10);
-          }, 800);
+          }, 500);
 
           overall_device = 1;
           delay_count = 0;
