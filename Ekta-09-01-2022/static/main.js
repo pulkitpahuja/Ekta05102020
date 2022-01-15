@@ -493,7 +493,7 @@ const start_test = () => {
   task_interval = setInterval(function () {
     count++;
     console.log("Count: " + count);
-  }, 1000);
+  }, 2000);
 
   timer = setInterval(() => {
     const or = order[start_counter];
@@ -513,7 +513,6 @@ const start_test = () => {
         console.log("Running Normal function:", fn);
         setTimeout(() => {
         MAIN[fn](true);
-          
         }, 0);
       });
     }
@@ -524,7 +523,7 @@ const start_test = () => {
     if (start_counter >= order.length) {
       stop();
     }
-  }, 1700);
+  }, 2000);
 };
 
 function reset() {
