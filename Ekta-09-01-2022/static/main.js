@@ -503,13 +503,18 @@ const start_test = () => {
     if (count <= del) {
       or.work.forEach((fn) => {
         console.log("Running Delayed function:", fn);
+       setTimeout(() => {
         MAIN[fn](false);
+       }, 0);
       });
     }
     if (count > del && count <= time) {
       or.work.forEach((fn) => {
         console.log("Running Normal function:", fn);
+        setTimeout(() => {
         MAIN[fn](true);
+          
+        }, 0);
       });
     }
     if (count > time) {
@@ -519,7 +524,7 @@ const start_test = () => {
     if (start_counter >= order.length) {
       stop();
     }
-  }, 1000);
+  }, 1700);
 };
 
 function reset() {
