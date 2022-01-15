@@ -154,7 +154,7 @@ const processInsulation = (truth) => {
       } else {
         setTimeout(function () {
           stop();
-        turn_off_device_relay(3);
+          turn_off_device_relay(3);
         }, 2500);
         $("#result_3").css({ color: "red" });
       }
@@ -273,14 +273,47 @@ const processPF = (truth) => {
   });
 };
 
-const processMicroAmp = (secondMicro, truth) => {
-  console.log("processMicroAmp");
+const processMicroAmp1 = (truth) => {
+  console.log("processMicroAmp1");
   let identifier = 9;
-  if (secondMicro) {
-    identifier = 13;
-  }
+
   const to_send = {
-    secondMicro: secondMicro,
+    secondMicro: false,
+    truth: truth,
+    com: document.getElementById("com_port").value,
+    device: 6,
+    maximum: document.getElementById(`max_${identifier}`).value,
+    minimum: document.getElementById(`min_${identifier}`).value,
+  };
+
+  $.ajax({
+    type: "POST",
+    url: "/run_task",
+    cache: false,
+    async: false,
+
+    data: to_send, // serializes the form's elements.
+    success: function (response) {
+      document.getElementById(`#result_${identifier}`).value = response;
+
+      if (
+        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(response) >= parseFloat(to_send["minimum"])
+      ) {
+        $(`#result_${identifier}`).css({ color: "green" });
+      } else {
+        $(`#result_${identifier}`).css({ color: "red" });
+        turn_off_device_relay(6);
+      }
+    },
+  });
+};
+const processMicroAmp2 = (truth) => {
+  console.log("processMicroAmp2");
+  let identifier = 13;
+
+  const to_send = {
+    secondMicro: true,
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
@@ -418,67 +451,75 @@ const delayedFunction = (wrapper) => {
   }
 };
 
-const timedFnction = (wrapper, time) => {
-  let timed = 0;
-  const delayedInterval = setInterval(() => {
-    if (timed < time) {
-      wrapper(true);
+const timedFnction = (wrapper, truth, time) => {
+  const localTimer = setInterval(() => {
+    if (count < time) {
+      wrapper(truth);
+      console.log(count);
     } else {
-      clearInterval(delayedInterval);
+      count = 0;
+      clearInterval(localTimer);
     }
-    timed++;
-  }, 1700);
+  }, 1000);
 };
 
-const majorStart = () => {
-  delayedFunction(processKV);
-  for (let i = 0; i < parseInt(document.getElementById("time_1").value); i++) {
-    processKV(true);
-    processmA(true);
-  }
+const MAIN = {
+  kV: processKV,
+  mA: processmA,
+  Resistance: processResistance,
+  MicroAmpere1: processMicroAmp1,
+  MicroAmpere2: processMicroAmp2,
+  Voltmeter: processVoltmeter,
+  VAW: processVAW,
+  PF: processPF,
+  "20V": process20V,
+  "30A": process30A,
+  Frequency: processFrequency,
+  Insulation: processInsulation,
+};
 
-  delayedFunction(processInsulation);
-  for (let i = 0; i < parseInt(document.getElementById("time_3").value); i++) {
-    processInsulation(true);
-  }
-  delayedFunction(processVoltmeter);
-  for (let i = 0; i < parseInt(document.getElementById("time_4").value); i++) {
-    processInsulation(true);
-  }
-  delayedFunction(processVAW);
-  for (let i = 0; i < parseInt(document.getElementById("time_5").value); i++) {
-    processVAW(true);
-  }
+const order = [
+  {
+    work: ["kV", "mA"],
+    time: 1,
+  },
+  {
+    work: ["PF"],
+    time: 9,
+  },
+];
 
-  delayedFunction(processPF);
-  for (let i = 0; i < parseInt(document.getElementById("time_9").value); i++) {
-    processPF(true);
-  }
+const start_test = () => {
+  task_interval = setInterval(function () {
+    count++;
+    console.log("Count: " + count);
+  }, 1000);
 
-  delayedFunction(processMicroAmp);
-  for (let i = 0; i < parseInt(document.getElementById("time_8").value); i++) {
-    processMicroAmp(false, true);
-    processMicroAmp(true, true);
-  }
-
-  delayedFunction(process20V);
-  for (let i = 0; i < parseInt(document.getElementById("time_10").value); i++) {
-    process20V(true);
-    process30A(true);
-    processResistance();
-  }
-
-  delayedFunction(processFrequency);
-  for (let i = 0; i < parseInt(document.getElementById("time_12").value); i++) {
-    processFrequency(true);
-  }
-
-  clearInterval(timer);
-  setTimeout(function () {
-    stop();
-    save_result_data();
-    start_counter = 0;
-  }, 2000);
+  timer = setInterval(() => {
+    const or = order[start_counter];
+    const del = parseInt(document.getElementById("delay").value) || 1;
+    const time =
+      parseInt(document.getElementById(`time_${or.time}`).value) || 0;
+    if (count <= del) {
+      or.work.forEach((fn) => {
+        console.log("Running Delayed function:", fn);
+        MAIN[fn](false);
+      });
+    }
+    if (count > del && count <= time) {
+      or.work.forEach((fn) => {
+        console.log("Running Normal function:", fn);
+        MAIN[fn](true);
+      });
+    }
+    if (count > time) {
+      start_counter++;
+      count = 0;
+    }
+    if (start_counter >= order.length) {
+      stop();
+    }
+  }, 1000);
 };
 
 function reset() {
@@ -494,7 +535,7 @@ function reset() {
   count = 0;
   delay_count = 0;
   start_counter = 0;
-  check_ext_trigg();
+  // check_ext_trigg();
 }
 
 function turn_off_device_relay(device) {
@@ -622,8 +663,6 @@ function stop() {
   overall_device = 1;
   stop_sequence();
   turn_off_device_relay(overall_device);
-  check_ext_trigg();
-
   clearInterval(timer);
   clearInterval(task_interval);
 }
@@ -632,42 +671,40 @@ function start() {
   // timer = setInterval(() => {
   //   majorStart();
   // }, 1000);
-  if (document.getElementById("device_id").value == "") {
-    alert("Enter Device ID");
-    start_counter = 0;
-
-    check_ext_trigg();
-
-    return;
-  }
-  if (document.getElementById("ser_status").innerHTML == "Disconnected") {
-    alert("Serial Connection Not Found");
-    start_counter = 0;
-    if (hasReturned == "true") {
-      hasReturned = "false";
-    }
-    load_config();
-    return;
-  }
-  console.log("STarting TASK");
-  //check_stop_trigg();
-  start_counter = 1;
-  start_sequence();
-  if (document.getElementById("strt_butt").innerHTML == "Resume") {
-    var val = document.getElementById("device_id").value;
-    reset();
-    start_counter = 1;
-    start_sequence();
-    document.getElementById("device_id").value = val;
-    document.getElementById("strt_butt").innerHTML = "Start";
-  }
-  clearInterval(status);
-  timer = setInterval(function () {
-    count++;
-  }, 1000);
-  task_interval = setInterval(function () {
-    main_task(overall_device);
-  }, 1600);
+  start_test();
+  // if (document.getElementById("device_id").value == "") {
+  //   alert("Enter Device ID");
+  //   start_counter = 0;
+  //   return;
+  // }
+  // if (document.getElementById("ser_status").innerHTML == "Disconnected") {
+  //   alert("Serial Connection Not Found");
+  //   start_counter = 0;
+  //   if (hasReturned == "true") {
+  //     hasReturned = "false";
+  //   }
+  //   load_config();
+  //   return;
+  // }
+  // console.log("STarting TASK");
+  // //check_stop_trigg();
+  // start_counter = 1;
+  // start_sequence();
+  // if (document.getElementById("strt_butt").innerHTML == "Resume") {
+  //   var val = document.getElementById("device_id").value;
+  //   reset();
+  //   start_counter = 1;
+  //   start_sequence();
+  //   document.getElementById("device_id").value = val;
+  //   document.getElementById("strt_butt").innerHTML = "Start";
+  // }
+  // clearInterval(status);
+  // timer = setInterval(function () {
+  //   count++;
+  // }, 1000);
+  // task_interval = setInterval(function () {
+  //   main_task(overall_device);
+  // }, 1600);
 }
 
 function start_sequence() {
@@ -1011,7 +1048,7 @@ function get_connect_status() {
       if (data == "true") {
         document.getElementById("ser_status").innerHTML = "Connected";
         $("#ser_status").css({ color: "green" });
-        check_ext_trigg();
+        // check_ext_trigg();
       } else {
         document.getElementById("ser_status").innerHTML = "Disconnected";
         $("#ser_status").css({ color: "red" });
@@ -1086,19 +1123,3 @@ function load_config() {
     },
   });
 }
-
-const MAIN = {
-  KV: processKV,
-  mA: processmA,
-  Resistance: processResistance,
-  MicroAmpere: processMicroAmp,
-  Voltmeter: processVoltmeter,
-  VAW: processVAW,
-  PF: processPF,
-  "20V": process20V,
-  "30A": process30A,
-  Frequency: processFrequency,
-  Insulation: processInsulation,
-};
-
-xxx
