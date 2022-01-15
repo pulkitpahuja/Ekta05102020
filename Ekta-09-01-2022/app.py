@@ -354,7 +354,6 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
               
               
         else:
-
             new_byte=bytearray([0x00,0x00,000,000,000,0x00,0x00,0x00])
             final_rec=new_byte
 
@@ -407,13 +406,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
             else:
                 pass
 
-    if (device==5):
-        
-        temp_dict={"vals":master_list}
-        return json.dumps(temp_dict)
-
-    if (device==1):
-        
+    if (device==1 or device==5):
         temp_dict={"vals":master_list}
         return json.dumps(temp_dict)
 
@@ -421,11 +414,6 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         if(device==10):
             import random
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
-            ran = random.choice(sam_Lst)
-            return ran
-        elif(device==7):
-            import random
-            sam_Lst = [.995,.996,.997, .998, .999,1.0]
             ran = random.choice(sam_Lst)
             return ran
         else:
@@ -439,10 +427,10 @@ def start_sequence(com):     ##turn 1st relay ON and 2nd relay OFF
     to_write.append(high)
     to_write.append(low)   
     ser.write(to_write) 
-    time.sleep(.5)
+    time.sleep(.6)
 
 def stop_sequence(com): 
-    time.sleep(.5)
+    time.sleep(.6)
      ##turn 1st relay OFF and 2nd relay ON
     to_write=bytearray([0x03,0x03,215,000,000,0x04])
     low,high=cal_checksum_func(to_write)
@@ -509,6 +497,7 @@ def get_dates(start_date,end_date):
     return lst
 
 def overall_csv(data,name):
+    print(data)
     x = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S%p")
     loc = 'static/csv/'+str(date.today())+'/Overall/'+str(x)
     createFolder('static/csv/'+str(date.today())+'/Overall/')
@@ -531,9 +520,14 @@ def overall_csv(data,name):
         except:
             pass
 
+
     header.append("Timestamp")
+    popped = header.pop(-3)
+    header.insert(8,popped)
     popped = header.pop(-2)
-    header.insert(9,popped)
+    header.insert(13,popped)
+    print(header)
+
     flag1=False
     flag2=False
     # header.pop(-3)
@@ -558,25 +552,10 @@ def overall_csv(data,name):
         except:
             temp_dict[header[9]] =  str("___")
         temp_dict[header[10]] = str(obj["9"]["result"]) +"-"+ str(obj["9"]["status"])
+        temp_dict[header[11]] = str(obj["10"]["result"]) +"-"+ str(obj["10"]["status"])
+        temp_dict[header[12]] = str(obj["11"]["result"]) +"-"+ str(obj["11"]["status"])
         temp_dict[header[14]] = str(obj["14"]["result"]) +"-"+ str(obj["14"]["status"])
-        if (str(obj["10"]["result"]) == "0.0"):
-            if(not flag1):
-                header.pop(-4)
-                flag1=True
-        else:
-            temp_dict[header[11]] = str(obj["10"]["result"]) +"-"+ str(obj["10"]["status"])   
-
-        if (str(obj["11"]["result"]) == "0.0"):
-            if(not flag2):
-                header.pop(-3)
-                flag2=True
-        else:
-            temp_dict[header[12]] = str(obj["11"]["result"]) +"-"+ str(obj["11"]["status"])
-        
-        if(flag1 and flag2):
-            temp_dict[header[11]] = str(obj["12"]["result"]) +"-"+ str(obj["12"]["status"])
-        else:
-            temp_dict[header[13]] = str(obj["12"]["result"]) +"-"+ str(obj["12"]["status"])
+        temp_dict[header[13]] = str(obj["12"]["result"]) +"-"+ str(obj["12"]["status"])
         temp_dict[header[-1]]=obj["datetime"]
         temp_list.append(temp_dict)
 
@@ -605,7 +584,7 @@ def overall_csv(data,name):
     workbook.close()
     path = "C:/Users"
     path = os.path.realpath('static/csv/'+str(date.today())+'/Overall/')
-    os.startfile(path)
+    # os.startfile(path)
     return "Success - Location = "+loc+'_data_file.xlsx'
  
 @app.route('/csv_dated',methods = ['GET', 'POST', 'DELETE'])

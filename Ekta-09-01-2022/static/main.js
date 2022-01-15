@@ -643,7 +643,7 @@ function main_task(device) {
             secondMicro = "false";
             save_result_data();
             start_counter = 0;
-          }, 500);
+          }, 800);
         } else {
           turn_off_device_relay(overall_device);
           if (overall_device != 6) {
