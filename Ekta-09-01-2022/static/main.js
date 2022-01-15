@@ -77,7 +77,7 @@ const processKV = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
     data: to_send, // serializes the form's elements.
     success: function (response) {
       list = Object.values(JSON.parse(response))[0];
@@ -106,7 +106,7 @@ const processmA = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -138,7 +138,7 @@ const processInsulation = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
 
     url: "/run_task",
     cache: false,
@@ -175,7 +175,7 @@ const processVoltmeter = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
 
     url: "/run_task",
     cache: false,
@@ -217,7 +217,7 @@ const processVAW = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -254,7 +254,7 @@ const processPF = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -290,7 +290,7 @@ const processMicroAmp1 = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -325,7 +325,7 @@ const processMicroAmp2 = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -359,7 +359,7 @@ const process20V = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -390,7 +390,7 @@ const process30A = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -435,7 +435,7 @@ const processFrequency = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
