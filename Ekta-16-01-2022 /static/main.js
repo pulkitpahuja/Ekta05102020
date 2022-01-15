@@ -77,7 +77,7 @@ const processKV = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
     data: to_send, // serializes the form's elements.
     success: function (response) {
       list = Object.values(JSON.parse(response))[0];
@@ -106,7 +106,7 @@ const processmA = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -138,7 +138,7 @@ const processInsulation = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
 
     url: "/run_task",
     cache: false,
@@ -175,7 +175,7 @@ const processVoltmeter = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
 
     url: "/run_task",
     cache: false,
@@ -217,7 +217,7 @@ const processVAW = (truth) => {
 
   $.ajax({
     type: "POST",
-    async: false,
+    
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -254,7 +254,7 @@ const processPF = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -273,9 +273,10 @@ const processPF = (truth) => {
   });
 };
 
-const processMicroAmp = (secondMicro, truth) => {
-  console.log("processMicroAmp");
+const processMicroAmp1 = (truth) => {
+  console.log("processMicroAmp1");
   let identifier = 9;
+
   const to_send = {
     secondMicro: false,
     truth: truth,
@@ -289,7 +290,7 @@ const processMicroAmp = (secondMicro, truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -307,9 +308,8 @@ const processMicroAmp = (secondMicro, truth) => {
     },
   });
 };
-
-const processMicroAmp_2 = (truth) => {
-  console.log("processMicroAmp");
+const processMicroAmp2 = (truth) => {
+  console.log("processMicroAmp2");
   let identifier = 13;
 
   const to_send = {
@@ -325,7 +325,7 @@ const processMicroAmp_2 = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -359,7 +359,7 @@ const process20V = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -390,7 +390,7 @@ const process30A = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -435,7 +435,7 @@ const processFrequency = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    async: false,
+    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -451,16 +451,79 @@ const delayedFunction = (wrapper) => {
   }
 };
 
-const timedFnction = (wrapper, time) => {
-  let timed = 0;
-  const delayedInterval = setInterval(() => {
-    if (timed < time) {
-      wrapper(true);
+const timedFnction = (wrapper, truth, time) => {
+  const localTimer = setInterval(() => {
+    if (count < time) {
+      wrapper(truth);
+      console.log(count);
     } else {
-      clearInterval(delayedInterval);
+      count = 0;
+      clearInterval(localTimer);
     }
-    timed++;
-  }, 1700);
+  }, 1000);
+};
+
+const MAIN = {
+  kV: processKV,
+  mA: processmA,
+  Resistance: processResistance,
+  MicroAmpere1: processMicroAmp1,
+  MicroAmpere2: processMicroAmp2,
+  Voltmeter: processVoltmeter,
+  VAW: processVAW,
+  PF: processPF,
+  "20V": process20V,
+  "30A": process30A,
+  Frequency: processFrequency,
+  Insulation: processInsulation,
+};
+
+const order = [
+  {
+    work: ["kV", "mA"],
+    time: 1,
+  },
+  {
+    work: ["PF"],
+    time: 9,
+  },
+];
+
+const start_test = () => {
+  task_interval = setInterval(function () {
+    count++;
+    console.log("Count: " + count);
+  }, 2000);
+
+  timer = setInterval(() => {
+    const or = order[start_counter];
+    const del = parseInt(document.getElementById("delay").value) || 1;
+    const time =
+      parseInt(document.getElementById(`time_${or.time}`).value) || 0;
+    if (count <= del) {
+      or.work.forEach((fn) => {
+        console.log("Running Delayed function:", fn);
+       setTimeout(() => {
+        MAIN[fn](false);
+       }, 0);
+      });
+    }
+    if (count > del && count <= time) {
+      or.work.forEach((fn) => {
+        console.log("Running Normal function:", fn);
+        setTimeout(() => {
+        MAIN[fn](true);
+        }, 0);
+      });
+    }
+    if (count > time) {
+      start_counter++;
+      count = 0;
+    }
+    if (start_counter >= order.length) {
+      stop();
+    }
+  }, 2000);
 };
 
 function reset() {
@@ -476,7 +539,7 @@ function reset() {
   count = 0;
   delay_count = 0;
   start_counter = 0;
-  check_ext_trigg();
+  // check_ext_trigg();
 }
 
 function turn_off_device_relay(device) {
@@ -604,52 +667,48 @@ function stop() {
   overall_device = 1;
   stop_sequence();
   turn_off_device_relay(overall_device);
-  check_ext_trigg();
-  document.getElementById("strt_butt").disabled = false;
-
   clearInterval(timer);
   clearInterval(task_interval);
 }
 
 function start() {
-  if (document.getElementById("device_id").value == "") {
-    alert("Enter Device ID");
-    start_counter = 0;
-
-    check_ext_trigg();
-
-    return;
-  }
-  if (document.getElementById("ser_status").innerHTML == "Disconnected") {
-    alert("Serial Connection Not Found");
-    start_counter = 0;
-    if (hasReturned == "true") {
-      hasReturned = "false";
-    }
-    load_config();
-    return;
-  }
-  console.log("STarting TASK");
-  //check_stop_trigg();
-  start_counter = 1;
-  start_sequence();
-  document.getElementById("strt_butt").disabled = true;
-  if (document.getElementById("strt_butt").innerHTML == "Resume") {
-    var val = document.getElementById("device_id").value;
-    reset();
-    stop();
-    start_counter = 1;
-    start_sequence();
-    document.getElementById("device_id").value = val;
-    document.getElementById("strt_butt").innerHTML = "Start";
-  }
-  clearInterval(status);
-  timer = setInterval(function () {
-    count++;
-  }, 1000);
-  task_interval = setInterval(function () {
-    main_task(overall_device);
-  }, 1500);
+  // timer = setInterval(() => {
+  //   majorStart();
+  // }, 1000);
+  start_test();
+  // if (document.getElementById("device_id").value == "") {
+  //   alert("Enter Device ID");
+  //   start_counter = 0;
+  //   return;
+  // }
+  // if (document.getElementById("ser_status").innerHTML == "Disconnected") {
+  //   alert("Serial Connection Not Found");
+  //   start_counter = 0;
+  //   if (hasReturned == "true") {
+  //     hasReturned = "false";
+  //   }
+  //   load_config();
+  //   return;
+  // }
+  // console.log("STarting TASK");
+  // //check_stop_trigg();
+  // start_counter = 1;
+  // start_sequence();
+  // if (document.getElementById("strt_butt").innerHTML == "Resume") {
+  //   var val = document.getElementById("device_id").value;
+  //   reset();
+  //   start_counter = 1;
+  //   start_sequence();
+  //   document.getElementById("device_id").value = val;
+  //   document.getElementById("strt_butt").innerHTML = "Start";
+  // }
+  // clearInterval(status);
+  // timer = setInterval(function () {
+  //   count++;
+  // }, 1000);
+  // task_interval = setInterval(function () {
+  //   main_task(overall_device);
+  // }, 1600);
 }
 
 function start_sequence() {
@@ -993,7 +1052,7 @@ function get_connect_status() {
       if (data == "true") {
         document.getElementById("ser_status").innerHTML = "Connected";
         $("#ser_status").css({ color: "green" });
-        check_ext_trigg();
+        // check_ext_trigg();
       } else {
         document.getElementById("ser_status").innerHTML = "Disconnected";
         $("#ser_status").css({ color: "red" });
