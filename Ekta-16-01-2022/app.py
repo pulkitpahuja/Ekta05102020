@@ -583,7 +583,7 @@ def overall_csv(data,name):
     workbook.close()
     path = "C:/Users"
     path = os.path.realpath('static/csv/'+str(date.today())+'/Overall/')
-    # os.startfile(path)
+    os.startfile(path)
     return "Success - Location = "+loc+'_data_file.xlsx'
  
 @app.route('/csv_dated',methods = ['GET', 'POST', 'DELETE'])
