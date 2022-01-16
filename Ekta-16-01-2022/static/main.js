@@ -396,7 +396,6 @@ const process30A = (truth) => {
         $("#result_11").css({ color: "red" });
         turn_off_device_relay(9);
       }
-
       processResistance();
     },
   });
@@ -436,6 +435,7 @@ const processFrequency = (truth) => {
     success: function (response) {
       document.getElementById(`result_12`).value = response;
       $("#result_12").css({ color: "green" });
+
     },
   });
 };
@@ -536,8 +536,8 @@ const start_test = () => {
       count = 0;
     }
     if (start_counter >= order.length) {
-      inner_counter = 0;
       stop();
+      save_result_data();
     }
   }, 1500);
 };
@@ -679,45 +679,37 @@ function main_task(device) {
 }
 
 function stop() {
-  start_counter = 0;
-  overall_device = 1;
   stop_sequence();
   turn_off_device_relay(overall_device);
   clearInterval(timer);
   clearInterval(task_interval);
+  start_counter = 0;
+  count = 0;
+  inner_counter = 0;
+  overall_device = 0;
 }
 
 function start() {
-  // timer = setInterval(() => {
-  //   majorStart();
-  // }, 1000);
-  start_test();
-  // if (document.getElementById("device_id").value == "") {
-  //   alert("Enter Device ID");
-  //   start_counter = 0;
-  //   return;
-  // }
-  // if (document.getElementById("ser_status").innerHTML == "Disconnected") {
-  //   alert("Serial Connection Not Found");
-  //   start_counter = 0;
-  //   if (hasReturned == "true") {
-  //     hasReturned = "false";
-  //   }
-  //   load_config();
-  //   return;
-  // }
-  // console.log("STarting TASK");
+  if (document.getElementById("device_id").value == "") {
+    alert("Enter Device ID");
+    start_counter = 0;
+    return;
+  }
+  if (document.getElementById("ser_status").innerHTML == "Disconnected") {
+    alert("Serial Connection Not Found");
+    start_counter = 0;
+    if (hasReturned == "true") {
+      hasReturned = "false";
+    }
+    load_config();
+    return;
+  }
+  console.log("STarting TASK");
   // //check_stop_trigg();
-  // start_counter = 1;
-  // start_sequence();
-  // if (document.getElementById("strt_butt").innerHTML == "Resume") {
-  //   var val = document.getElementById("device_id").value;
-  //   reset();
-  //   start_counter = 1;
-  //   start_sequence();
-  //   document.getElementById("device_id").value = val;
-  //   document.getElementById("strt_butt").innerHTML = "Start";
-  // }
+  start_counter = 1;
+  start_sequence();
+  start_test();
+
   // clearInterval(status);
   // timer = setInterval(function () {
   //   count++;
