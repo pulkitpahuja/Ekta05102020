@@ -706,7 +706,6 @@ function start() {
   }
   console.log("STarting TASK");
   // //check_stop_trigg();
-  start_counter = 1;
   start_sequence();
   start_test();
 
