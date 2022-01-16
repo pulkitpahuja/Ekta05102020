@@ -273,7 +273,7 @@ const processPF = (truth) => {
 
 const processMicroAmp1 = (truth) => {
   console.log("processMicroAmp1");
-  let identifier = 9;
+  let identifier = 8;
 
   const to_send = {
     secondMicro: false,
@@ -291,7 +291,7 @@ const processMicroAmp1 = (truth) => {
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
-      document.getElementById(`#result_${identifier}`).value = response;
+      document.getElementById(`result_${identifier}`).value = response;
 
       if (
         parseFloat(response) <= parseFloat(to_send["maximum"]) &&
@@ -325,7 +325,7 @@ const processMicroAmp2 = (truth) => {
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
-      document.getElementById(`#result_${identifier}`).value = response;
+      document.getElementById(`result_${identifier}`).value = response;
 
       if (
         parseFloat(response) <= parseFloat(to_send["maximum"]) &&
@@ -358,7 +358,7 @@ const process20V = (truth) => {
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
-      document.getElementById(`#result_10`).value = response;
+      document.getElementById(`result_10`).value = response;
 
       if (parseFloat(response) >= parseFloat(to_send["minimum"])) {
         $("#result_10").css({ color: "green" });
@@ -388,7 +388,7 @@ const process30A = (truth) => {
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
-      document.getElementById(`#result_11`).value = response;
+      document.getElementById(`result_11`).value = response;
 
       if (parseFloat(response) >= parseFloat(to_send["minimum"])) {
         $("#result_11").css({ color: "green" });
@@ -421,8 +421,8 @@ const processFrequency = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 10,
-    maximum: 100000,
-    minimum: -1000000,
+    maximum: null,
+    minimum: null,
   };
 
   $.ajax({
@@ -432,7 +432,7 @@ const processFrequency = (truth) => {
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
-      document.getElementById(`#result_12`).value = response;
+      document.getElementById(`result_12`).value = response;
     },
   });
 };
