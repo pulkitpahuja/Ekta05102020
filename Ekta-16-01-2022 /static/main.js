@@ -5,6 +5,7 @@ var delay_count = 0;
 var task_interval;
 var timer;
 var start_counter = 0;
+var inner_counter = 0;
 var status;
 var hasReturned = "false";
 var secondMicro = "false";
@@ -77,7 +78,7 @@ const processKV = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
+
     data: to_send, // serializes the form's elements.
     success: function (response) {
       list = Object.values(JSON.parse(response))[0];
@@ -106,7 +107,7 @@ const processmA = (truth) => {
 
   $.ajax({
     type: "POST",
-    
+
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -138,7 +139,6 @@ const processInsulation = (truth) => {
 
   $.ajax({
     type: "POST",
-    
 
     url: "/run_task",
     cache: false,
@@ -175,7 +175,6 @@ const processVoltmeter = (truth) => {
 
   $.ajax({
     type: "POST",
-    
 
     url: "/run_task",
     cache: false,
@@ -217,7 +216,7 @@ const processVAW = (truth) => {
 
   $.ajax({
     type: "POST",
-    
+
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
@@ -254,7 +253,6 @@ const processPF = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -290,7 +288,6 @@ const processMicroAmp1 = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -325,7 +322,6 @@ const processMicroAmp2 = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -359,7 +355,6 @@ const process20V = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -390,7 +385,6 @@ const process30A = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -435,7 +429,6 @@ const processFrequency = (truth) => {
     type: "POST",
     url: "/run_task",
     cache: false,
-    
 
     data: to_send, // serializes the form's elements.
     success: function (response) {
@@ -497,33 +490,42 @@ const start_test = () => {
 
   timer = setInterval(() => {
     const or = order[start_counter];
+    const work_length = or.work.length;
     const del = parseInt(document.getElementById("delay").value) || 1;
     const time =
       parseInt(document.getElementById(`time_${or.time}`).value) || 0;
     if (count <= del) {
-      or.work.forEach((fn) => {
-        console.log("Running Delayed function:", fn);
-       setTimeout(() => {
-        MAIN[fn](false);
-       }, 0);
-      });
+      setTimeout(() => {
+        console.log("Running Delayed function:", or.work[inner_counter]);
+        MAIN[or.work[inner_counter]](false);
+      }, 0);
+      if (inner_counter === work_length - 1) {
+        inner_counter = 0;
+      } else {
+        inner_counter++;
+      }
     }
     if (count > del && count <= time) {
-      or.work.forEach((fn) => {
-        console.log("Running Normal function:", fn);
-        setTimeout(() => {
-        MAIN[fn](true);
-        }, 0);
-      });
+      setTimeout(() => {
+        console.log("Running Delayed function:", or.work[inner_counter]);
+        MAIN[or.work[inner_counter]](true);
+      }, 0);
+      if (inner_counter === work_length - 1) {
+        inner_counter = 0;
+      } else {
+        inner_counter++;
+      }
     }
     if (count > time) {
+      inner_counter = 0;
       start_counter++;
       count = 0;
     }
     if (start_counter >= order.length) {
+      inner_counter = 0;
       stop();
     }
-  }, 2000);
+  }, 600);
 };
 
 function reset() {
