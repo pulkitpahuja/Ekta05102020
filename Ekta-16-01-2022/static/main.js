@@ -1,14 +1,12 @@
-// alert("Before Starting Please ensure Serial device is connected");
+alert("Before Starting Please ensure Serial device is connected");
 var overall_device = 1;
-var count = 0;
-var delay_count = 0;
-var task_interval;
-var timer;
-var start_counter = 0;
-var inner_counter = 0;
+var count = 0; //keeps track of the time elapsed
+var task_interval; //Run order timer (the order in which the devices are run)
+var timer; //Run the timer for seconds(time)
+var start_counter = 0; // this counter is used to keep track of the order of the devices (index of order array)
+var inner_counter = 0; // inner counter is there for access the type of order with multiple device (index of inner array)
 var status;
 var hasReturned = "false";
-var secondMicro = "false";
 
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
@@ -435,7 +433,6 @@ const processFrequency = (truth) => {
     success: function (response) {
       document.getElementById(`result_12`).value = response;
       $("#result_12").css({ color: "green" });
-
     },
   });
 };
@@ -551,10 +548,10 @@ function reset() {
   document.getElementById("device_id").value = "";
   clearInterval(timer);
   clearInterval(task_interval);
-  overall_device = 1;
-  count = 0;
-  delay_count = 0;
   start_counter = 0;
+  count = 0;
+  inner_counter = 0;
+  overall_device = 1;
   // check_ext_trigg();
 }
 
@@ -573,111 +570,6 @@ function turn_off_device_relay(device) {
   });
 }
 
-function main_task(device) {
-  console.log(device);
-  if (device == 1 || device == 2) {
-    if (delay_count <= parseInt(document.getElementById("delay").value)) {
-      run_task("false", device);
-      if (overall_device == 2) {
-        overall_device = 1;
-      } else if (overall_device == 1) {
-        overall_device = 2;
-      }
-      delay_count++;
-    } else {
-      if (count <= parseInt(document.getElementById("time_1").value)) {
-        run_task("true", device);
-        if (overall_device == 2) {
-          overall_device = 1;
-        } else if (overall_device == 1) {
-          overall_device = 2;
-        }
-      } else {
-        overall_device = 3;
-        turn_off_device_relay(2);
-
-        delay_count = 0;
-        count = 0;
-      }
-    }
-  } else if (device == 8 || device == 9) {
-    if (delay_count <= parseInt(document.getElementById("delay").value)) {
-      run_task("false", device);
-      if (overall_device == 8) {
-        overall_device = 9;
-      } else if (overall_device == 9) {
-        overall_device = 8;
-      }
-      delay_count++;
-    } else {
-      if (count <= parseInt(document.getElementById("time_10").value)) {
-        run_task("true", device);
-        if (overall_device == 8) {
-          overall_device = 9;
-        } else if (overall_device == 9) {
-          overall_device = 8;
-        }
-      } else {
-        setTimeout(function () {
-          turn_off_device_relay(8);
-          setTimeout(function () {
-            turn_off_device_relay(9);
-          }, 1000);
-        }, 1000);
-
-        overall_device = 10;
-        delay_count = 0;
-        count = 0;
-      }
-    }
-  } else {
-    if (delay_count <= parseInt(document.getElementById("delay").value)) {
-      run_task("false", device);
-      delay_count++;
-    } else {
-      var time = device;
-      if (device == 6) {
-        time = 8;
-      } else if (device == 7) {
-        time = 9;
-      } else if (device == 10) {
-        time = 12;
-      }
-      if (count <= parseInt(document.getElementById("time_" + time).value)) {
-        run_task("true", device);
-      } else {
-        if (device == 10) {
-          setTimeout(function () {
-            turn_off_device_relay(10);
-          }, 500);
-
-          overall_device = 1;
-          delay_count = 0;
-          count = 0;
-          setTimeout(function () {
-            stop();
-            secondMicro = "false";
-            save_result_data();
-            start_counter = 0;
-          }, 800);
-        } else {
-          turn_off_device_relay(overall_device);
-          if (overall_device != 6) {
-            overall_device++;
-          } else if (overall_device == 6 && secondMicro == "true") {
-            overall_device++;
-            secondMicro = "false";
-          } else {
-            secondMicro = "true";
-          }
-          delay_count = 0;
-          count = 0;
-        }
-      }
-    }
-  }
-}
-
 function stop() {
   stop_sequence();
   turn_off_device_relay(overall_device);
@@ -686,36 +578,23 @@ function stop() {
   start_counter = 0;
   count = 0;
   inner_counter = 0;
-  overall_device = 0;
+  overall_device = 1;
 }
 
 function start() {
   if (document.getElementById("device_id").value == "") {
     alert("Enter Device ID");
-    start_counter = 0;
     return;
   }
   if (document.getElementById("ser_status").innerHTML == "Disconnected") {
     alert("Serial Connection Not Found");
-    start_counter = 0;
-    if (hasReturned == "true") {
-      hasReturned = "false";
-    }
     load_config();
     return;
   }
   console.log("STarting TASK");
-  // //check_stop_trigg();
+  //check_stop_trigg();
   start_sequence();
   start_test();
-
-  // clearInterval(status);
-  // timer = setInterval(function () {
-  //   count++;
-  // }, 1000);
-  // task_interval = setInterval(function () {
-  //   main_task(overall_device);
-  // }, 1600);
 }
 
 function start_sequence() {
@@ -913,140 +792,6 @@ function save_curr_config() {
         alert("Save Status : " + data);
       },
     });
-  });
-}
-
-function run_task(truth, device) {
-  if (device == 5) {
-    var to_send = {
-      secondMicro: "false",
-      truth: truth,
-      com: document.getElementById("com_port").value,
-      device: device,
-      maximum: [
-        document.getElementById("max_5").value,
-        document.getElementById("max_6").value,
-        document.getElementById("max_7").value,
-      ].toString(),
-      minimum: [
-        document.getElementById("min_5").value,
-        document.getElementById("min_6").value,
-        document.getElementById("min_7").value,
-      ].toString(),
-    };
-  } else if (device == 6 && secondMicro == "true") {
-    var to_send = {
-      secondMicro: secondMicro,
-      truth: truth,
-      com: document.getElementById("com_port").value,
-      device: device,
-      maximum: document.getElementById("max_13").value,
-      minimum: document.getElementById("min_13").value,
-    };
-  } else {
-    var val = device;
-    if (device > 5) {
-      val = device + 2;
-    }
-    var to_send = {
-      secondMicro: "false",
-      truth: truth,
-      com: document.getElementById("com_port").value,
-      device: device,
-      maximum: document.getElementById("max_" + val).value,
-      minimum: document.getElementById("min_" + val).value,
-    };
-  }
-
-  $.ajax({
-    type: "POST",
-    url: "/run_task",
-    cache: false,
-    data: to_send, // serializes the form's elements.
-
-    success: function (response) {
-      if (device == 5) {
-        list = Object.values(JSON.parse(response))[0];
-        for (var i = 0; i < list.length; i++) {
-          var val = device + i;
-          var max = document.getElementById("max_" + val).value;
-          var min = document.getElementById("min_" + val).value;
-          document.getElementById("result_" + val).value = list[i];
-          if (list[i] <= parseFloat(max) && list[i] >= parseFloat(min)) {
-            $("#result_" + val).css({ color: "green" });
-          } else {
-            $("#result_" + val).css({ color: "red" });
-            //stop();
-          }
-        }
-      } else if (device == 1) {
-        list = Object.values(JSON.parse(response))[0];
-        document.getElementById("result_1").value =
-          list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
-        if (list[1] == 2) {
-          stop();
-          turn_off_device_relay(1);
-          $("#result_1").css({ color: "red" });
-        } else {
-          $("#result_1").css({ color: "green" });
-        }
-      } else if (device == 6 && secondMicro == "true") {
-        document.getElementById("result_13").value = response;
-        if (
-          parseFloat(response) <= parseFloat(to_send["maximum"]) &&
-          parseFloat(response) >= parseFloat(to_send["minimum"])
-        ) {
-          $("#result_13").css({ color: "green" });
-        } else {
-          $("#result_13").css({ color: "red" });
-        }
-      } else {
-        var val = device;
-        if (device > 5) {
-          val = device + 2;
-        }
-        if (val === 9) {
-          document.getElementById("result_" + val).value = Math.abs(response);
-        } else {
-          document.getElementById("result_" + val).value = response;
-        }
-
-        if (val === 11) {
-          $("#result_" + val).css({ color: "green" });
-          const twentyvolt = document.getElementById("result_10").value;
-          const twentyvoltmin = document.getElementById("min_10").value;
-          const thirtyamp = document.getElementById("result_11").value;
-          const resis = ((twentyvolt - twentyvoltmin) / thirtyamp).toFixed(3);
-          document.getElementById("result_resistance").value = resis;
-          if (resis < document.getElementById("max_resistance").value) {
-            $("#result_resistance").css({ color: "green" });
-          } else {
-            $("#result_resistance").css({ color: "red" });
-          }
-        }
-
-        if (
-          parseFloat(response) <= parseFloat(to_send["maximum"]) &&
-          parseFloat(response) >= parseFloat(to_send["minimum"])
-        ) {
-          $("#result_" + val).css({ color: "green" });
-        } else {
-          if (device == 3) {
-            var temp = parseInt(document.getElementById("delay").value);
-            if (delay_count <= temp) {
-            } else {
-              setTimeout(function () {
-                stop();
-                turn_off_device_relay(3);
-              }, 1000);
-            }
-          }
-          if (val !== 11) {
-            $("#result_" + val).css({ color: "red" });
-          }
-        }
-      }
-    },
   });
 }
 
