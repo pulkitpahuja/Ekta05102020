@@ -421,8 +421,8 @@ const processFrequency = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 10,
-    maximum: null,
-    minimum: null,
+    maximum: -100000,
+    minimum: 1000000,
   };
 
   $.ajax({
