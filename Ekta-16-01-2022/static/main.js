@@ -504,7 +504,7 @@ const start_test = () => {
       }
     }
     if (count > del && count <= time) {
-      console.log("Running Delayed function: ", or.work[inner_counter]);
+      console.log("Running Normal function: ", or.work[inner_counter]);
       MAIN[or.work[inner_counter]](true);
       if (inner_counter === work_length - 1) {
         inner_counter = 0;
@@ -521,7 +521,7 @@ const start_test = () => {
       inner_counter = 0;
       stop();
     }
-  }, 600);
+  }, 1400);
 };
 
 function reset() {

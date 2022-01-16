@@ -237,7 +237,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()  
-        time.sleep(.7)
+        time.sleep(.5)
     elif(device>=3 and device<=6 and secondMicro=="false"):
         byte_to_write=bytearray([0x0c,0x03,160+device-1,000,000,0x04])
         low,high=cal_checksum_func(byte_to_write)
@@ -245,7 +245,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()  
-        time.sleep(.6)
+        time.sleep(.5)
     elif(device==6 and secondMicro=="true"):
         byte_to_write=bytearray([0x0c,0x03,160+device,000,000,0x04])
         low,high=cal_checksum_func(byte_to_write)
@@ -253,7 +253,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()  
-        time.sleep(.6)
+        time.sleep(.5)
     elif(device == 7 or device == 8):
         byte_to_write=bytearray([0x0c,0x03,160+device,000,000,0x04])
         low,high=cal_checksum_func(byte_to_write)
@@ -262,16 +262,15 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
         ser.write(byte_to_write)
         ser.flush()  
         print(byte_to_write,len(byte_to_write))
-        time.sleep(.6)
+        time.sleep(.5)
     elif(device==10):
         byte_to_write=bytearray([0x0c,0x03,160+device-1,000,000,0x04])
         low,high=cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
         byte_to_write.append(low)
-        time.sleep(.6)
         ser.write(byte_to_write)
         ser.flush()  
-        time.sleep(.6)
+        time.sleep(.5)
     ##################################
     try:     
         if (device==5): 
