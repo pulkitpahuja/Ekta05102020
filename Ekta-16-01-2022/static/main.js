@@ -521,7 +521,7 @@ const start_test = () => {
       inner_counter = 0;
       stop();
     }
-  }, 1400);
+  }, 1500);
 };
 
 function reset() {
