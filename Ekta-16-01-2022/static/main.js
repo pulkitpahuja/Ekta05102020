@@ -396,6 +396,8 @@ const process30A = (truth) => {
         $("#result_11").css({ color: "red" });
         turn_off_device_relay(9);
       }
+
+      processResistance();
     },
   });
 };
@@ -433,6 +435,7 @@ const processFrequency = (truth) => {
     data: to_send, // serializes the form's elements.
     success: function (response) {
       document.getElementById(`result_12`).value = response;
+      $("#result_12").css({ color: "green" });
     },
   });
 };
@@ -490,7 +493,7 @@ const order = [
   },
   { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
   { work: ["PF"], time: 9 },
-  { work: ["20V", "30A", "Resistance"], time: 10 },
+  { work: ["20V", "30A"], time: 10 },
   {
     work: ["Frequency"],
     time: 12,
