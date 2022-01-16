@@ -477,8 +477,23 @@ const order = [
     time: 1,
   },
   {
-    work: ["PF"],
-    time: 9,
+    work: ["Insulation"],
+    time: 3,
+  },
+  {
+    work: ["Voltmeter"],
+    time: 4,
+  },
+  {
+    work: ["VAW"],
+    time: 5,
+  },
+  { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
+  { work: ["PF"], time: 9 },
+  { work: ["20V", "30A", "Resistance"], time: 10 },
+  {
+    work: ["Frequency"],
+    time: 12,
   },
 ];
 
