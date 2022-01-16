@@ -495,10 +495,8 @@ const start_test = () => {
     const time =
       parseInt(document.getElementById(`time_${or.time}`).value) || 0;
     if (count <= del) {
-      setTimeout(() => {
-        console.log("Running Delayed function: ", or.work[inner_counter]);
-        MAIN[or.work[inner_counter]](false);
-      }, 0);
+      console.log("Running Delayed function: ", or.work[inner_counter]);
+      MAIN[or.work[inner_counter]](false);
       if (inner_counter === work_length - 1) {
         inner_counter = 0;
       } else {
@@ -506,10 +504,8 @@ const start_test = () => {
       }
     }
     if (count > del && count <= time) {
-      setTimeout(() => {
-        console.log("Running Delayed function: ", or.work[inner_counter]);
-        MAIN[or.work[inner_counter]](true);
-      }, 0);
+      console.log("Running Delayed function: ", or.work[inner_counter]);
+      MAIN[or.work[inner_counter]](true);
       if (inner_counter === work_length - 1) {
         inner_counter = 0;
       } else {
