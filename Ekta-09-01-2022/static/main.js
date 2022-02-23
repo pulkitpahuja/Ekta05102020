@@ -972,7 +972,7 @@ function run_task(truth, device) {
               setTimeout(function () {
                 stop();
                 turn_off_device_relay(3);
-              }, 1000);
+              }, 3000);
             }
           }
           if (val !== 11) {
