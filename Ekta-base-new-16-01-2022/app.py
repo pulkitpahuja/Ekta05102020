@@ -45,19 +45,6 @@ ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-byte_val = {
-    "1": bytearray([0x03, 0x03, 000, 000, 000, 0x04, 0x45, 0xEB]),  # kV
-    "2": bytearray([0x07, 0x03, 000, 000, 000, 0x02, 0xC4, 0x6D]),  # mA
-    "3": bytearray([0x09, 0x03, 000, 000, 000, 0x02, 0xC5, 0x43]),  # insulatiom
-    "4": bytearray([0x01, 0x03, 000, 000, 000, 0x02, 0xC4, 0x0B]),  # voltmeter
-    "5": bytearray([0x0B, 0x03, 000, 000, 000, 0x06, 0xC5, 0x62]),  # VAW
-    "6": bytearray([0x02, 0x03, 000, 000, 000, 0x02, 0xC4, 0x38]),  # micro
-    "7": bytearray([0x04, 0x03, 000, 000, 000, 0x02, 0xC4, 0x5E]),  # pF
-    "8": bytearray([0x05, 0x03, 000, 000, 000, 0x02, 0xC5, 0x8F]),  # 20V
-    "9": bytearray([0x08, 0x03, 000, 000, 000, 0x02, 0xC4, 0x92]),  # 30A
-    "10": bytearray([0x06, 0x03, 000, 000, 000, 0x02, 0xC5, 0xBC]),  # Freq
-}
-
 
 @app.route("/")
 @app.route("/<name>")
@@ -351,7 +338,7 @@ def run_serial(com):
             return "false"
 
 
-def turn_off_device_relay(device,device_name):
+def turn_off_device_relay(device, device_name):
     time.sleep(0.5)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
     to_write = cal_checksum_func(to_write)
