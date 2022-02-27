@@ -93,8 +93,9 @@ def download_this_csv(result_data, name):
 
 def compute_float(bytes_rec):
     data = []
-    bytes_rec.pop()
-    bytes_rec.pop()  ## deletes last 2 bytes (Checksum)
+    bytes_rec = list(bytes_rec)
+    del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
+    del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
     del bytes_rec[:3]  ## deletes first 3 bytes (Header)
     for i in range(0, len(bytes_rec), 4):
         list1 = [bytes_rec[i + 1], bytes_rec[i], bytes_rec[i + 3], bytes_rec[i + 2]]
@@ -232,7 +233,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
         final_val = computed_values
         if computed_values > float(maximum) and computed_values < float(minimum):
             if truth == "true" and not flag[device_name]:
-                turn_on_device_relay(device_name)            
+                turn_on_device_relay(device_name)
 
     if device_name == "kV" or device_name == "VAW":
         temp_dict = {"vals": computed_values}
