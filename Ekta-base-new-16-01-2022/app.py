@@ -2,23 +2,14 @@ from flask import Flask, render_template, request, jsonify
 import serial
 import json
 from webui import WebUI
-import serial
-import sys
 import os
-import random
 import time
 import csv
 from xlsxwriter.workbook import Workbook
-
 import struct
 import datetime
-from fpdf import FPDF, HTMLMixin
 from datetime import date, timedelta
-
-
-class HTML2PDF(FPDF, HTMLMixin):
-    pass
-
+from constants import BYTE_VAL
 
 global start
 
@@ -144,7 +135,7 @@ def checksum_func(arr):
     checksum = checksum << 8
     highCRC = checksum >> 8
 
-    return lowCRC, highCRC
+    return lowCRC & 0xFF == arr[-1] and highCRC & 0xFF == arr[-2]
 
 
 def cal_checksum_func(arr):
@@ -170,11 +161,10 @@ def cal_checksum_func(arr):
     return bytearray(arr)
 
 
-def run_and_get_data(secondMicro, truth, device, maximum, minimum):
+def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     master_list = []
     device = int(device)
-    global bytes_rec
-    global final_rec
+    bytes_rec = bytearray([])
     ser.flushInput()
     ser.flushOutput()
 
@@ -218,195 +208,24 @@ def run_and_get_data(secondMicro, truth, device, maximum, minimum):
         time.sleep(0.5)
     ##################################
     try:
-        if device == 5:
-
-            ser.write(byte_val[str(device)])
-            ser.flush()
-            time.sleep(0.6)
-            bytes_rec = ser.read(17)
-            if len(bytes_rec) < 17:
-
-                bytes_rec = bytearray(
-                    [
-                        0x00,
-                        0x00,
-                        000,
-                        000,
-                        000,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                    ]
-                )
-
-        elif device == 1:
-            ser.write(byte_val[str(device)])
-            ser.flush()
-            time.sleep(0.6)
-
-            bytes_rec = ser.read(13)
-
-            if len(bytes_rec) < 13:
-                bytes_rec = bytearray(
-                    [
-                        0x00,
-                        0x00,
-                        000,
-                        000,
-                        000,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                        0x00,
-                    ]
-                )
-
-        else:
-            print("Sending", byte_val[str(device)])
-            ser.write(byte_val[str(device)])
-            ser.flush()
-            time.sleep(0.6)
-            bytes_rec = ser.read(9)
-
-            if len(bytes_rec) < 9:
-                bytes_rec = bytearray(
-                    [0x00, 0x00, 000, 000, 000, 0x00, 0x00, 0x00, 0x00]
-                )
-
-        import re
-
-        print("RECV", re.findall("..", bytes_rec.hex()))
+        BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
+        RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]
+        ser.write(BYTES_TO_SEND)
+        ser.flush()
+        time.sleep(0.6)
+        bytes_rec = ser.read(RECV_LEN)
+        if len(bytes_rec) < RECV_LEN:
+            bytes_rec = bytearray([0] * RECV_LEN)
 
     except:
+        bytes_rec = bytearray([0] * RECV_LEN)
 
-        if device == 5:
-            bytes_rec = bytearray(
-                [
-                    0x00,
-                    0x00,
-                    000,
-                    000,
-                    000,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                ]
-            )
+    import re
 
-        elif device == 1:
-            bytes_rec = bytearray(
-                [
-                    0x00,
-                    0x00,
-                    000,
-                    000,
-                    000,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                ]
-            )
+    print("RECV", re.findall("..", bytes_rec.hex()))
 
-        else:
-            bytes_rec = bytearray([0x00, 0x00, 000, 000, 000, 0x00, 0x00, 0x00, 0x00])
-
-        ##print(bytes_rec)
-    low, high = checksum_func(bytes_rec)
-
-    if device == 5:  ##VAW DEVICE
-
-        if low & 0xFF == bytes_rec[16] and high & 0xFF == bytes_rec[15]:
-
-            final_rec = bytes_rec
-            print("CHECKSUM MATCHED")
-        else:
-
-            new_byte = bytearray(
-                [
-                    0x00,
-                    0x00,
-                    000,
-                    000,
-                    000,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                ]
-            )
-            final_rec = new_byte
-
-    elif device == 1:  ##KV DEVICE
-        if low & 0xFF == bytes_rec[12] and high & 0xFF == bytes_rec[11]:
-
-            final_rec = bytes_rec
-            print("CHECKSUM MATCHED")
-
-        else:
-
-            new_byte = bytearray(
-                [
-                    0x00,
-                    0x00,
-                    000,
-                    000,
-                    000,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                    0x00,
-                ]
-            )
-            final_rec = new_byte
-
-    else:
-        if low & 0xFF == bytes_rec[8] and high & 0xFF == bytes_rec[7]:
-
-            final_rec = bytes_rec
-            print("CHECKSUM MATCHED")
-
-        else:
-            new_byte = bytearray([0x00, 0x00, 000, 000, 000, 0x00, 0x00, 0x00])
-            final_rec = new_byte
+    if not checksum_func(bytes_rec):
+        bytes_rec = bytearray([0] * RECV_LEN)
 
     ####### EEE#########3
 
@@ -415,8 +234,8 @@ def run_and_get_data(secondMicro, truth, device, maximum, minimum):
         temp = 2
         maximum = maximum.split(",")
         minimum = minimum.split(",")
-        for val in compute_float(final_rec):
-            print(compute_float(final_rec))
+        for val in compute_float(bytes_rec):
+            print(compute_float(bytes_rec))
             if val <= float(maximum[i]) and val >= float(minimum[i]):
                 master_list.append(val)
                 i += 1
@@ -435,16 +254,16 @@ def run_and_get_data(secondMicro, truth, device, maximum, minimum):
                     master_list.append(val)
                     pass
     elif device == 1:
-        for val in compute_float(final_rec):
+        for val in compute_float(bytes_rec):
             master_list.append(val)
 
     else:
-        if compute_float(final_rec) <= float(maximum) and compute_float(
-            final_rec
+        if compute_float(bytes_rec) <= float(maximum) and compute_float(
+            bytes_rec
         ) >= float(minimum):
-            final_val = compute_float(final_rec)
+            final_val = compute_float(bytes_rec)
         else:
-            final_val = compute_float(final_rec)
+            final_val = compute_float(bytes_rec)
             if truth == "true" and flag[str(device)] == "False":
                 to_write = bytearray(
                     [byte_val[str(device)][0], 0x03, 155, 000, 000, 0x04]
