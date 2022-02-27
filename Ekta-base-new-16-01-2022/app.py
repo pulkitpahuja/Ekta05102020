@@ -29,15 +29,16 @@ createFolder("static/csv/")
 ser = serial.Serial()
 
 flag = {
-    "1": "False",
-    "2": "False",
-    "3": "False",
-    "4": "False",
-    "6": "False",
-    "7": "False",
-    "8": "False",
-    "9": "False",
-    "10": "False",
+    "kV": False,
+    "mA": False,
+    "Insulation": False,
+    "Voltmeter": False,
+    "VAW": False,
+    "micro": False,
+    "pF": False,
+    "20V": False,
+    "30A": False,
+    "Frequency": False,
 }
 
 app = Flask(__name__)
@@ -251,7 +252,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
             final_val = compute_float(bytes_rec)
         else:
             final_val = compute_float(bytes_rec)
-            if truth == "true" and flag[str(device)] == "False":
+            if truth == "true" and flag[device_name] == "False":
                 to_write = bytearray(
                     [BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04]
                 )
@@ -259,7 +260,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
                 ser.write(to_write)
                 time.sleep(0.5)
                 print("RELAY On")
-                flag[str(device)] = "True"
+                flag[device_name] = True
             else:
                 pass
 
@@ -294,15 +295,16 @@ def stop_sequence():
     to_write = cal_checksum_func(to_write)
     ser.write(to_write)
     flag = {
-        "1": "False",
-        "2": "False",
-        "3": "False",
-        "4": "False",
-        "6": "False",
-        "7": "False",
-        "8": "False",
-        "9": "False",
-        "10": "False",
+        "kV": False,
+        "mA": False,
+        "Insulation": False,
+        "Voltmeter": False,
+        "VAW": False,
+        "micro": False,
+        "pF": False,
+        "20V": False,
+        "30A": False,
+        "Frequency": False,
     }
     global start
     start = False
@@ -344,7 +346,7 @@ def turn_off_device_relay(device, device_name):
     to_write = cal_checksum_func(to_write)
     ser.write(to_write)
     print("RELAY OFF", to_write)
-    flag[str(device)] = "False"
+    flag[device_name] = False
     time.sleep(1)
 
 
@@ -503,10 +505,8 @@ def sequence_init():
 def turn_off_relay():  ## turn of individual device relay irrespective of state
     if request.method == "POST":
         data = request.form.to_dict()
-
-        turn_off_device_relay(data["device"], data["com_port"])
-
-        return "OFF"
+        turn_off_device_relay(data["device_name"])
+        return str(data["device_name"] + "Relay is now OFF")
 
 
 @app.route("/get_fac_data", methods=["GET", "POST", "DELETE"])
@@ -611,6 +611,7 @@ def run_task():
                 "true",
                 data["truth"],
                 data["device"],
+                data["device_name"],
                 data["maximum"],
                 data["minimum"],
                 data["com"],
@@ -620,6 +621,7 @@ def run_task():
                 "false",
                 data["truth"],
                 data["device"],
+                data["device_name"],
                 data["maximum"],
                 data["minimum"],
                 data["com"],
