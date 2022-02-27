@@ -33,7 +33,7 @@ flag = {
     "kV": False,
     "mA": False,
     "Insulation": False,
-    "Voltmeter": False,
+    "ResistanceMeter": False,
     "VAW": False,
     "micro": False,
     "pF": False,
@@ -93,6 +93,7 @@ def download_this_csv(result_data, name):
 
 def compute_float(bytes_rec):
     data = []
+    bytes_rec = list(bytes_rec)
     del bytes_rec[-1]
     del bytes_rec[-1]  ## deletes last 2 bytes (Checksum)
     del bytes_rec[:3]  ## deletes first 3 bytes (Header)
@@ -150,7 +151,7 @@ def cal_checksum_func(arr):
     return bytearray(arr)
 
 
-def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
+def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, extra):
     BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
     RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]
     final_val = 0.0
@@ -228,11 +229,19 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     elif device_name == "kV":
         pass
 
+    elif device_name == "ResistanceMeter":
+        final_val = computed_values
+        v_val = float(extra["valV"])
+        w_val = (v_val * v_val) / computed_values
+        if w_val > float(maximum) or w_val < float(minimum):
+            if truth == "true" and not flag[device_name]:
+                turn_on_device_relay(device_name)
+
     else:
         final_val = computed_values
-        if computed_values > float(maximum) and computed_values < float(minimum):
+        if computed_values > float(maximum) or computed_values < float(minimum):
             if truth == "true" and not flag[device_name]:
-                turn_on_device_relay(device_name)            
+                turn_on_device_relay(device_name)
 
     if device_name == "kV" or device_name == "VAW":
         temp_dict = {"vals": computed_values}
@@ -268,7 +277,7 @@ def stop_sequence():
         "kV": False,
         "mA": False,
         "Insulation": False,
-        "Voltmeter": False,
+        "ResistanceMeter": False,
         "VAW": False,
         "micro": False,
         "pF": False,
@@ -593,6 +602,7 @@ def run_task():
                 data["maximum"],
                 data["minimum"],
                 data["com"],
+                data["extra"]
             )
         else:
             val = run_and_get_data(
@@ -603,6 +613,7 @@ def run_task():
                 data["maximum"],
                 data["minimum"],
                 data["com"],
+                data["extra"]
             )
         return str(val)
 

@@ -165,33 +165,40 @@ const processInsulation = (truth) => {
 
 const processResistanceMeter = (truth) => {
   console.log("processResistanceMeter");
+  const valV = parseFloat(document.getElementById("value_V").value);
+  const valueI = parseFloat(document.getElementById("value_I").value);
   const to_send = {
     secondMicro: "false",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 4,
+    extra: { valV: valV },
     device_name: "ResistanceMeter",
     maximum: document.getElementById("max_4").value,
     minimum: document.getElementById("min_4").value,
   };
 
+  // Max Min on W
+
   $.ajax({
     type: "POST",
-
     url: "/run_task",
     cache: false,
     data: to_send, // serializes the form's elements.
     success: function (response) {
       document.getElementById("result_4").value = response;
-
+      const valW = (valV * valV) / parseFloat(response);
+      const valI = valueI / parseFloat(response);
+      document.getElementById("result_valW").value = valW;
+      document.getElementById("result_valI").value = valI;
       if (
-        parseFloat(response) <= parseFloat(to_send["maximum"]) &&
-        parseFloat(response) >= parseFloat(to_send["minimum"])
+        parseFloat(valW) <= parseFloat(to_send["maximum"]) &&
+        parseFloat(valW) >= parseFloat(to_send["minimum"])
       ) {
-        $("#result_4").css({ color: "green" });
+        $("#result_valW").css({ color: "green" });
       } else {
         turn_off_device_relay(to_send["device_name"]);
-        $("#result_4").css({ color: "red" });
+        $("#result_valW").css({ color: "red" });
       }
     },
   });
@@ -548,13 +555,13 @@ function reset() {
   overall_device = 1;
 }
 
-function turn_off_device_relay(device) {
+function turn_off_device_relay(device_name) {
   //turn off individual device relay
   $.ajax({
     type: "POST",
     url: "/turn_off_relay",
     data: {
-      device: device,
+      device_name: device_name,
       com_port: document.getElementById("com_port").value,
     }, // serializes the form's elements.
     success: function (data) {
