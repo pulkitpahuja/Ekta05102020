@@ -165,8 +165,7 @@ const processInsulation = (truth) => {
 
 const processResistanceMeter = (truth) => {
   console.log("processResistanceMeter");
-  const valV = parseFloat(document.getElementById("value_V").value);
-  const valueI = parseFloat(document.getElementById("value_I").value);
+  const valV = parseFloat(document.getElementById("value_V_input").value);
   const to_send = {
     secondMicro: "false",
     truth: truth,
@@ -188,7 +187,7 @@ const processResistanceMeter = (truth) => {
     success: function (response) {
       document.getElementById("result_4").value = response;
       const valW = (valV * valV) / parseFloat(response);
-      const valI = valueI / parseFloat(response);
+      const valI = valV / parseFloat(response);
       document.getElementById("result_valW").value = valW;
       document.getElementById("result_valI").value = valI;
       if (
@@ -457,21 +456,6 @@ const processFrequency = (truth) => {
   });
 };
 
-const MAIN = {
-  kV: processKV,
-  mA: processmA,
-  Resistance: processResistance,
-  MicroAmpere1: processMicroAmp1,
-  MicroAmpere2: processMicroAmp2,
-  ResistanceMeter: processResistanceMeter,
-  VAW: processVAW,
-  PF: processPF,
-  "20V": process20V,
-  "30A": process30A,
-  Frequency: processFrequency,
-  Insulation: processInsulation,
-};
-
 const order = [
   {
     work: ["kV", "mA"],
@@ -528,16 +512,31 @@ const start_test = () => {
         inner_counter++;
       }
     }
-    if (count > time) {
+    if (count > time) {     //test running time without delay
       inner_counter = 0;
       start_counter++;
       count = 0;
     }
-    if (start_counter >= order.length) {
+    if (start_counter >= order.length) {    //end of test
       stop();
       save_result_data();
     }
   }, 1500);
+};
+
+const MAIN = {
+  kV: processKV,
+  mA: processmA,
+  Resistance: processResistance,
+  MicroAmpere1: processMicroAmp1,
+  MicroAmpere2: processMicroAmp2,
+  ResistanceMeter: processResistanceMeter,
+  VAW: processVAW,
+  PF: processPF,
+  "20V": process20V,
+  "30A": process30A,
+  Frequency: processFrequency,
+  Insulation: processInsulation,
 };
 
 function reset() {
@@ -626,6 +625,7 @@ function stop_sequence() {
 
 function stop_task() {
   clearInterval(task_interval);
+  clearInterval(timer);
 }
 
 function save_result_data() {
