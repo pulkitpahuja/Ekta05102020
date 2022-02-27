@@ -149,6 +149,8 @@ def cal_checksum_func(arr):
 
 
 def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
+    BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
+    RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]
     master_list = []
     device = int(device)
     bytes_rec = bytearray([])
@@ -195,8 +197,6 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
         time.sleep(0.5)
     ##################################
     try:
-        BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
-        RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]
         ser.write(BYTES_TO_SEND)
         ser.flush()
         time.sleep(0.6)
