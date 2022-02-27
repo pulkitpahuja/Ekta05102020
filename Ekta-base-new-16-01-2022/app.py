@@ -54,23 +54,25 @@ ui = WebUI(app, debug=True)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
-byte_val={
-         "1":bytearray([0x03,0x03,000,000,000,0x04,0x45,0xeb]),  #kV
-         "2":bytearray([0x07,0x03,000,000,000,0x02,0xc4,0x6d]),  #mA
-         "3":bytearray([0x09,0x03,000,000,000,0x02,0xc5,0x43]),  #insulatiom
-         "4":bytearray([0x01,0x03,000,000,000,0x02,0xc4,0x0b]),  #voltmeter
-         "5":bytearray([0x0b,0x03,000,000,000,0x06,0xc5,0x62]),  #VAW
-         "6":bytearray([0x02,0x03,000,000,000,0x02,0xc4,0x38]), #micro
-         "7":bytearray([0x04,0x03,000,000,000,0x02,0xc4,0x5e]), #pF
-         "8":bytearray([0x05,0x03,000,000,000,0x02,0xc5,0x8f]), #20V
-         "9":bytearray([0x08,0x03,000,000,000,0x02,0xc4,0x92]), #30A
-         "10":bytearray([0x06,0x03,000,000,000,0x02,0xc5,0xbc]), #Freq
-        }
+byte_val = {
+    "1": bytearray([0x03, 0x03, 000, 000, 000, 0x04, 0x45, 0xEB]),  # kV
+    "2": bytearray([0x07, 0x03, 000, 000, 000, 0x02, 0xC4, 0x6D]),  # mA
+    "3": bytearray([0x09, 0x03, 000, 000, 000, 0x02, 0xC5, 0x43]),  # insulatiom
+    "4": bytearray([0x01, 0x03, 000, 000, 000, 0x02, 0xC4, 0x0B]),  # voltmeter
+    "5": bytearray([0x0B, 0x03, 000, 000, 000, 0x06, 0xC5, 0x62]),  # VAW
+    "6": bytearray([0x02, 0x03, 000, 000, 000, 0x02, 0xC4, 0x38]),  # micro
+    "7": bytearray([0x04, 0x03, 000, 000, 000, 0x02, 0xC4, 0x5E]),  # pF
+    "8": bytearray([0x05, 0x03, 000, 000, 000, 0x02, 0xC5, 0x8F]),  # 20V
+    "9": bytearray([0x08, 0x03, 000, 000, 000, 0x02, 0xC4, 0x92]),  # 30A
+    "10": bytearray([0x06, 0x03, 000, 000, 000, 0x02, 0xC5, 0xBC]),  # Freq
+}
+
 
 @app.route("/")
 @app.route("/<name>")
 def hello(name=None):
     return render_template("main.html", name={"text": name})
+
 
 def download_this_csv(result_data, name):
     result_data = json.loads(result_data)
@@ -108,6 +110,7 @@ def download_this_csv(result_data, name):
 
     return "Success - Location = " + loc + "_data_file.csv"
 
+
 def compute_float(bytes_rec):
     data = []
     bytes_rec.pop()
@@ -122,6 +125,7 @@ def compute_float(bytes_rec):
         return data[0]
     else:
         return data
+
 
 def checksum_func(arr):
 
@@ -141,6 +145,7 @@ def checksum_func(arr):
     highCRC = checksum >> 8
 
     return lowCRC, highCRC
+
 
 def cal_checksum_func(arr):
 
@@ -163,6 +168,7 @@ def cal_checksum_func(arr):
     arr.append(highCRC)
     arr.append(lowCRC)
     return bytearray(arr)
+
 
 def run_and_get_data(secondMicro, truth, device, maximum, minimum):
     master_list = []
@@ -465,6 +471,7 @@ def run_and_get_data(secondMicro, truth, device, maximum, minimum):
         else:
             return final_val
 
+
 def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     print("START SEQ")
     start = True
@@ -472,6 +479,7 @@ def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     to_write = cal_checksum_func(to_write)
     ser.write(to_write)
     time.sleep(0.6)
+
 
 def stop_sequence():
     time.sleep(0.6)
@@ -501,6 +509,7 @@ def stop_sequence():
     ser.flush()
     time.sleep(1)
 
+
 def run_serial(com):
     try:
         global ser
@@ -522,6 +531,7 @@ def run_serial(com):
                 ser.close()
             return "false"
 
+
 def turn_off_device_relay(device):
     time.sleep(0.5)
     to_write = bytearray([byte_val[str(device)][0], 0x03, 215, 000, 000, 0x04])
@@ -530,6 +540,7 @@ def turn_off_device_relay(device):
     print("RELAY OFF", to_write)
     flag[str(device)] = "False"
     time.sleep(1)
+
 
 def get_dates(start_date, end_date):
     sdate = datetime.datetime.strptime(start_date, "%Y-%m-%d")  # start date
@@ -541,6 +552,7 @@ def get_dates(start_date, end_date):
         lst.append(day.strftime("%Y-%m-%d"))
 
     return lst
+
 
 def overall_csv(data, name):
     print(data)
@@ -641,6 +653,7 @@ def overall_csv(data, name):
     os.startfile(path)
     return "Success - Location = " + loc + "_data_file.xlsx"
 
+
 @app.route("/csv_dated", methods=["GET", "POST", "DELETE"])
 def csv_dated():
     if request.method == "POST":
@@ -663,6 +676,7 @@ def csv_dated():
 
         return overall_csv(to_send, data["org"])
 
+
 @app.route("/sequence_init", methods=["GET", "POST", "DELETE"])
 def sequence_init():
     if request.method == "POST":
@@ -678,6 +692,7 @@ def sequence_init():
 
         return "500"
 
+
 @app.route("/turn_off_relay", methods=["GET", "POST", "DELETE"])
 def turn_off_relay():  ## turn of individual device relay irrespective of state
     if request.method == "POST":
@@ -686,6 +701,7 @@ def turn_off_relay():  ## turn of individual device relay irrespective of state
         turn_off_device_relay(data["device"], data["com_port"])
 
         return "OFF"
+
 
 @app.route("/get_fac_data", methods=["GET", "POST", "DELETE"])
 def get_fac_data():
@@ -706,6 +722,7 @@ def get_fac_data():
 
         return jsonify(tempdict)
 
+
 @app.route("/save_curr_config", methods=["GET", "POST", "DELETE"])
 def save_curr_config():
     if request.method == "POST":
@@ -720,6 +737,7 @@ def save_curr_config():
             return "Success"
         except:
             return "Failure"
+
 
 @app.route("/save_result", methods=["GET", "POST", "DELETE"])
 def save_result():
@@ -744,9 +762,11 @@ def save_result():
         except:
             return "Failure"
 
+
 @app.route("/load_data", methods=["GET", "POST", "DELETE"])
 def load_data():
     return render_template("load_data.html")
+
 
 @app.route("/load_config", methods=["GET", "POST", "DELETE"])
 def load_config():
@@ -765,6 +785,7 @@ def load_config():
         except:
             return "No File Found"
 
+
 @app.route("/connected", methods=["GET", "POST", "DELETE"])
 def connected():
     global start
@@ -773,6 +794,7 @@ def connected():
         data = request.form.to_dict()
 
         return run_serial(data["com_port"])
+
 
 @app.route("/run_task", methods=["GET", "POST", "DELETE"])
 def run_task():
@@ -798,12 +820,13 @@ def run_task():
             )
         return str(val)
 
+
 @app.route("/download_csv", methods=["GET", "POST", "DELETE"])
 def download_csv():
     if request.method == "POST":
         data = request.get_json(force=True)
         return download_this_csv(data["data"], data["name"])
 
+
 if __name__ == "__main__":
     ui.run()
-
