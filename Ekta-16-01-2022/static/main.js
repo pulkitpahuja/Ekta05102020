@@ -303,6 +303,7 @@ const processMicroAmp1 = (truth) => {
     },
   });
 };
+
 const processMicroAmp2 = (truth) => {
   console.log("processMicroAmp2");
   let identifier = 13;
@@ -552,7 +553,6 @@ function reset() {
   count = 0;
   inner_counter = 0;
   overall_device = 1;
-  // check_ext_trigg();
 }
 
 function turn_off_device_relay(device) {
@@ -592,7 +592,6 @@ function start() {
     return;
   }
   console.log("STarting TASK");
-  //check_stop_trigg();
   start_sequence();
   start_test();
 }
@@ -621,48 +620,6 @@ function stop_sequence() {
     data: { type: "stop", com_port: document.getElementById("com_port").value }, // serializes the form's elements.
     success: function (data) {
       console.log("Result Status : " + data);
-    },
-  });
-}
-
-function check_ext_trigg() {
-  //##checking external trigger
-
-  $.ajax({
-    type: "POST",
-    url: "/check_ext_trigg",
-    data: { com_port: document.getElementById("com_port").value },
-    success: function (data) {
-      hasReturned = "true";
-      if (data == "1") {
-        console.log(data);
-        if (start_counter == 1) {
-        } else {
-          start_counter = 1;
-          start();
-        }
-      }
-    },
-  });
-}
-
-function check_stop_trigg() {
-  //##checking external trigger
-
-  $.ajax({
-    type: "POST",
-    url: "/check_stop_trigg",
-    data: { com_port: document.getElementById("com_port").value },
-    success: function (data) {
-      hasReturned = "true";
-      if (data == "1") {
-        console.log(data);
-        if (start_counter == 1) {
-        } else {
-          start_counter = 1;
-          stop();
-        }
-      }
     },
   });
 }
@@ -804,7 +761,6 @@ function get_connect_status() {
       if (data == "true") {
         document.getElementById("ser_status").innerHTML = "Connected";
         $("#ser_status").css({ color: "green" });
-        // check_ext_trigg();
       } else {
         document.getElementById("ser_status").innerHTML = "Disconnected";
         $("#ser_status").css({ color: "red" });
