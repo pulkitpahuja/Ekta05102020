@@ -4,6 +4,7 @@ import json
 from webui import WebUI
 import os
 import time
+import re
 import csv
 from xlsxwriter.workbook import Workbook
 import struct
@@ -208,49 +209,37 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     except:
         bytes_rec = bytearray([0] * RECV_LEN)
 
-    import re
-
-    print("RECV", re.findall("..", bytes_rec.hex()))
+    print("RECEIVED BYTES", re.findall("..", bytes_rec.hex()))
 
     if not checksum_func(bytes_rec):
         bytes_rec = bytearray([0] * RECV_LEN)
 
-    ####### EEE#########3
-
     computed_values = compute_float(bytes_rec)
 
-    if device == 5:
-        i = 0
+    if device_name == "VAW":
         maximum = maximum.split(",")
         minimum = minimum.split(",")
-        for val in computed_values:
-            if val <= float(maximum[i]) and val >= float(minimum[i]):
-                i += 1
-            else:
-                if truth == "true" and i == 2:
-                    turn_on_device_relay(device_name)
-                    temp = i
-                    i += 1
-                else:
-                    i += 1
+        if computed_values[2] > float(maximum[2]) or computed_values[2] < float(
+            minimum[2]
+        ):
+            if truth == "true" and not flag[device_name]:
+                turn_on_device_relay(device_name)
 
-    elif device == 1:
+    elif device_name == "kV":
         pass
 
     else:
         final_val = computed_values
-        if computed_values <= float(maximum) and computed_values >= float(minimum):
-            pass
-        else:
+        if computed_values > float(maximum) and computed_values < float(minimum):
             if truth == "true" and not flag[device_name]:
-                turn_on_device_relay(device_name)
+                turn_on_device_relay(device_name)            
 
-    if device == 1 or device == 5:
+    if device_name == "kV" or device_name == "VAW":
         temp_dict = {"vals": computed_values}
         return json.dumps(temp_dict)
 
     else:
-        if device == 10:
+        if device_name == "Frequency":
             import random
 
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
