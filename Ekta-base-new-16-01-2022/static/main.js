@@ -68,6 +68,7 @@ const processKV = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 1,
+    device_name: "kV",
     maximum: -10000,
     minimum: 10000,
   };
@@ -99,6 +100,7 @@ const processmA = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 2,
+    device_name: "mA",
     maximum: document.getElementById("max_2").value,
     minimum: document.getElementById("min_2").value,
   };
@@ -118,7 +120,7 @@ const processmA = (truth) => {
         $("#result_2").css({ color: "green" });
       } else {
         $("#result_2").css({ color: "red" });
-        turn_off_device_relay(2);
+        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -131,6 +133,7 @@ const processInsulation = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 3,
+    device_name: "Insulation",
     maximum: document.getElementById("max_3").value,
     minimum: document.getElementById("min_3").value,
   };
@@ -152,7 +155,7 @@ const processInsulation = (truth) => {
       } else {
         setTimeout(function () {
           stop();
-          turn_off_device_relay(3);
+          turn_off_device_relay(to_send["device_name"]);
         }, 2500);
         $("#result_3").css({ color: "red" });
       }
@@ -167,6 +170,7 @@ const processVoltmeter = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 4,
+    device_name: "Voltmeter",
     maximum: document.getElementById("max_4").value,
     minimum: document.getElementById("min_4").value,
   };
@@ -186,7 +190,7 @@ const processVoltmeter = (truth) => {
       ) {
         $("#result_4").css({ color: "green" });
       } else {
-        turn_off_device_relay(4);
+        turn_off_device_relay(to_send["device_name"]);
         $("#result_4").css({ color: "red" });
       }
     },
@@ -200,6 +204,7 @@ const processVAW = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 5,
+    device_name: "VAW",
     maximum: [
       document.getElementById("max_5").value,
       document.getElementById("max_6").value,
@@ -229,7 +234,7 @@ const processVAW = (truth) => {
           $("#result_" + val).css({ color: "green" });
         } else {
           $("#result_" + val).css({ color: "red" });
-          turn_off_device_relay(5);
+          turn_off_device_relay(to_send["device_name"]);
         }
       }
     },
@@ -243,6 +248,7 @@ const processPF = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 7,
+    device_name: "pF",
     maximum: document.getElementById("max_9").value,
     minimum: document.getElementById("min_9").value,
   };
@@ -263,7 +269,7 @@ const processPF = (truth) => {
         $("#result_9").css({ color: "green" });
       } else {
         $("#result_9").css({ color: "red" });
-        turn_off_device_relay(7);
+        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -278,6 +284,7 @@ const processMicroAmp1 = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
+    device_name: "micro",
     maximum: document.getElementById(`max_${identifier}`).value,
     minimum: document.getElementById(`min_${identifier}`).value,
   };
@@ -298,7 +305,7 @@ const processMicroAmp1 = (truth) => {
         $(`#result_${identifier}`).css({ color: "green" });
       } else {
         $(`#result_${identifier}`).css({ color: "red" });
-        turn_off_device_relay(6);
+        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -313,6 +320,8 @@ const processMicroAmp2 = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
+    device_name: "micro",
+
     maximum: document.getElementById(`max_${identifier}`).value,
     minimum: document.getElementById(`min_${identifier}`).value,
   };
@@ -333,7 +342,7 @@ const processMicroAmp2 = (truth) => {
         $(`#result_${identifier}`).css({ color: "green" });
       } else {
         $(`#result_${identifier}`).css({ color: "red" });
-        turn_off_device_relay(6);
+        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -346,6 +355,7 @@ const process20V = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 8,
+    device_name: "20V",
     maximum: 100000,
     minimum: document.getElementById("min_10").value,
   };
@@ -363,7 +373,7 @@ const process20V = (truth) => {
         $("#result_10").css({ color: "green" });
       } else {
         $("#result_10").css({ color: "red" });
-        turn_off_device_relay(8);
+        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -376,6 +386,7 @@ const process30A = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 9,
+    device_name: "30A",
     maximum: 100000,
     minimum: document.getElementById("min_11").value,
   };
@@ -393,7 +404,7 @@ const process30A = (truth) => {
         $("#result_11").css({ color: "green" });
       } else {
         $("#result_11").css({ color: "red" });
-        turn_off_device_relay(9);
+        turn_off_device_relay(to_send["device_name"]);
       }
       processResistance();
     },
@@ -421,6 +432,7 @@ const processFrequency = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 10,
+    device_name: "Frequency",
     maximum: -100000,
     minimum: 1000000,
   };

@@ -219,7 +219,6 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
 
     if device == 5:
         i = 0
-        temp = 2
         maximum = maximum.split(",")
         minimum = minimum.split(",")
         for val in compute_float(bytes_rec):
@@ -228,7 +227,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
                 master_list.append(val)
                 i += 1
             else:
-                if truth == "true" and temp == i:
+                if truth == "true" and i == 2:
                     to_write = bytearray([0x0B, 0x03, 155, 000, 000, 0x04])
                     master_list.append(val)
                     to_write = cal_checksum_func(to_write)
@@ -252,14 +251,14 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
             final_val = compute_float(bytes_rec)
         else:
             final_val = compute_float(bytes_rec)
-            if truth == "true" and flag[device_name] == "False":
+            if truth == "true" and not flag[device_name]:
                 to_write = bytearray(
                     [BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04]
                 )
                 to_write = cal_checksum_func(to_write)
                 ser.write(to_write)
                 time.sleep(0.5)
-                print("RELAY On")
+                print("RELAY of ", device_name, " is now ON")
                 flag[device_name] = True
             else:
                 pass
@@ -271,7 +270,6 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     else:
         if device == 10:
             import random
-
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
             return ran
@@ -339,8 +337,10 @@ def run_serial(com):
                 ser.close()
             return "false"
 
+def turn_on_device_relay(device_name):
+    pass
 
-def turn_off_device_relay(device, device_name):
+def turn_off_device_relay(device_name):
     time.sleep(0.5)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
     to_write = cal_checksum_func(to_write)
