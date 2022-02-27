@@ -11,7 +11,7 @@ BYTE_VAL = {
         "arr": bytearray([0x09, 0x03, 000, 000, 000, 0x02, 0xC5, 0x43]),
         "RECV_LEN": 9,
     },
-    "Voltmeter": {
+    "ResistanceMeter": {
         "arr": bytearray([0x01, 0x03, 000, 000, 000, 0x02, 0xC4, 0x0B]),
         "RECV_LEN": 9,
     },

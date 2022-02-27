@@ -34,7 +34,7 @@ document.getElementById("min_13").value = 0;
 document.getElementById("name_1").value = "kV";
 document.getElementById("name_2").value = "mA";
 document.getElementById("name_3").value = "Insulation";
-document.getElementById("name_4").value = "Voltmeter";
+document.getElementById("name_4").value = "Resistance Meter";
 document.getElementById("name_5").value = "VAW";
 document.getElementById("name_9").value = "PF";
 document.getElementById("name_8").value = "MicroAmpere";
@@ -46,7 +46,7 @@ document.getElementById("name_resistance").value = "Resistance";
 document.getElementById("param_1").value = "kV";
 document.getElementById("param_2").value = "mA";
 document.getElementById("param_3").value = "MΩ";
-document.getElementById("param_4").value = "V";
+document.getElementById("param_4").value = "Ω";
 document.getElementById("param_5").value = "V";
 document.getElementById("param_6").value = "A";
 document.getElementById("param_7").value = "W";
@@ -163,14 +163,14 @@ const processInsulation = (truth) => {
   });
 };
 
-const processVoltmeter = (truth) => {
-  console.log("processVoltmeter");
+const processResistanceMeter = (truth) => {
+  console.log("processResistanceMeter");
   const to_send = {
     secondMicro: "false",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 4,
-    device_name: "Voltmeter",
+    device_name: "ResistanceMeter",
     maximum: document.getElementById("max_4").value,
     minimum: document.getElementById("min_4").value,
   };
@@ -456,7 +456,7 @@ const MAIN = {
   Resistance: processResistance,
   MicroAmpere1: processMicroAmp1,
   MicroAmpere2: processMicroAmp2,
-  Voltmeter: processVoltmeter,
+  ResistanceMeter: processResistanceMeter,
   VAW: processVAW,
   PF: processPF,
   "20V": process20V,
@@ -475,7 +475,7 @@ const order = [
     time: 3,
   },
   {
-    work: ["Voltmeter"],
+    work: ["ResistanceMeter"],
     time: 4,
   },
   {
