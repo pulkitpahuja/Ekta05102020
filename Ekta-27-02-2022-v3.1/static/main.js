@@ -450,25 +450,6 @@ const processFrequency = (truth) => {
   });
 };
 
-const delayedFunction = (wrapper) => {
-  const delayVal = parseInt(document.getElementById("delay").value);
-  for (let i = 0; i < delayVal; i++) {
-    wrapper(false);
-  }
-};
-
-const timedFnction = (wrapper, truth, time) => {
-  const localTimer = setInterval(() => {
-    if (count < time) {
-      wrapper(truth);
-      console.log(count);
-    } else {
-      count = 0;
-      clearInterval(localTimer);
-    }
-  }, 1000);
-};
-
 const MAIN = {
   kV: processKV,
   mA: processmA,
