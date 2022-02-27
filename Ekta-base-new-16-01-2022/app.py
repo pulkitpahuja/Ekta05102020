@@ -266,7 +266,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
             final_val = compute_float(bytes_rec)
             if truth == "true" and flag[str(device)] == "False":
                 to_write = bytearray(
-                    [byte_val[str(device)][0], 0x03, 155, 000, 000, 0x04]
+                    [BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04]
                 )
                 to_write = cal_checksum_func(to_write)
                 ser.write(to_write)
@@ -351,9 +351,9 @@ def run_serial(com):
             return "false"
 
 
-def turn_off_device_relay(device):
+def turn_off_device_relay(device,device_name):
     time.sleep(0.5)
-    to_write = bytearray([byte_val[str(device)][0], 0x03, 215, 000, 000, 0x04])
+    to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
     to_write = cal_checksum_func(to_write)
     ser.write(to_write)
     print("RELAY OFF", to_write)
