@@ -152,7 +152,7 @@ def cal_checksum_func(arr):
 def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
     RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]
-    master_list = []
+    final_val = 0.0
     device = int(device)
     bytes_rec = bytearray([])
     ser.flushInput()
@@ -217,59 +217,42 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
 
     ####### EEE#########3
 
+    computed_values = compute_float(bytes_rec)
+
     if device == 5:
         i = 0
         maximum = maximum.split(",")
         minimum = minimum.split(",")
-        for val in compute_float(bytes_rec):
-            print(compute_float(bytes_rec))
+        for val in computed_values:
             if val <= float(maximum[i]) and val >= float(minimum[i]):
-                master_list.append(val)
                 i += 1
             else:
                 if truth == "true" and i == 2:
-                    to_write = bytearray([0x0B, 0x03, 155, 000, 000, 0x04])
-                    master_list.append(val)
-                    to_write = cal_checksum_func(to_write)
-                    ser.write(to_write)
-                    time.sleep(0.5)
-                    print("RELAY ON")
+                    turn_on_device_relay(device_name)
                     temp = i
                     i += 1
                 else:
                     i += 1
-                    master_list.append(val)
-                    pass
+
     elif device == 1:
-        for val in compute_float(bytes_rec):
-            master_list.append(val)
+        pass
 
     else:
-        if compute_float(bytes_rec) <= float(maximum) and compute_float(
-            bytes_rec
-        ) >= float(minimum):
-            final_val = compute_float(bytes_rec)
+        final_val = computed_values
+        if computed_values <= float(maximum) and computed_values >= float(minimum):
+            pass
         else:
-            final_val = compute_float(bytes_rec)
             if truth == "true" and not flag[device_name]:
-                to_write = bytearray(
-                    [BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04]
-                )
-                to_write = cal_checksum_func(to_write)
-                ser.write(to_write)
-                time.sleep(0.5)
-                print("RELAY of ", device_name, " is now ON")
-                flag[device_name] = True
-            else:
-                pass
+                turn_on_device_relay(device_name)
 
     if device == 1 or device == 5:
-        temp_dict = {"vals": master_list}
+        temp_dict = {"vals": computed_values}
         return json.dumps(temp_dict)
 
     else:
         if device == 10:
             import random
+
             sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
             ran = random.choice(sam_Lst)
             return ran
@@ -337,8 +320,14 @@ def run_serial(com):
                 ser.close()
             return "false"
 
+
 def turn_on_device_relay(device_name):
-    pass
+    to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04])
+    to_write = cal_checksum_func(to_write)
+    ser.write(to_write)
+    flag[device_name] = True
+    time.sleep(0.5)
+
 
 def turn_off_device_relay(device_name):
     time.sleep(0.5)
