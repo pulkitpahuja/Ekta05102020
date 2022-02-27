@@ -120,77 +120,24 @@ def compute_float(bytes_rec):
         final_val=list(struct.unpack('<f', bytearray(list1)))
         return round(final_val[0],2)
 
-def checksum_func(bytearray):
+def checksum_func(arr):
+  
+    checksum=(0xffff)
+    for num in range(0,len(arr)-2):
+        lsb=bytearray[num]
+        checksum=(checksum^lsb)
+        for count in range(1,9):
+            lastbit=checksum&0x0001
+            checksum=checksum>>1
+        
+            if (lastbit==1):
+                checksum=checksum^0xa001
 
-    if (len(bytearray)==17):
-
-        checksum=(0xffff)
-      
-        for num in range(0,15):
-            
-            lsb=bytearray[num]
-            checksum=(checksum^lsb)
-            for count in range(1,9):
-                
-                lastbit=checksum&0x0001
-                checksum=checksum>>1
-              
-                if (lastbit==1):
-                    
-                    checksum=checksum^0xa001
-          
-        lowCRC = checksum>>8
-        checksum = checksum<<8
-        highCRC = checksum>>8
-      
-        return(lowCRC,highCRC)
-
-    elif (len(bytearray)==13):
-
-        checksum=(0xffff)
-      
-        for num in range(0,11):
-            
-            lsb=bytearray[num]
-            checksum=(checksum^lsb)
-            for count in range(1,9):
-                
-                lastbit=checksum&0x0001
-                checksum=checksum>>1
-              
-                if (lastbit==1):
-                    
-                    checksum=checksum^0xa001
-          
-        lowCRC = checksum>>8
-        checksum = checksum<<8
-        highCRC = checksum>>8
-      
-        return(lowCRC,highCRC)
-
-    else:
-            
-        checksum=(0xffff)
-      
-        for num in range(0,7):
-
-                
-            lsb=bytearray[num]
-            checksum=(checksum^lsb)
-            for count in range(1,9):
-                    
-                lastbit=checksum&0x0001
-                checksum=checksum>>1
-            
-                if (lastbit==1):
-                        
-                    checksum=checksum^0xa001
+    lowCRC = checksum>>8
+    checksum = checksum<<8
+    highCRC = checksum>>8
     
-        lowCRC = checksum>>8
-        checksum = checksum<<8
-        highCRC = checksum>>8
-      
-        return(lowCRC,highCRC)
+    return(lowCRC,highCRC)
 
 def cal_checksum_func(arr):
 
@@ -223,7 +170,7 @@ def run_and_get_data(secondMicro,truth,device,maximum,minimum,com):
     global final_val0
     device=int(device)
 
-    if(maximum=="-" ):
+    if(maximum=="-"):
         maximum=100000
 
     if(minimum=="-"):
@@ -632,45 +579,6 @@ def turn_off_relay():  ## turn of individual device relay irrespective of state
 
         return "OFF"
 
-@app.route('/check_ext_trigg',methods = ['GET', 'POST', 'DELETE'])
-def check_ext_trigg():  ## turn of individual device relay irrespective of state
-    if request.method == 'POST':
-        ##global ser
-        ##ser = serial.Serial("COM"+com, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
-        try:
-            if(ser.isOpen()):
-                temp = 0
-                while(temp == 0):
-                    if(start==True):
-                        temp=1
-                    ext_trigg_bytes=ser.read(5)
-                    time.sleep(0.5)
-                    ## 12,4,195,c1,c2
-                    ##low,high=checksum_func(ext_trigg_bytes)
-                    ##if (low&0xff==ext_trigg_bytes[4] and high&0xff==ext_trigg_bytes[3]):
-                    if(len(ext_trigg_bytes)>0):
-                        if(ext_trigg_bytes[0] == 0x0c and ext_trigg_bytes[1] == 4 and ext_trigg_bytes[2] == 0xc3):
-                            temp = 1
-                return "1"
-        except:
-            return "0"
-
-@app.route('/check_stop_trigg',methods = ['GET', 'POST', 'DELETE'])
-def check_stop_trigg():  ## turn of individual device relay irrespective of state
-    if request.method == 'POST':
-        ##global ser
-        ##ser = serial.Serial("COM"+com, 9600,serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE,timeout=1)
-        temp = 0
-        while(temp == 0):
-            ext_trigg_bytes=ser.read(5)
-            ## 12,4,195,c1,c2
-            ##low,high=checksum_func(ext_trigg_bytes)
-            ##if (low&0xff==ext_trigg_bytes[4] and high&0xff==ext_trigg_bytes[3]):
-            if(len(ext_trigg_bytes)>0):
-                if(ext_trigg_bytes[0] == 0x0c and ext_trigg_bytes[1] == 4 and ext_trigg_bytes[2] == 0xc6):
-                    temp = 1
-        return "1"
-    
 @app.route('/get_fac_data',methods = ['GET', 'POST', 'DELETE'])
 def get_fac_data():
     if request.method == 'POST':
