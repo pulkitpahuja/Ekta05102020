@@ -371,7 +371,10 @@ def overall_csv(data, name):
     header = ["Device"]
     for val in data[0].keys():
         try:
-            header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
+            if("VAW" in data[0][str(val)]["name"] or "PF" in data[0][str(val)]["name"]):
+                pass
+            else:   
+                header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
         except:
             pass
 
@@ -397,23 +400,23 @@ def overall_csv(data, name):
         temp_dict[header[2]] = str(obj["2"]["result"]) + "-" + str(obj["2"]["status"])
         temp_dict[header[3]] = str(obj["3"]["result"]) + "-" + str(obj["3"]["status"])
         temp_dict[header[4]] = str(obj["4"]["result"]) + "-" + str(obj["4"]["status"])
-        temp_dict[header[8]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
+        temp_dict[header[5]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
         try:
-            temp_dict[header[9]] = (
+            temp_dict[header[6]] = (
                 str(obj["13"]["result"]) + "-" + str(obj["13"]["status"])
             )
         except:
-            temp_dict[header[9]] = str("___")
-        temp_dict[header[11]] = (
+            temp_dict[header[6]] = str("___")
+        temp_dict[header[7]] = (
             str(obj["10"]["result"]) + "-" + str(obj["10"]["status"])
         )
-        temp_dict[header[12]] = (
+        temp_dict[header[8]] = (
             str(obj["11"]["result"]) + "-" + str(obj["11"]["status"])
         )
-        temp_dict[header[14]] = (
+        temp_dict[header[9]] = (
             str(obj["14"]["result"]) + "-" + str(obj["14"]["status"])
         )
-        temp_dict[header[13]] = (
+        temp_dict[header[10]] = (
             str(obj["12"]["result"]) + "-" + str(obj["12"]["status"])
         )
         temp_dict[header[-1]] = obj["datetime"]
