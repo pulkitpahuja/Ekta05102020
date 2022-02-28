@@ -521,7 +521,7 @@ const start_test = () => {
       stop();
       save_result_data();
     }
-  }, 1500);
+  }, 2000);
 };
 
 const MAIN = {
@@ -665,8 +665,20 @@ function save_result_data() {
       temp_config["result"] =
         document.getElementById("result_resistance").value;
       curr_config[i.toString()] = temp_config;
+    } else if (i == 4) {
+      temp_config["name"] = document.getElementById("name_" + i).value;
+      if (document.getElementById("result_valW").style.color == "red") {
+        temp_config["status"] = "Failed";
+      } else {
+        temp_config["status"] = "Passed";
+      }
+      temp_config["param"] = `${document.getElementById("param_" + i).value},${
+        document.getElementById("param_W").value
+      },${document.getElementById("param_I").value}`;
+      temp_config["result"] = `${document.getElementById("result_4")},${
+        document.getElementById("result_valW").value
+      },${document.getElementById("result_valI").value}`;
     } else {
-      temp_config["name"] = document.getElementById("name_8").value;
       temp_config["name"] = document.getElementById("name_" + i).value;
       if (document.getElementById("result_" + i).style.color == "red") {
         temp_config["status"] = "Failed";
@@ -730,6 +742,10 @@ function save_curr_config() {
           document.getElementById("param_resistance").value;
         curr_config[i.toString()] = temp_config;
       } else {
+        if (i == 4) {
+          temp_config["value_V_input"] =
+            document.getElementById("value_V_input").value;
+        }
         temp_config["name"] = document.getElementById("name_" + i).value;
         temp_config["time"] = document.getElementById("time_" + i).value;
         temp_config["max"] = document.getElementById("max_" + i).value;
@@ -803,6 +819,10 @@ function load_config() {
                 document.getElementById("max_" + i).value = data[i]["max"];
               if (!document.getElementById("min_" + i).disabled)
                 document.getElementById("min_" + i).value = data[i]["min"];
+              if (i == 4) {
+                document.getElementById("value_V_input").value =
+                  data[i]["value_V_input"];
+              }
               document.getElementById("time_" + i).value = data[i]["time"];
               document.getElementById("param_" + i).value = data[i]["param"];
               document.getElementById("name_" + i).value = data[i]["name"];
