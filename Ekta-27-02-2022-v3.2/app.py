@@ -371,7 +371,7 @@ def overall_csv(data, name):
     header = ["Device"]
     for val in data[0].keys():
         try:
-            if("VAW" in data[0][str(val)]["name"] or "PF" in data[0][str(val)]["name"]):
+            if("-" in data[0][str(val)]["name"]):
                 pass
             else:   
                 header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
