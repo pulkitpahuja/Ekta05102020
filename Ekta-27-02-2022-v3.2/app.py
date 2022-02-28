@@ -231,7 +231,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
     elif device_name == "ResistanceMeter":
         final_val = computed_values
         v_val = float(extra)
-        if(computed_values==0):
+        if computed_values == 0:
             w_val = 0
         else:
             w_val = (v_val * v_val) / computed_values
@@ -304,7 +304,7 @@ def run_serial(com):
         global ser
         ser.baudrate = 9600
         ser.port = "COM" + com
-        ser.timeout = .7
+        ser.timeout = 0.7
         ser.parity = serial.PARITY_NONE
         ser.stopbits = serial.STOPBITS_ONE
         ser.bytesize = serial.EIGHTBITS
@@ -371,10 +371,12 @@ def overall_csv(data, name):
     header = ["Device"]
     for val in data[0].keys():
         try:
-            if(len(data[0][str(val)]["name"])==0):
+            if len(data[0][str(val)]["name"]) == 0:
                 pass
-            else:   
-                header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
+            else:
+                header.append(
+                    data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"]
+                )
         except:
             pass
 
@@ -400,23 +402,27 @@ def overall_csv(data, name):
         temp_dict[header[2]] = str(obj["2"]["result"]) + "-" + str(obj["2"]["status"])
         temp_dict[header[3]] = str(obj["3"]["result"]) + "-" + str(obj["3"]["status"])
         temp_dict[header[4]] = str(obj["4"]["result"]) + "-" + str(obj["4"]["status"])
-        temp_dict[header[5]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
+        temp_dict[header[5]] = "-"
+        temp_dict[header[6]] = "-"
+        temp_dict[header[7]] = "-"
+        temp_dict[header[8]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
         try:
-            temp_dict[header[6]] = (
+            temp_dict[header[9]] = (
                 str(obj["13"]["result"]) + "-" + str(obj["13"]["status"])
             )
         except:
-            temp_dict[header[6]] = str("___")
-        temp_dict[header[7]] = (
+            temp_dict[header[9]] = str("___")
+        temp_dict[header[10]] = "-"
+        temp_dict[header[11]] = (
             str(obj["10"]["result"]) + "-" + str(obj["10"]["status"])
         )
-        temp_dict[header[8]] = (
+        temp_dict[header[12]] = (
             str(obj["11"]["result"]) + "-" + str(obj["11"]["status"])
         )
-        temp_dict[header[9]] = (
+        temp_dict[header[14]] = (
             str(obj["14"]["result"]) + "-" + str(obj["14"]["status"])
         )
-        temp_dict[header[10]] = (
+        temp_dict[header[13]] = (
             str(obj["12"]["result"]) + "-" + str(obj["12"]["status"])
         )
         temp_dict[header[-1]] = obj["datetime"]
@@ -594,12 +600,12 @@ def connected():
 def run_task():
     if request.method == "POST":
         data = request.form.to_dict()
-        extra=0
-        try :
-            extra=data["extra"]
-            print(extra)    
+        extra = 0
+        try:
+            extra = data["extra"]
+            print(extra)
         except:
-            extra=0
+            extra = 0
 
         if data["secondMicro"] == "true":
             val = run_and_get_data(
@@ -609,7 +615,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                extra
+                extra,
             )
         else:
             val = run_and_get_data(
@@ -619,7 +625,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                extra
+                extra,
             )
         return str(val)
 
