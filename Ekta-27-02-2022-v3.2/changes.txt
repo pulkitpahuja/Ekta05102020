@@ -1,1 +1,2 @@
 1. removed Voltmeter and added Resistance Meter
+2. No VAW and PF

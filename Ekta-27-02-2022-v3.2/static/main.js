@@ -11,7 +11,6 @@ var hasReturned = "false";
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
   } else {
-    console.log(document.getElementById("max_" + i).disabled);
     if (!document.getElementById("max_" + i).disabled)
       document.getElementById("max_" + i).value = 0;
     if (!document.getElementById("min_" + i).disabled)
@@ -35,8 +34,8 @@ document.getElementById("name_1").value = "kV";
 document.getElementById("name_2").value = "mA";
 document.getElementById("name_3").value = "Insulation";
 document.getElementById("name_4").value = "Resistance Meter";
-document.getElementById("name_5").value = "VAW";
-document.getElementById("name_9").value = "PF";
+// document.getElementById("name_5").value = "VAW";
+// document.getElementById("name_9").value = "PF";
 document.getElementById("name_8").value = "MicroAmpere";
 document.getElementById("name_10").value = "20V";
 document.getElementById("name_11").value = "30A";
@@ -47,12 +46,12 @@ document.getElementById("param_1").value = "kV";
 document.getElementById("param_2").value = "mA";
 document.getElementById("param_3").value = "MΩ";
 document.getElementById("param_4").value = "Ω";
-document.getElementById("param_5").value = "V";
-document.getElementById("param_6").value = "A";
-document.getElementById("param_7").value = "W";
+// document.getElementById("param_5").value = "V";
+// document.getElementById("param_6").value = "A";
+// document.getElementById("param_7").value = "W";
 document.getElementById("param_8").value = "μA-1";
 document.getElementById("param_13").value = "μA-2";
-document.getElementById("param_9").value = "";
+// document.getElementById("param_9").value = "";
 document.getElementById("param_10").value = "V";
 document.getElementById("param_11").value = "A";
 document.getElementById("param_12").value = "Hz";
@@ -466,12 +465,7 @@ const order = [
     work: ["ResistanceMeter"],
     time: 4,
   },
-  {
-    work: ["VAW"],
-    time: 5,
-  },
   { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
-  { work: ["pF"], time: 9 },
   { work: ["20V", "30A"], time: 10 },
   {
     work: ["Frequency"],
