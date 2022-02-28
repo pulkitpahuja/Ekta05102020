@@ -675,7 +675,7 @@ function save_result_data() {
       temp_config["param"] = `${document.getElementById("param_" + i).value},${
         document.getElementById("param_W").value
       },${document.getElementById("param_I").value}`;
-      temp_config["result"] = `${document.getElementById("result_4")},${
+      temp_config["result"] = `${document.getElementById("result_4").value},${
         document.getElementById("result_valW").value
       },${document.getElementById("result_valI").value}`;
       curr_config[i.toString()] = temp_config;
