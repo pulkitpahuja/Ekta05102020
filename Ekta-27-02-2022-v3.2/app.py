@@ -397,9 +397,6 @@ def overall_csv(data, name):
         temp_dict[header[2]] = str(obj["2"]["result"]) + "-" + str(obj["2"]["status"])
         temp_dict[header[3]] = str(obj["3"]["result"]) + "-" + str(obj["3"]["status"])
         temp_dict[header[4]] = str(obj["4"]["result"]) + "-" + str(obj["4"]["status"])
-        temp_dict[header[5]] = str(obj["5"]["result"]) + "-" + str(obj["5"]["status"])
-        temp_dict[header[6]] = str(obj["6"]["result"]) + "-" + str(obj["6"]["status"])
-        temp_dict[header[7]] = str(obj["7"]["result"]) + "-" + str(obj["7"]["status"])
         temp_dict[header[8]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
         try:
             temp_dict[header[9]] = (
@@ -407,7 +404,6 @@ def overall_csv(data, name):
             )
         except:
             temp_dict[header[9]] = str("___")
-        temp_dict[header[10]] = str(obj["9"]["result"]) + "-" + str(obj["9"]["status"])
         temp_dict[header[11]] = (
             str(obj["10"]["result"]) + "-" + str(obj["10"]["status"])
         )
