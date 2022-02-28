@@ -169,7 +169,7 @@ const processResistanceMeter = (truth) => {
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 4,
-    extra: { valV: valV },
+    extra: valV,
     device_name: "ResistanceMeter",
     maximum: document.getElementById("max_4").value,
     minimum: document.getElementById("min_4").value,
