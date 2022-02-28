@@ -678,6 +678,7 @@ function save_result_data() {
       temp_config["result"] = `${document.getElementById("result_4")},${
         document.getElementById("result_valW").value
       },${document.getElementById("result_valI").value}`;
+      curr_config[i.toString()] = temp_config;
     } else {
       temp_config["name"] = document.getElementById("name_" + i).value;
       if (document.getElementById("result_" + i).style.color == "red") {
