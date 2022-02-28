@@ -128,7 +128,9 @@ def checksum_func(arr):
     return lowCRC & 0xFF == arr[-1] and highCRC & 0xFF == arr[-2]
 
 
-def cal_checksum_func(arr):
+def cal_checksum_func(bytes_rec):
+
+    arr = bytes_rec[:]
 
     checksum = 0xFFFF
     for num in range(0, len(arr)):
