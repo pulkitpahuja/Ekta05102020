@@ -184,10 +184,16 @@ const processResistanceMeter = (truth) => {
     data: to_send, // serializes the form's elements.
     success: function (response) {
       document.getElementById("result_4").value = response;
-      const valW = (valV * valV) / parseFloat(response);
-      const valI = valV / parseFloat(response);
-      document.getElementById("result_valW").value = valW;
-      document.getElementById("result_valI").value = valI;
+      let valW, valI;
+      if (float(response) == 0) {
+        valW = 0;
+        valI = 0;
+      } else {
+        valW = (valV * valV) / parseFloat(response);
+        valI = valV / parseFloat(response);
+      }
+      document.getElementById("result_valW").value = valW.toFixed(2);
+      document.getElementById("result_valI").value = valI.toFixed(2);
       if (
         parseFloat(valW) <= parseFloat(to_send["maximum"]) &&
         parseFloat(valW) >= parseFloat(to_send["minimum"])
