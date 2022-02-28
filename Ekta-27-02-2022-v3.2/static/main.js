@@ -184,7 +184,7 @@ const processResistanceMeter = (truth) => {
     success: function (response) {
       document.getElementById("result_4").value = response;
       let valW, valI;
-      if (float(response) == 0) {
+      if (parseFloat(response) == 0) {
         valW = 0;
         valI = 0;
       } else {
