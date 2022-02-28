@@ -521,7 +521,7 @@ const start_test = () => {
       stop();
       save_result_data();
     }
-  }, 2000);
+  }, 2200);
 };
 
 const MAIN = {

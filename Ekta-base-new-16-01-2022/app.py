@@ -202,7 +202,6 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum):
     try:
         ser.write(BYTES_TO_SEND)
         ser.flush()
-        time.sleep(0.6)
         bytes_rec = ser.read(RECV_LEN)
         if len(bytes_rec) < RECV_LEN:
             bytes_rec = bytearray([0] * RECV_LEN)
@@ -294,7 +293,7 @@ def run_serial(com):
         global ser
         ser.baudrate = 9600
         ser.port = "COM" + com
-        ser.timeout = 1
+        ser.timeout = .7
         ser.parity = serial.PARITY_NONE
         ser.stopbits = serial.STOPBITS_ONE
         ser.bytesize = serial.EIGHTBITS
