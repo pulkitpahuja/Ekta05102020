@@ -120,7 +120,6 @@ const processmA = (truth) => {
         $("#result_2").css({ color: "green" });
       } else {
         $("#result_2").css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -155,7 +154,6 @@ const processInsulation = (truth) => {
       } else {
         setTimeout(function () {
           stop();
-          turn_off_device_relay(to_send["device_name"]);
         }, 2500);
         $("#result_3").css({ color: "red" });
       }
@@ -196,7 +194,6 @@ const processResistanceMeter = (truth) => {
       ) {
         $("#result_valW").css({ color: "green" });
       } else {
-        turn_off_device_relay(to_send["device_name"]);
         $("#result_valW").css({ color: "red" });
       }
     },
@@ -240,7 +237,6 @@ const processVAW = (truth) => {
           $("#result_" + val).css({ color: "green" });
         } else {
           $("#result_" + val).css({ color: "red" });
-          turn_off_device_relay(to_send["device_name"]);
         }
       }
     },
@@ -275,7 +271,6 @@ const processPF = (truth) => {
         $("#result_9").css({ color: "green" });
       } else {
         $("#result_9").css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -311,7 +306,6 @@ const processMicroAmp1 = (truth) => {
         $(`#result_${identifier}`).css({ color: "green" });
       } else {
         $(`#result_${identifier}`).css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -348,7 +342,6 @@ const processMicroAmp2 = (truth) => {
         $(`#result_${identifier}`).css({ color: "green" });
       } else {
         $(`#result_${identifier}`).css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -379,7 +372,6 @@ const process20V = (truth) => {
         $("#result_10").css({ color: "green" });
       } else {
         $("#result_10").css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
     },
   });
@@ -410,7 +402,6 @@ const process30A = (truth) => {
         $("#result_11").css({ color: "green" });
       } else {
         $("#result_11").css({ color: "red" });
-        turn_off_device_relay(to_send["device_name"]);
       }
       processResistance();
     },
@@ -474,7 +465,7 @@ const order = [
     time: 5,
   },
   { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
-  { work: ["PF"], time: 9 },
+  { work: ["pF"], time: 9 },
   { work: ["20V", "30A"], time: 10 },
   {
     work: ["Frequency"],
@@ -512,12 +503,21 @@ const start_test = () => {
         inner_counter++;
       }
     }
-    if (count > time) {     //test running time without delay
+    if (count > time) {
+      //test swtiching
+      or.work.forEach((dev) => {
+        if (dev.startsWith("Micro")) {
+          turn_off_device_relay("micro");
+        } else {
+          turn_off_device_relay(dev);
+        }
+      });
       inner_counter = 0;
       start_counter++;
       count = 0;
     }
-    if (start_counter >= order.length) {    //end of test
+    if (start_counter >= order.length) {
+      //end of test
       stop();
       save_result_data();
     }
@@ -532,7 +532,7 @@ const MAIN = {
   MicroAmpere2: processMicroAmp2,
   ResistanceMeter: processResistanceMeter,
   VAW: processVAW,
-  PF: processPF,
+  pF: processPF,
   "20V": process20V,
   "30A": process30A,
   Frequency: processFrequency,
