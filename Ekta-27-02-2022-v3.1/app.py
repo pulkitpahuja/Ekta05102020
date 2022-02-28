@@ -251,15 +251,14 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         temp_dict = {"vals": computed_values}
         return json.dumps(temp_dict)
 
-    else:
-        if device_name == "Frequency":
-            import random
+    elif device_name == "Frequency":
+        import random
+        sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
+        ran = random.choice(sam_Lst)
+        return ran
 
-            sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
-            ran = random.choice(sam_Lst)
-            return ran
-        else:
-            return final_val
+    else:
+        return final_val
 
 
 def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
