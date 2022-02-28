@@ -112,7 +112,7 @@ def checksum_func(arr):
 
     checksum = 0xFFFF
     for num in range(0, len(arr) - 2):
-        lsb = bytearray[num]
+        lsb = arr[num]
         checksum = checksum ^ lsb
         for count in range(1, 9):
             lastbit = checksum & 0x0001
@@ -230,8 +230,11 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
 
     elif device_name == "ResistanceMeter":
         final_val = computed_values
-        v_val = float(extra["valV"])
-        w_val = (v_val * v_val) / computed_values
+        v_val = float(extra)
+        if(computed_values==0):
+            w_val = 0
+        else:
+            w_val = (v_val * v_val) / computed_values
         if w_val > float(maximum) or w_val < float(minimum):
             if truth == "true" and not flag[device_name]:
                 turn_on_device_relay(device_name)
@@ -479,10 +482,10 @@ def sequence_init():
 
         if data["type"] == "start":
             start = True
-            start_sequence(data["com_port"])
+            start_sequence()
         else:
             start = False
-            stop_sequence(data["com_port"])
+            stop_sequence()
 
         return "500"
 
@@ -592,6 +595,13 @@ def connected():
 def run_task():
     if request.method == "POST":
         data = request.form.to_dict()
+        extra=0
+        try :
+            extra=data["extra"]
+            print(extra)    
+        except:
+            extra=0
+
         if data["secondMicro"] == "true":
             val = run_and_get_data(
                 "true",
@@ -600,8 +610,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                data["com"],
-                data["extra"]
+                extra
             )
         else:
             val = run_and_get_data(
@@ -611,8 +620,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                data["com"],
-                data["extra"]
+                extra
             )
         return str(val)
 
