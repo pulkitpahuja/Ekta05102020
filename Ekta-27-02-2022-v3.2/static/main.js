@@ -637,11 +637,14 @@ function stop_task() {
 function save_result_data() {
   var curr_config = {};
   curr_config["device_id"] = document.getElementById("device_id").value;
-  var resultElements = $("#result_col").find(":visible");
-  var nameElements = $("#name_col").find(":visible");
-  var paramElements = $("#param_col").find(":visible");
+  var result_col = document.getElementById("result_col");
+  var resultElements = result_col.querySelectorAll("input");
+  var name_col = document.getElementById("name_col");
+  var nameElements = name_col.querySelectorAll("input");
+  var param_col = document.getElementById("param_col");
+  var paramElements = param_col.querySelectorAll("input");
   let name_element = "";
-  resultElements.each((idx, element) => {
+  resultElements.forEach((element, idx) => {
     var temp_config = {};
     if (nameElements[idx].value) {
       name_element = nameElements[idx].value;
