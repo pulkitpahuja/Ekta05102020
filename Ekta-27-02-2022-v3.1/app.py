@@ -72,15 +72,16 @@ def download_this_csv(result_data, name):
 
     temp_list = []
 
-    for device in range(1, 13):
-        temp_dict = {}
+    del result_data["device_id"]
+    del result_data["datetime"]
 
-        if result_data[str(device)]["result"] != "0.0":
-            temp_dict["Name"] = result_data[str(device)]["name"]
-            temp_dict["Result"] = result_data[str(device)]["result"]
-            temp_dict["Unit"] = result_data[str(device)]["param"]
-            temp_dict["Status"] = result_data[str(device)]["status"]
-            temp_list.append(temp_dict)
+    for device in result_data.keys():
+        temp_dict = {}
+        temp_dict["Name"] = result_data[str(device)]["name"]
+        temp_dict["Result"] = result_data[str(device)]["result"]
+        temp_dict["Unit"] = result_data[str(device)]["param"]
+        temp_dict["Status"] = result_data[str(device)]["status"]
+        temp_list.append(temp_dict)
 
     for var in temp_list:
 
