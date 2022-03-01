@@ -26,12 +26,13 @@ const displayContents = (contents) => {
   const data_row = document.getElementById("data_row");
 
   Object.keys(contents).forEach((key) => {
-    data_row.innerHTML += `<div class="card col-2 text-center">
+    const color = contents[key].status === "Failed" ? "red" : "green";
+    data_row.innerHTML += `<div style="color: ${color}" class="card col-2 text-center">
     <div class="card-header">
       <strong>${contents[key].name}</strong>
     </div>
     <div class="card-body">
-      <h5 class="card-title">${contents[key].result}</h5>
+      <h5 class="card-title">${contents[key].result} - ${contents[key].param}</h5>
     </div>
     <div class="card-footer">
       <strong>${contents[key].status}</strong>
