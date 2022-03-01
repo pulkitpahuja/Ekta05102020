@@ -176,6 +176,10 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         ser.flush()
         time.sleep(0.7)
     elif device >= 3 and device <= 6 and secondMicro == "false":
+        if(device == 6):
+            turn_off_programmer_relay("VAW")
+            time.sleep(0.5)
+        
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
@@ -285,6 +289,17 @@ def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     to_write.append(low)
     ser.write(to_write)
     time.sleep(0.6)
+
+
+def turn_off_programmer_relay(device_name):
+    to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
+    ser.write(to_write)
+    print("RELAY OFF", to_write)
+    flag[device_name] = False
+    time.sleep(1)
 
 
 def stop_sequence():

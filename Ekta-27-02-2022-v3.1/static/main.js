@@ -420,7 +420,7 @@ const processResistance = () => {
   const twentyvoltmin = document.getElementById("min_10").value;
   const thirtyamp = document.getElementById("result_11").value;
   const resis = (twentyvolt - twentyvoltmin) / thirtyamp;
-  document.getElementById("result_resistance").value = resis;
+  document.getElementById("result_resistance").value = resis.toFixed(2);
   if (resis > document.getElementById("min_resistance").value) {
     $("#result_resistance").css({ color: "green" });
   } else {
