@@ -417,11 +417,6 @@ def overall_csv(data, name):
             pass
 
     header.append("Timestamp")
-    popped = header.pop(-3)
-    header.insert(8, popped)
-    popped = header.pop(-2)
-    header.insert(13, popped)
-    print(header)
 
     flag1 = False
     flag2 = False
@@ -434,33 +429,13 @@ def overall_csv(data, name):
     for obj in data:
         temp_dict = {}
         temp_dict[header[0]] = obj["device_id"]
-        temp_dict[header[1]] = str(obj["1"]["result"])
-        temp_dict[header[2]] = str(obj["2"]["result"]) + "-" + str(obj["2"]["status"])
-        temp_dict[header[3]] = str(obj["3"]["result"]) + "-" + str(obj["3"]["status"])
-        temp_dict[header[4]] = str(obj["4"]["result"]) + "-" + str(obj["4"]["status"])
-        temp_dict[header[5]] = str(obj["5"]["result"]) + "-" + str(obj["5"]["status"])
-        temp_dict[header[6]] = str(obj["6"]["result"]) + "-" + str(obj["6"]["status"])
-        temp_dict[header[7]] = str(obj["7"]["result"]) + "-" + str(obj["7"]["status"])
-        temp_dict[header[8]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
-        try:
-            temp_dict[header[9]] = (
-                str(obj["13"]["result"]) + "-" + str(obj["13"]["status"])
-            )
-        except:
-            temp_dict[header[9]] = str("___")
-        temp_dict[header[10]] = str(obj["9"]["result"]) + "-" + str(obj["9"]["status"])
-        temp_dict[header[11]] = (
-            str(obj["10"]["result"]) + "-" + str(obj["10"]["status"])
-        )
-        temp_dict[header[12]] = (
-            str(obj["11"]["result"]) + "-" + str(obj["11"]["status"])
-        )
-        temp_dict[header[14]] = (
-            str(obj["14"]["result"]) + "-" + str(obj["14"]["status"])
-        )
-        temp_dict[header[13]] = (
-            str(obj["12"]["result"]) + "-" + str(obj["12"]["status"])
-        )
+        for val in obj.keys():
+            if val == "device_id" or val == "timestamp":
+                continue
+            try:
+                temp_dict[header[int(val)]] = str(obj[val]["result"]) + "-" + str(obj[val]["status"])
+            except:
+                pass
         temp_dict[header[-1]] = obj["datetime"]
         temp_list.append(temp_dict)
 
