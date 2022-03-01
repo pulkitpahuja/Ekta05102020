@@ -465,7 +465,8 @@ const order = [
     work: ["ResistanceMeter"],
     time: 4,
   },
-  { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
+  { work: ["MicroAmpere1"], time: 8 },
+  { work: ["MicroAmpere2"], time: 8 },
   { work: ["20V", "30A"], time: 10 },
   {
     work: ["Frequency"],

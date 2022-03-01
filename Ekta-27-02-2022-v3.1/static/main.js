@@ -470,7 +470,8 @@ const order = [
     work: ["VAW"],
     time: 5,
   },
-  { work: ["MicroAmpere1", "MicroAmpere2"], time: 8 },
+  { work: ["MicroAmpere1"], time: 8 },
+  { work: ["MicroAmpere2"], time: 8 },
   { work: ["pF"], time: 9 },
   { work: ["20V", "30A"], time: 10 },
   {
@@ -639,7 +640,7 @@ function stop_task() {
   clearInterval(timer);
 }
 
-function save_result_data() {
+function save_result() {
   var curr_config = {};
   curr_config["device_id"] = document.getElementById("device_id").value;
   for (var i = 1; i <= 14; i++) {
@@ -703,6 +704,57 @@ function save_result_data() {
     }
   }
 
+  curr_config["datetime"] =
+    Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH_mm_ss");
+
+  $.ajax({
+    type: "POST",
+    url: "/save_result",
+    data: JSON.stringify(curr_config), // serializes the form's elements.
+    success: function (data) {
+      alert("Result Status : " + data);
+    },
+  });
+
+  $.ajax({
+    type: "POST",
+    url: "/download_csv",
+    data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }), // serializes the form's elements.
+    success: (data) => {
+      alert(data);
+    },
+  });
+}
+
+function save_result_data() {
+  var curr_config = {};
+  curr_config["device_id"] = document.getElementById("device_id").value;
+  var result_col = document.getElementById("result_col");
+  var resultElements = result_col.querySelectorAll("input");
+  var name_col = document.getElementById("name_col");
+  var nameElements = name_col.querySelectorAll("input");
+  var param_col = document.getElementById("param_col");
+  var paramElements = param_col.querySelectorAll("input");
+  let name_element = "";
+  let param_element = "";
+  resultElements.forEach((element, idx) => {
+    var temp_config = {};
+    if (nameElements[idx].value) {
+      name_element = nameElements[idx].value;
+    }
+    if (paramElements[idx].value) {
+      param_element = paramElements[idx].value;
+    }
+    temp_config["name"] = name_element;
+    temp_config["param"] = param_element;
+    temp_config["result"] = element.value;
+    if (element.style.color == "red") {
+      temp_config["status"] = "Failed";
+    } else {
+      temp_config["status"] = "Passed";
+    }
+    curr_config[(idx + 1).toString()] = temp_config;
+  });
   curr_config["datetime"] =
     Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH_mm_ss");
 
