@@ -641,7 +641,7 @@ function save_result_data() {
   var nameElements = $("#name_col").find(":visible");
   var paramElements = $("#param_col").find(":visible");
   let name_element = "";
-  resultElements.forEach((element, idx) => {
+  resultElements.each((element, idx) => {
     var temp_config = {};
     if (nameElements[idx].value) {
       name_element = nameElements[idx].value;
