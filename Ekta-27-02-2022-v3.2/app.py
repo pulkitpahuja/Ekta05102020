@@ -348,6 +348,17 @@ def turn_on_device_relay(device_name):
     time.sleep(0.5)
 
 
+def turn_off_programmer_relay(device_name):
+    to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
+    ser.write(to_write)
+    print("RELAY OFF", to_write)
+    flag[device_name] = False
+    time.sleep(1)
+
+
 def turn_off_device_relay(device_name):
     time.sleep(0.5)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
