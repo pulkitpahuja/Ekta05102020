@@ -640,92 +640,6 @@ function stop_task() {
   clearInterval(timer);
 }
 
-function save_result() {
-  var curr_config = {};
-  curr_config["device_id"] = document.getElementById("device_id").value;
-  for (var i = 1; i <= 14; i++) {
-    var temp_config = {};
-    if (i > 5 && i < 8) {
-      temp_config["name"] = document.getElementById("name_5").value;
-
-      temp_config["param"] = document.getElementById("param_" + i).value;
-      temp_config["result"] = document.getElementById("result_" + i).value;
-      if (document.getElementById("result_" + i).style.color == "red") {
-        temp_config["status"] = "Failed";
-      } else {
-        temp_config["status"] = "Passed";
-      }
-      curr_config[i.toString()] = temp_config;
-    } else if (i == 13) {
-      temp_config["name"] = document.getElementById("name_8").value;
-      if (document.getElementById("result_" + i).style.color == "red") {
-        temp_config["status"] = "Failed";
-      } else {
-        temp_config["status"] = "Passed";
-      }
-      temp_config["param"] = document.getElementById("param_" + i).value;
-      temp_config["result"] = document.getElementById("result_" + i).value;
-      curr_config[i.toString()] = temp_config;
-    } else if (i == 14) {
-      temp_config["name"] = document.getElementById("name_resistance").value;
-      if (document.getElementById("result_resistance").style.color == "red") {
-        temp_config["status"] = "Failed";
-      } else {
-        temp_config["status"] = "Passed";
-      }
-      temp_config["param"] = document.getElementById("param_resistance").value;
-      temp_config["result"] =
-        document.getElementById("result_resistance").value;
-      curr_config[i.toString()] = temp_config;
-    } else if (i == 4) {
-      temp_config["name"] = document.getElementById("name_" + i).value;
-      if (document.getElementById("result_valW").style.color == "red") {
-        temp_config["status"] = "Failed";
-      } else {
-        temp_config["status"] = "Passed";
-      }
-      temp_config["param"] = `${document.getElementById("param_" + i).value},${
-        document.getElementById("param_W").value
-      },${document.getElementById("param_I").value}`;
-      temp_config["result"] = `${document.getElementById("result_4").value},${
-        document.getElementById("result_valW").value
-      },${document.getElementById("result_valI").value}`;
-      curr_config[i.toString()] = temp_config;
-    } else {
-      temp_config["name"] = document.getElementById("name_" + i).value;
-      if (document.getElementById("result_" + i).style.color == "red") {
-        temp_config["status"] = "Failed";
-      } else {
-        temp_config["status"] = "Passed";
-      }
-      temp_config["param"] = document.getElementById("param_" + i).value;
-      temp_config["result"] = document.getElementById("result_" + i).value;
-      curr_config[i.toString()] = temp_config;
-    }
-  }
-
-  curr_config["datetime"] =
-    Date.today().toString("dd-MM-yyyy") + " " + new Date().toString("HH_mm_ss");
-
-  $.ajax({
-    type: "POST",
-    url: "/save_result",
-    data: JSON.stringify(curr_config), // serializes the form's elements.
-    success: function (data) {
-      alert("Result Status : " + data);
-    },
-  });
-
-  $.ajax({
-    type: "POST",
-    url: "/download_csv",
-    data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }), // serializes the form's elements.
-    success: (data) => {
-      alert(data);
-    },
-  });
-}
-
 function save_result_data() {
   var curr_config = {};
   curr_config["device_id"] = document.getElementById("device_id").value;
@@ -736,17 +650,13 @@ function save_result_data() {
   var param_col = document.getElementById("param_col");
   var paramElements = param_col.querySelectorAll("input");
   let name_element = "";
-  let param_element = "";
   resultElements.forEach((element, idx) => {
     var temp_config = {};
     if (nameElements[idx].value) {
       name_element = nameElements[idx].value;
     }
-    if (paramElements[idx].value) {
-      param_element = paramElements[idx].value;
-    }
     temp_config["name"] = name_element;
-    temp_config["param"] = param_element;
+    temp_config["param"] = paramElements[idx].value || "";
     temp_config["result"] = element.value;
     if (element.style.color == "red") {
       temp_config["status"] = "Failed";
