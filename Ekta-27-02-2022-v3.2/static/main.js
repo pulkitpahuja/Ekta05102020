@@ -286,7 +286,7 @@ const processMicroAmp1 = (truth) => {
   let identifier = 8;
 
   const to_send = {
-    secondMicro: false,
+    secondMicro: "false",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
@@ -321,7 +321,7 @@ const processMicroAmp2 = (truth) => {
   let identifier = 13;
 
   const to_send = {
-    secondMicro: true,
+    secondMicro: "true",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
@@ -487,7 +487,7 @@ const start_test = () => {
       parseInt(document.getElementById(`time_${or.time}`).value) || 0;
     if (count <= del) {
       console.log("Running Delayed function: ", or.work[inner_counter]);
-      MAIN[or.work[inner_counter]](false);
+      MAIN[or.work[inner_counter]]("false");
       if (inner_counter === work_length - 1) {
         inner_counter = 0;
       } else {
@@ -496,7 +496,7 @@ const start_test = () => {
     }
     if (count > del && count <= time) {
       console.log("Running Normal function: ", or.work[inner_counter]);
-      MAIN[or.work[inner_counter]](true);
+      MAIN[or.work[inner_counter]]("true");
       if (inner_counter === work_length - 1) {
         inner_counter = 0;
       } else {
