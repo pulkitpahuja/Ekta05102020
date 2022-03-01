@@ -506,7 +506,7 @@ const start_test = () => {
     }
     if (count > time) {
       //test swtiching
-      or.work.forEach((dev) => {
+      or.work.forEach((dev, idx) => {
         setTimeout(() => {
           if (dev.startsWith("MicroAmpere1")) {
             turn_off_device_relay("micro");
@@ -680,7 +680,6 @@ function save_result_data() {
     },
   });
 }
-
 
 function save_curr_config() {
   var curr_config = {};
