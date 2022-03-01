@@ -131,7 +131,6 @@ def checksum_func(arr):
 def cal_checksum_func(bytes_rec):
 
     arr = bytes_rec[:]
-
     checksum = 0xFFFF
     for num in range(0, len(arr)):
 
@@ -148,9 +147,8 @@ def cal_checksum_func(bytes_rec):
     checksum = checksum << 8
     highCRC = (checksum >> 8) % 256
 
-    arr.append(highCRC)
-    arr.append(lowCRC)
-    return bytearray(arr)
+    return lowCRC, highCRC
+
 
 
 def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, extra):
@@ -171,35 +169,46 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
     ##################################
     if device == 1:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.7)
     elif device >= 3 and device <= 6 and secondMicro == "false":
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 6 and secondMicro == "true":
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 7 or device == 8:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
         print(byte_to_write, len(byte_to_write))
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 10:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
+        time.sleep(0.6)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     ##################################
     try:
         ser.write(BYTES_TO_SEND)
@@ -265,16 +274,21 @@ def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     print("START SEQ")
     start = True
     to_write = bytearray([0x03, 0x03, 155, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     time.sleep(0.6)
+
 
 
 def stop_sequence():
     time.sleep(0.6)
     ##turn 1st relay OFF and 2nd relay ON
     to_write = bytearray([0x03, 0x03, 215, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     flag = {
         "kV": False,
@@ -294,7 +308,9 @@ def stop_sequence():
     time.sleep(1)
     ###########################
     to_write = bytearray([0x0C, 0x03, 170, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     ser.flush()
     time.sleep(1)
@@ -324,7 +340,9 @@ def run_serial(com):
 
 def turn_on_device_relay(device_name):
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     flag[device_name] = True
     time.sleep(0.5)
@@ -333,7 +351,9 @@ def turn_on_device_relay(device_name):
 def turn_off_device_relay(device_name):
     time.sleep(0.5)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     print("RELAY OFF", to_write)
     flag[device_name] = False
@@ -502,26 +522,6 @@ def turn_off_relay():  ## turn of individual device relay irrespective of state
         data = request.form.to_dict()
         turn_off_device_relay(data["device_name"])
         return str(data["device_name"] + "Relay is now OFF")
-
-
-@app.route("/get_fac_data", methods=["GET", "POST", "DELETE"])
-def get_fac_data():
-    if request.method == "POST":
-        tempdict = {"save_status": "Failed", "transfer_status": "Failed"}
-        data = request.form.to_dict()
-
-        with open(
-            "static/data_storage/" + data["calib_number"] + ".json", "w"
-        ) as outfile:
-            json.dump(data, outfile)
-            tempdict["save_status"] = "Success"
-        ##SERIAL PORT DATA TRANSFER TO METER TAKES PLACE HERE##
-        # try:
-
-        # except:
-        #     tempdict["save_status"]="Failed"
-
-        return jsonify(tempdict)
 
 
 @app.route("/save_curr_config", methods=["GET", "POST", "DELETE"])

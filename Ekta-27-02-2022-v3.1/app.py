@@ -148,9 +148,7 @@ def cal_checksum_func(bytes_rec):
     checksum = checksum << 8
     highCRC = (checksum >> 8) % 256
 
-    arr.append(highCRC)
-    arr.append(lowCRC)
-    return bytearray(arr)
+    return lowCRC, highCRC
 
 
 def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, extra):
@@ -171,35 +169,46 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
     ##################################
     if device == 1:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.7)
     elif device >= 3 and device <= 6 and secondMicro == "false":
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 6 and secondMicro == "true":
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 7 or device == 8:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
         print(byte_to_write, len(byte_to_write))
-        time.sleep(0.5)
+        time.sleep(0.6)
     elif device == 10:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
-        byte_to_write = cal_checksum_func(byte_to_write)
+        low, high = cal_checksum_func(byte_to_write)
+        byte_to_write.append(high)
+        byte_to_write.append(low)
+        time.sleep(0.6)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.5)
+        time.sleep(0.6)
     ##################################
     try:
         ser.write(BYTES_TO_SEND)
@@ -233,7 +242,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
     elif device_name == "ResistanceMeter":
         final_val = computed_values
         v_val = float(extra)
-        if(computed_values==0):
+        if computed_values == 0:
             w_val = 0
         else:
             w_val = (v_val * v_val) / computed_values
@@ -253,7 +262,15 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
 
     elif device_name == "Frequency":
         import random
+
         sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
+        ran = random.choice(sam_Lst)
+        return ran
+
+    elif device_name == "pF":
+        import random
+
+        sam_Lst = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.00]
         ran = random.choice(sam_Lst)
         return ran
 
@@ -265,7 +282,9 @@ def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     print("START SEQ")
     start = True
     to_write = bytearray([0x03, 0x03, 155, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     time.sleep(0.6)
 
@@ -274,7 +293,9 @@ def stop_sequence():
     time.sleep(0.6)
     ##turn 1st relay OFF and 2nd relay ON
     to_write = bytearray([0x03, 0x03, 215, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     flag = {
         "kV": False,
@@ -294,7 +315,9 @@ def stop_sequence():
     time.sleep(1)
     ###########################
     to_write = bytearray([0x0C, 0x03, 170, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     ser.flush()
     time.sleep(1)
@@ -305,7 +328,7 @@ def run_serial(com):
         global ser
         ser.baudrate = 9600
         ser.port = "COM" + com
-        ser.timeout = .7
+        ser.timeout = 0.7
         ser.parity = serial.PARITY_NONE
         ser.stopbits = serial.STOPBITS_ONE
         ser.bytesize = serial.EIGHTBITS
@@ -324,7 +347,9 @@ def run_serial(com):
 
 def turn_on_device_relay(device_name):
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 155, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     flag[device_name] = True
     time.sleep(0.5)
@@ -333,7 +358,9 @@ def turn_on_device_relay(device_name):
 def turn_off_device_relay(device_name):
     time.sleep(0.5)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
-    to_write = cal_checksum_func(to_write)
+    low, high = cal_checksum_func(to_write)
+    to_write.append(high)
+    to_write.append(low)
     ser.write(to_write)
     print("RELAY OFF", to_write)
     flag[device_name] = False
@@ -596,12 +623,12 @@ def connected():
 def run_task():
     if request.method == "POST":
         data = request.form.to_dict()
-        extra=0
-        try :
-            extra=data["extra"]
-            print(extra)    
+        extra = 0
+        try:
+            extra = data["extra"]
+            print(extra)
         except:
-            extra=0
+            extra = 0
 
         if data["secondMicro"] == "true":
             val = run_and_get_data(
@@ -611,7 +638,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                extra
+                extra,
             )
         else:
             val = run_and_get_data(
@@ -621,7 +648,7 @@ def run_task():
                 data["device_name"],
                 data["maximum"],
                 data["minimum"],
-                extra
+                extra,
             )
         return str(val)
 

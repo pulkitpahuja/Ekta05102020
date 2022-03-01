@@ -506,11 +506,14 @@ const start_test = () => {
     if (count > time) {
       //test swtiching
       or.work.forEach((dev) => {
-        if (dev.startsWith("Micro")) {
-          turn_off_device_relay("micro");
-        } else {
-          turn_off_device_relay(dev);
-        }
+        setTimeout(() => {
+          if (dev.startsWith("MicroAmpere1")) {
+            turn_off_device_relay("micro");
+          } else if (dev.startsWith("MicroAmpere2")) {
+          } else {
+            turn_off_device_relay(dev);
+          }
+        }, 1000 * idx);
       });
       inner_counter = 0;
       start_counter++;
@@ -545,6 +548,8 @@ function reset() {
   }
   document.getElementById("result_resistance").value = "";
   document.getElementById("strt_butt").innerHTML = "Start";
+  document.getElementById("result_valW").value = "";
+  document.getElementById("result_valI").value = "";
   document.getElementById("device_id").value = "";
   clearInterval(timer);
   clearInterval(task_interval);
