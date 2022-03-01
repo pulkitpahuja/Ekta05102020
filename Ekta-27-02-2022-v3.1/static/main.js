@@ -287,7 +287,7 @@ const processMicroAmp1 = (truth) => {
   let identifier = 8;
 
   const to_send = {
-    secondMicro: false,
+    secondMicro: "false",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
@@ -322,7 +322,7 @@ const processMicroAmp2 = (truth) => {
   let identifier = 13;
 
   const to_send = {
-    secondMicro: true,
+    secondMicro: "true",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 6,
