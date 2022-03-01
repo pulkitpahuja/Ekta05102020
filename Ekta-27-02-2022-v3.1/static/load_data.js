@@ -26,7 +26,8 @@ const displayContents = (contents) => {
   const data_row = document.getElementById("data_row");
 
   Object.keys(contents).forEach((key) => {
-    data_row.appendChild(`<div class="card col-2 text-center">
+    const element = document.createElement("div");
+    div.innerHTML = `<div class="card col-2 text-center">
     <div class="card-header">
       <strong>${contents[key].name}</strong>
     </div>
@@ -36,7 +37,8 @@ const displayContents = (contents) => {
     <div class="card-footer">
       <strong>${contents[key].status}</strong>
     </div>
-  </div>`);
+  </div>`
+    data_row.appendChild(innerHTML);
   });
 };
 
