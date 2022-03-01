@@ -27,7 +27,7 @@ const displayContents = (contents) => {
 
   Object.keys(contents).forEach((key) => {
     const element = document.createElement("div");
-    div.innerHTML = `<div class="card col-2 text-center">
+    element.innerHTML = `<div class="card col-2 text-center">
     <div class="card-header">
       <strong>${contents[key].name}</strong>
     </div>
