@@ -418,13 +418,7 @@ def overall_csv(data, name):
             pass
 
     header.append("Timestamp")
-
-    flag1 = False
-    flag2 = False
-    # header.pop(-3)
-    # header.pop(-4)
-
-    # csv_writer.writerow(header)
+    
     temp_list = []
 
     for obj in data:

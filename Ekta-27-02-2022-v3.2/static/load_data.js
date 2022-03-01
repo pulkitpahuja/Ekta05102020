@@ -14,30 +14,32 @@ const readSingleFile = (e) => {
   reader.readAsText(file);
 }
 
-const displayContents = contents => {
+const displayContents = (contents) => {
   result_data.data = contents;
   contents = JSON.parse(contents);
 
-  document.getElementById('device_id').textContent = contents["device_id"];
-  document.getElementById('datetime').textContent = contents["datetime"];
+  document.getElementById("device_id").textContent = contents["device_id"];
+  document.getElementById("datetime").textContent = contents["datetime"];
 
-  for (var i = 1; i <= 14; i++) {
+  delete contents["device_id"];
+  delete contents["datetime"];
+  const data_row = document.getElementById("data_row");
 
-    document.getElementById('name_' + i).textContent = contents[i.toString()]["name"];
-    document.getElementById('result_' + i).textContent = contents[i.toString()]["result"] + "\n" + contents[i.toString()]["param"];
-    document.getElementById('status_' + i).textContent = contents[i.toString()]["status"];
-
-    if (contents[i.toString()]["status"] == "Failed") {
-      document.getElementById('result_' + i).style.color = "red";
-      document.getElementById('status_' + i).style.color = "red";
-    } else {
-      document.getElementById('result_' + i).style.color = "green";
-      document.getElementById('status_' + i).style.color = "green";
-    }
-
-  }
-
-}
+  Object.keys(contents).forEach((key) => {
+    const color = contents[key].status === "Failed" ? "red" : "green";
+    data_row.innerHTML += `<div style="color: ${color}" class="card col-2 text-center">
+    <div class="card-header">
+      <strong>${contents[key].name}</strong>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">${contents[key].result} - ${contents[key].param}</h5>
+    </div>
+    <div class="card-footer">
+      <strong>${contents[key].status}</strong>
+    </div>
+  </div>`;
+  });
+};
 
 document.getElementById('file-input')
   .addEventListener('change', readSingleFile, false);

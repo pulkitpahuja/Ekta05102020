@@ -72,15 +72,16 @@ def download_this_csv(result_data, name):
 
     temp_list = []
 
-    for device in range(1, 13):
-        temp_dict = {}
+    del result_data["device_id"]
+    del result_data["datetime"]
 
-        if result_data[str(device)]["result"] != "0.0":
-            temp_dict["Name"] = result_data[str(device)]["name"]
-            temp_dict["Result"] = result_data[str(device)]["result"]
-            temp_dict["Unit"] = result_data[str(device)]["param"]
-            temp_dict["Status"] = result_data[str(device)]["status"]
-            temp_list.append(temp_dict)
+    for device in result_data.keys():
+        temp_dict = {}
+        temp_dict["Name"] = result_data[str(device)]["name"]
+        temp_dict["Result"] = result_data[str(device)]["result"]
+        temp_dict["Unit"] = result_data[str(device)]["param"]
+        temp_dict["Status"] = result_data[str(device)]["status"]
+        temp_list.append(temp_dict)
 
     for var in temp_list:
 
@@ -400,63 +401,27 @@ def overall_csv(data, name):
     row_count += 1
 
     # csv_writer.writerow(top_row)
-    c=0
     header = ["Device"]
     for val in data[0].keys():
         try:
-            if(len(data[0][str(val)]["name"])==0):
-                header.append("No Test - " + str(c))
-            else:
-                header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
-            c+=1
+            header.append(data[0][str(val)]["name"] + "-" + data[0][str(val)]["param"])
         except:
             pass
 
     header.append("Timestamp")
-    popped = header.pop(-3)
-    header.insert(8, popped)
-    popped = header.pop(-2)
-    header.insert(13, popped)
-    print(header)
 
-    flag1 = False
-    flag2 = False
-    # header.pop(-3)
-    # header.pop(-4)
-
-    # csv_writer.writerow(header)
     temp_list = []
 
     for obj in data:
         temp_dict = {}
         temp_dict[header[0]] = obj["device_id"]
-        temp_dict[header[1]] = str(obj["1"]["result"])
-        temp_dict[header[2]] = str(obj["2"]["result"]) + "-" + str(obj["2"]["status"])
-        temp_dict[header[3]] = str(obj["3"]["result"]) + "-" + str(obj["3"]["status"])
-        temp_dict[header[4]] = str(obj["4"]["result"]) + "-" + str(obj["4"]["status"])
-        temp_dict[header[5]] = "-"
-        temp_dict[header[6]] = "-"
-        temp_dict[header[7]] = "-"
-        temp_dict[header[8]] = str(obj["8"]["result"]) + "-" + str(obj["8"]["status"])
-        try:
-            temp_dict[header[9]] = (
-                str(obj["13"]["result"]) + "-" + str(obj["13"]["status"])
-            )
-        except:
-            temp_dict[header[9]] = str("___")
-        temp_dict[header[10]] = "-"
-        temp_dict[header[11]] = (
-            str(obj["10"]["result"]) + "-" + str(obj["10"]["status"])
-        )
-        temp_dict[header[12]] = (
-            str(obj["11"]["result"]) + "-" + str(obj["11"]["status"])
-        )
-        temp_dict[header[14]] = (
-            str(obj["14"]["result"]) + "-" + str(obj["14"]["status"])
-        )
-        temp_dict[header[13]] = (
-            str(obj["12"]["result"]) + "-" + str(obj["12"]["status"])
-        )
+        for val in obj.keys():
+            if val == "device_id" or val == "timestamp":
+                continue
+            try:
+                temp_dict[header[int(val)]] = str(obj[val]["result"]) + "-" + str(obj[val]["status"])
+            except:
+                pass
         temp_dict[header[-1]] = obj["datetime"]
         temp_list.append(temp_dict)
 
