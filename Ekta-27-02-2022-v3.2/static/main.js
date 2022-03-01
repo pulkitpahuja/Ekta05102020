@@ -790,6 +790,7 @@ function load_config() {
               }
               document.getElementById("time_" + i).value = data[i]["time"];
               document.getElementById("param_" + i).value = data[i]["param"];
+              console.log(i)
               document.getElementById("name_" + i).value = data[i]["name"];
             } else {
               document.getElementById("time_" + i).value = data[i]["time"];
