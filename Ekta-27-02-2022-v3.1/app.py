@@ -272,7 +272,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
 
     elif device_name == "pF":
         import random
-        sam_Lst = [0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99, 1.00]
+        sam_Lst = [0.99, 1.00]
         ran = random.choice(sam_Lst)
         return ran
 
