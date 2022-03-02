@@ -3,3 +3,4 @@
 *.zip
 *.pyc
 *.csv
+.DS_Store

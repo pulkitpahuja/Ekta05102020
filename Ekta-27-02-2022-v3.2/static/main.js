@@ -63,7 +63,7 @@ document.getElementById("datetime").innerHTML =
 const processKV = (truth) => {
   console.log("processKV");
   const to_send = {
-    secondMicro: false,
+    secondMicro: "false",
     truth: truth,
     com: document.getElementById("com_port").value,
     device: 1,
@@ -419,7 +419,7 @@ const processResistance = () => {
   const twentyvoltmin = document.getElementById("min_10").value;
   const thirtyamp = document.getElementById("result_11").value;
   const resis = (twentyvolt - twentyvoltmin) / thirtyamp;
-  document.getElementById("result_resistance").value = resis;
+  document.getElementById("result_resistance").value = resis.toFixed(2);
   if (resis > document.getElementById("min_resistance").value) {
     $("#result_resistance").css({ color: "green" });
   } else {
@@ -548,9 +548,9 @@ function reset() {
     document.getElementById("result_" + i).value = "";
   }
   document.getElementById("result_resistance").value = "";
-  document.getElementById("strt_butt").innerHTML = "Start";
   document.getElementById("result_valW").value = "";
   document.getElementById("result_valI").value = "";
+  document.getElementById("strt_butt").innerHTML = "Start";
   document.getElementById("device_id").value = "";
   clearInterval(timer);
   clearInterval(task_interval);
@@ -793,7 +793,6 @@ function load_config() {
               }
               document.getElementById("time_" + i).value = data[i]["time"];
               document.getElementById("param_" + i).value = data[i]["param"];
-              console.log(i)
               document.getElementById("name_" + i).value = data[i]["name"];
             } else {
               document.getElementById("time_" + i).value = data[i]["time"];

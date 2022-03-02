@@ -151,7 +151,6 @@ def cal_checksum_func(bytes_rec):
     return lowCRC, highCRC
 
 
-
 def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, extra):
     BYTES_TO_SEND = BYTE_VAL[device_name]["arr"]
     RECV_LEN = BYTE_VAL[device_name]["RECV_LEN"]

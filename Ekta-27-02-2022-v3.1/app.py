@@ -132,7 +132,6 @@ def checksum_func(arr):
 def cal_checksum_func(bytes_rec):
 
     arr = bytes_rec[:]
-
     checksum = 0xFFFF
     for num in range(0, len(arr)):
 
@@ -507,26 +506,6 @@ def turn_off_relay():  ## turn of individual device relay irrespective of state
         data = request.form.to_dict()
         turn_off_device_relay(data["device_name"])
         return str(data["device_name"] + "Relay is now OFF")
-
-
-@app.route("/get_fac_data", methods=["GET", "POST", "DELETE"])
-def get_fac_data():
-    if request.method == "POST":
-        tempdict = {"save_status": "Failed", "transfer_status": "Failed"}
-        data = request.form.to_dict()
-
-        with open(
-            "static/data_storage/" + data["calib_number"] + ".json", "w"
-        ) as outfile:
-            json.dump(data, outfile)
-            tempdict["save_status"] = "Success"
-        ##SERIAL PORT DATA TRANSFER TO METER TAKES PLACE HERE##
-        # try:
-
-        # except:
-        #     tempdict["save_status"]="Failed"
-
-        return jsonify(tempdict)
 
 
 @app.route("/save_curr_config", methods=["GET", "POST", "DELETE"])

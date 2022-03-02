@@ -11,7 +11,6 @@ var hasReturned = "false";
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
   } else {
-    console.log(document.getElementById("max_" + i).disabled);
     if (!document.getElementById("max_" + i).disabled)
       document.getElementById("max_" + i).value = 0;
     if (!document.getElementById("min_" + i).disabled)
