@@ -168,6 +168,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
 
     ##################################
     if device == 1:
+        print("Programmer Relay - Device = 1")
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
@@ -176,6 +177,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         ser.flush()
         time.sleep(0.7)
     elif device >= 3 and device <= 6 and secondMicro == "false":
+        print("Relay - Device = ", device)
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
@@ -184,6 +186,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         ser.flush()
         time.sleep(0.6)
     elif device == 6 and secondMicro == "true":
+        print("Relay - Device = ", device)
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
@@ -192,6 +195,8 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         ser.flush()
         time.sleep(0.6)
     elif device == 7 or device == 8:
+        print("Relay - Device = ", device)
+
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
@@ -201,6 +206,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         print(byte_to_write, len(byte_to_write))
         time.sleep(0.6)
     elif device == 10:
+        print("Relay - Device = ", device)
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
