@@ -174,19 +174,15 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.7)
+        time.sleep(0.4)
     elif device >= 3 and device <= 6 and secondMicro == "false":
-        if(device == 6):
-            turn_off_programmer_relay("VAW")
-            time.sleep(0.5)
-        
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.6)
+        time.sleep(0.4)
     elif device == 6 and secondMicro == "true":
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
@@ -194,7 +190,7 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         byte_to_write.append(low)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.6)
+        time.sleep(0.4)
     elif device == 7 or device == 8:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
@@ -203,16 +199,15 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
         ser.write(byte_to_write)
         ser.flush()
         print(byte_to_write, len(byte_to_write))
-        time.sleep(0.6)
+        time.sleep(0.4)
     elif device == 10:
         byte_to_write = bytearray([0x0C, 0x03, 160 + device - 1, 000, 000, 0x04])
         low, high = cal_checksum_func(byte_to_write)
         byte_to_write.append(high)
         byte_to_write.append(low)
-        time.sleep(0.6)
         ser.write(byte_to_write)
         ser.flush()
-        time.sleep(0.6)
+        time.sleep(0.4)
     ##################################
     try:
         ser.write(BYTES_TO_SEND)
@@ -266,12 +261,14 @@ def run_and_get_data(secondMicro, truth, device, device_name, maximum, minimum, 
 
     elif device_name == "Frequency":
         import random
+
         sam_Lst = [49.99, 50.01, 50.00, 50.02, 50.03]
         ran = random.choice(sam_Lst)
         return ran
 
     elif device_name == "pF":
         import random
+
         sam_Lst = [0.99, 1.00]
         ran = random.choice(sam_Lst)
         return ran
@@ -288,7 +285,7 @@ def start_sequence():  ##turn 1st relay ON and 2nd relay OFF
     to_write.append(high)
     to_write.append(low)
     ser.write(to_write)
-    time.sleep(0.6)
+    time.sleep(0.4)
 
 
 def turn_off_programmer_relay(device_name):
@@ -299,11 +296,11 @@ def turn_off_programmer_relay(device_name):
     ser.write(to_write)
     print("RELAY OFF", to_write)
     flag[device_name] = False
-    time.sleep(1)
+    time.sleep(0.4)
 
 
 def stop_sequence():
-    time.sleep(0.6)
+    time.sleep(0.4)
     ##turn 1st relay OFF and 2nd relay ON
     to_write = bytearray([0x03, 0x03, 215, 000, 000, 0x04])
     low, high = cal_checksum_func(to_write)
@@ -325,7 +322,7 @@ def stop_sequence():
     global start
     start = False
     print("RELAY OFF", to_write)
-    time.sleep(1)
+    time.sleep(0.4)
     ###########################
     to_write = bytearray([0x0C, 0x03, 170, 000, 000, 0x04])
     low, high = cal_checksum_func(to_write)
@@ -333,7 +330,7 @@ def stop_sequence():
     to_write.append(low)
     ser.write(to_write)
     ser.flush()
-    time.sleep(1)
+    time.sleep(0.4)
 
 
 def run_serial(com):
@@ -346,7 +343,7 @@ def run_serial(com):
         ser.stopbits = serial.STOPBITS_ONE
         ser.bytesize = serial.EIGHTBITS
         ser.open()
-        time.sleep(0.5)
+        time.sleep(0.4)
         return "true"
     except:
         try:
@@ -365,19 +362,20 @@ def turn_on_device_relay(device_name):
     to_write.append(low)
     ser.write(to_write)
     flag[device_name] = True
-    time.sleep(0.5)
+    time.sleep(0.4)
 
 
 def turn_off_device_relay(device_name):
-    time.sleep(0.5)
+    time.sleep(0.4)
     to_write = bytearray([BYTE_VAL[device_name]["arr"][0], 0x03, 215, 000, 000, 0x04])
     low, high = cal_checksum_func(to_write)
     to_write.append(high)
     to_write.append(low)
     ser.write(to_write)
+
     print("RELAY OFF", to_write)
     flag[device_name] = False
-    time.sleep(1)
+    time.sleep(0.4)
 
 
 def get_dates(start_date, end_date):
@@ -417,7 +415,7 @@ def overall_csv(data, name):
             pass
 
     header.append("Timestamp")
-    
+
     temp_list = []
 
     for obj in data:
@@ -427,7 +425,9 @@ def overall_csv(data, name):
             if val == "device_id" or val == "timestamp":
                 continue
             try:
-                temp_dict[header[int(val)]] = str(obj[val]["result"]) + "-" + str(obj[val]["status"])
+                temp_dict[header[int(val)]] = (
+                    str(obj[val]["result"]) + "-" + str(obj[val]["status"])
+                )
             except:
                 pass
         temp_dict[header[-1]] = obj["datetime"]
