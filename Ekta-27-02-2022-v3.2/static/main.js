@@ -670,7 +670,7 @@ function save_result_data() {
     url: "/save_result",
     data: JSON.stringify(curr_config), // serializes the form's elements.
     success: function (data) {
-      alert("Result Status : " + data);
+      console.log("Result Status : " + data);
     },
   });
 
@@ -679,7 +679,7 @@ function save_result_data() {
     url: "/download_csv",
     data: JSON.stringify({ name: "", data: JSON.stringify(curr_config) }), // serializes the form's elements.
     success: (data) => {
-      alert(data);
+      alert("Result Status : Success. " + data);
     },
   });
 }
