@@ -13,8 +13,7 @@ from datetime import date, timedelta
 from constants import BYTE_VAL
 
 global start
-
-timer_time = 0.4
+timer_time = 0.5
 
 
 def createFolder(directory):
@@ -376,7 +375,6 @@ def turn_off_device_relay(device_name):
     ser.write(to_write)
     print("RELAY OFF", to_write)
     flag[device_name] = False
-    time.sleep(timer_time)
 
 
 def get_dates(start_date, end_date):

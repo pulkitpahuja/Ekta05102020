@@ -8,6 +8,9 @@ var inner_counter = 0; // inner counter is there for access the type of order wi
 var status;
 var hasReturned = "false";
 
+const counter_time = 1300;
+const order_time = 1500;
+
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
   } else {
@@ -478,7 +481,7 @@ const start_test = () => {
   task_interval = setInterval(function () {
     count++;
     console.log("Count: " + count);
-  }, 2000);
+  }, counter_time);
 
   timer = setInterval(() => {
     const or = order[start_counter];
@@ -525,7 +528,7 @@ const start_test = () => {
       stop();
       save_result_data();
     }
-  }, 2200);
+  }, order_time);
 };
 
 const MAIN = {
