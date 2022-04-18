@@ -7,6 +7,8 @@ var start_counter = 0; // this counter is used to keep track of the order of the
 var inner_counter = 0; // inner counter is there for access the type of order with multiple device (index of inner array)
 var status;
 var hasReturned = "false";
+const counter_time = 1700;
+const order_time = 1700;
 
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
@@ -483,7 +485,7 @@ const start_test = () => {
   task_interval = setInterval(function () {
     count++;
     console.log("Count: " + count);
-  }, 2000);
+  }, counter_time);
 
   timer = setInterval(() => {
     const or = order[start_counter];
@@ -530,7 +532,7 @@ const start_test = () => {
       stop();
       save_result_data();
     }
-  }, 2200);
+  }, order_time);
 };
 
 const MAIN = {
