@@ -7,8 +7,8 @@ var start_counter = 0; // this counter is used to keep track of the order of the
 var inner_counter = 0; // inner counter is there for access the type of order with multiple device (index of inner array)
 var status;
 var hasReturned = "false";
-const counter_time = 1300;
-const order_time = 1500;
+const counter_time = 1100;
+const order_time = 1300;
 
 for (var i = 1; i <= 12; i++) {
   if (i == 1 || i == 12) {
