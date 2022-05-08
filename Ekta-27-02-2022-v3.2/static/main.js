@@ -152,9 +152,11 @@ const processInsulation = (truth) => {
       ) {
         $("#result_3").css({ color: "green" });
       } else {
-        setTimeout(function () {
-          stop();
-        }, 2500);
+        if (truth == "true") {
+          setTimeout(function () {
+            stop();
+          }, 2500);
+        }
         $("#result_3").css({ color: "red" });
       }
     },
