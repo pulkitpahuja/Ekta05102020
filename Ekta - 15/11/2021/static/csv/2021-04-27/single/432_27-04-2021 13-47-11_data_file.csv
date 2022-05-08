@@ -1,6 +1,0 @@
-Name,Result,Unit,Status
-kV,0-Passed,kV,Passed
-VAW,0,V,Passed
-VAW,0,A,Passed
-VAW,0,W,Failed
-Frequency,50.01,Hz,Failed
