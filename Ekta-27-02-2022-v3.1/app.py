@@ -13,7 +13,7 @@ from datetime import date, timedelta
 from constants import BYTE_VAL
 
 global start
-timer_time = 0.4
+timer_time = 0.5
 
 
 def createFolder(directory):

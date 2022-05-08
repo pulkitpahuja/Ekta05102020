@@ -463,17 +463,17 @@ const order = [
     work: ["Insulation"],
     time: 3,
   },
-  {
-    work: ["ResistanceMeter"],
-    time: 4,
-  },
+  // {
+  //   work: ["ResistanceMeter"],
+  //   time: 4,
+  // },
   {
     work: ["VAW"],
     time: 5,
   },
   { work: ["MicroAmpere1"], time: 8 },
   { work: ["MicroAmpere2"], time: 8 },
-  { work: ["pF"], time: 9 },
+  // { work: ["pF"], time: 9 },
   { work: ["20V", "30A"], time: 10 },
   {
     work: ["Frequency"],
