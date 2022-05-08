@@ -84,7 +84,9 @@ const processKV = (truth) => {
       document.getElementById("result_1").value =
         list[1] == 2 ? list[0] + "-Failed" : list[0] + "-Passed";
       if (list[1] == 2) {
-        stop();
+        if(truth=="true"){
+          stop();
+        }
         $("#result_1").css({ color: "red" });
       } else {
         $("#result_1").css({ color: "green" });
